@@ -577,6 +577,13 @@ td.num,th.num{text-align:end}
                   <option value="claude-sonnet-5">Claude Sonnet 5 — מהיר וחסכוני</option>
                   <option value="claude-haiku-4-5">Claude Haiku 4.5 — הכי מהיר</option>
                 </select></div>
+              <div class="field"><label for="set-datamodel" data-i18n="set.dataModel">מודל לשליפת נתונים (שערים, דולר, זיהוי סימול)</label>
+                <select class="input" id="set-datamodel">
+                  <option value="claude-haiku-4-5">Claude Haiku 4.5 — הכי מהיר</option>
+                  <option value="claude-sonnet-5">Claude Sonnet 5 — מהיר ומדויק (מומלץ)</option>
+                  <option value="claude-opus-5">Claude Opus 5 — איטי יותר</option>
+                </select></div>
+              <label class="chip outline" style="min-height:40px;cursor:pointer;justify-content:flex-start"><input type="checkbox" id="set-fast" style="accent-color:var(--primary)"> <span data-i18n="set.fast">מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה</span></label>
               <div class="field"><label data-i18n="set.effort">עומק חשיבה לניתוחים</label>
                 <div class="seg" id="set-effort"><button aria-pressed="false" data-e="medium" data-i18n="eff.med">בינוני</button><button aria-pressed="true" data-e="high" data-i18n="eff.high">גבוה</button><button aria-pressed="false" data-e="xhigh" data-i18n="eff.xhigh">מקסימלי</button></div></div>
               <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" id="btn-test"><span class="spin"></span><span class="lbl" data-i18n="set.test">בדוק חיבור</span></button><button class="btn ghost" id="btn-clearkey" data-i18n="set.clearkey">מחק מפתח</button></div>
@@ -653,7 +660,7 @@ const I18N = {
     'scan.title':'סורק שוק חכם','scan.sub':'בחר תחומי פעילות ובורסות — המנוע יאתר מניות חמות, פריצות טכניות ומומנטום, עם רמות כניסה, סטופ ויעד.','scan.sectors':'תחומי פעילות','scan.markets':'בורסות','scan.mode':'סוג סריקה','scan.m.all':'הכל','scan.m.hot':'מניות חמות','scan.m.breakout':'פריצות','scan.m.value':'ערך','scan.focus':'דגש נוסף (אופציונלי)','scan.focus.ph':'לדוגמה: דיבידנד גבוה, שווי שוק קטן, AI…','scan.run':'הפעל סריקה',
     'ins.title':'מנוע תובנות — ניתוח התיק','ins.sub':'ניתוח מעמיק של התיק הנוכחי: ציון איכות, ריכוזיות, חשיפות, אותות פריצה באחזקות, המלצות פעולה ותוכנית איזון.','ins.web':'כלול נתוני שוק עדכניים (Web)','ins.run':'נתח את התיק',
     'prof.cons':'שמרני','prof.bal':'מאוזן','prof.growth':'צמיחה','prof.aggr':'אגרסיבי',
-    'set.api':'חיבור ל-Anthropic API','set.key':'מפתח API','set.key.help':'המפתח נשמר מקומית בדפדפן בלבד (localStorage) ונשלח ישירות ל-api.anthropic.com.','set.model':'מודל','set.effort':'עומק חשיבה לניתוחים','eff.med':'בינוני','eff.high':'גבוה','eff.xhigh':'מקסימלי','set.test':'בדוק חיבור','set.clearkey':'מחק מפתח',
+    'set.api':'חיבור ל-Anthropic API','set.key':'מפתח API','set.key.help':'המפתח נשמר מקומית בדפדפן בלבד (localStorage) ונשלח ישירות ל-api.anthropic.com.','set.model':'מודל לניתוחים (סורק, תובנות, ניתוח מניה)','set.dataModel':'מודל לשליפת נתונים (שערים, דולר, זיהוי סימול)','set.fast':'מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה','set.effort':'עומק חשיבה לניתוחים','elapsed':'שנ׳','searches':'חיפושים','eff.med':'בינוני','eff.high':'גבוה','eff.xhigh':'מקסימלי','set.test':'בדוק חיבור','set.clearkey':'מחק מפתח',
     'set.display':'תצוגה ומטבע','set.lang':'שפה','set.theme':'ערכת עיצוב','theme.light':'בהיר','theme.dark':'כהה','theme.auto':'אוטומטי','set.fx':'שער דולר/שקל','set.fx.fetch':'עדכן מהרשת','set.fx.help':'מתעדכן אוטומטית עם עדכון שערים. ניתן להזין ידנית.','set.cash':'מזומן בתיק',
     'set.data':'נתונים','set.sample':'טען תיק לדוגמה','set.backup':'גיבוי מלא (JSON)','set.restore':'שחזור מגיבוי','set.wipe':'מחק את כל הנתונים','set.data.help':'כל הנתונים נשמרים בדפדפן זה בלבד. מומלץ לגבות מדי פעם.','set.about':'אודות',
     'about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
@@ -683,7 +690,7 @@ const I18N = {
     'scan.title':'Smart Market Scanner','scan.sub':'Pick sectors and exchanges — the engine finds hot stocks, technical breakouts and momentum, with entry zone, stop and target.','scan.sectors':'Sectors','scan.markets':'Exchanges','scan.mode':'Scan type','scan.m.all':'All','scan.m.hot':'Hot stocks','scan.m.breakout':'Breakouts','scan.m.value':'Value','scan.focus':'Extra focus (optional)','scan.focus.ph':'e.g. high dividend, small cap, AI…','scan.run':'Run scan',
     'ins.title':'Insights Engine — Portfolio Analysis','ins.sub':'Deep analysis of your current portfolio: quality score, concentration, exposures, breakout signals in holdings, action recommendations and a rebalancing plan.','ins.web':'Include live market data (Web)','ins.run':'Analyze portfolio',
     'prof.cons':'Conservative','prof.bal':'Balanced','prof.growth':'Growth','prof.aggr':'Aggressive',
-    'set.api':'Anthropic API connection','set.key':'API key','set.key.help':'Stored only in this browser (localStorage) and sent directly to api.anthropic.com.','set.model':'Model','set.effort':'Reasoning depth for analyses','eff.med':'Medium','eff.high':'High','eff.xhigh':'Max','set.test':'Test connection','set.clearkey':'Clear key',
+    'set.api':'Anthropic API connection','set.key':'API key','set.key.help':'Stored only in this browser (localStorage) and sent directly to api.anthropic.com.','set.model':'Model for analyses (scanner, insights, deep dive)','set.dataModel':'Model for data fetching (quotes, FX, ticker lookup)','set.fast':'Fast mode for Opus 5 — up to 2.5× faster output, double cost','set.effort':'Reasoning depth for analyses','elapsed':'s','searches':'searches','eff.med':'Medium','eff.high':'High','eff.xhigh':'Max','set.test':'Test connection','set.clearkey':'Clear key',
     'set.display':'Display & currency','set.lang':'Language','set.theme':'Theme','theme.light':'Light','theme.dark':'Dark','theme.auto':'Auto','set.fx':'USD/ILS rate','set.fx.fetch':'Fetch online','set.fx.help':'Updates automatically with quotes. Can be entered manually.','set.cash':'Cash in portfolio',
     'set.data':'Data','set.sample':'Load sample portfolio','set.backup':'Full backup (JSON)','set.restore':'Restore backup','set.wipe':'Delete all data','set.data.help':'All data lives in this browser only. Back up occasionally.','set.about':'About',
     'about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
@@ -757,13 +764,15 @@ const SAMPLE_HOLDINGS = [
 /* ---------- State ---------- */
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
-  settings:{apiKey:'',model:'claude-opus-5',effort:'high',lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
+  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
   holdings:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}
 };
 let S = load();
 function load(){
   try{ const raw=localStorage.getItem(LS_KEY); if(!raw) return structuredClone(DEFAULTS);
-    const p=JSON.parse(raw); return {...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}};
+    const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}};
+    if(!(p.settings&&p.settings.perfV2)){ st.settings.perfV2=true; st.settings.dataModel='claude-sonnet-5'; if(st.settings.effort==='high') st.settings.effort='medium'; } // one-time speed migration
+    return st;
   }catch(e){ console.warn('load failed',e); return structuredClone(DEFAULTS); }
 }
 let saveT=null;
@@ -843,11 +852,13 @@ function supportsFallback(model){ return /opus-5|fable/.test(model); }
  * Streaming call to the Messages API from the browser.
  * Returns {text, sources, stopReason, usage, refusal}
  */
-async function claude({system, user, tools=null, maxTokens=16000, effort=null, onStatus=()=>{}, onText=()=>{}, signal}={}){
+async function claude({system, user, tools=null, maxTokens=16000, effort=null, model:modelOverride=null, onStatus=()=>{}, onText=()=>{}, signal}={}){
   const key=(S.settings.apiKey||'').trim();
   if(!key) throw new Error(t('q.needkey'));
-  const model=S.settings.model||'claude-opus-5';
+  const model=modelOverride||S.settings.model||'claude-opus-5';
   const body={model, max_tokens:maxTokens, stream:true, system, messages:[{role:'user',content:user}]};
+  const fast=!!S.settings.fastMode&&/opus-5|opus-4-8/.test(model)&&!modelOverride;
+  if(fast) body.speed='fast';
   if(tools&&tools.length) body.tools=tools;
   if(effort&&supportsEffort(model)) body.output_config={effort};
   let useFallback=supportsFallback(model);
@@ -855,7 +866,8 @@ async function claude({system, user, tools=null, maxTokens=16000, effort=null, o
   const attempt=async(withFallback)=>{
     const headers={'content-type':'application/json','x-api-key':key,'anthropic-version':API_VERSION,'anthropic-dangerous-direct-browser-access':'true'};
     const b={...body};
-    if(withFallback){ headers['anthropic-beta']='server-side-fallback-2026-07-01'; b.fallbacks='default'; }
+    const betas=[]; if(withFallback){ betas.push('server-side-fallback-2026-07-01'); b.fallbacks='default'; } if(b.speed==='fast') betas.push('fast-mode-2026-02-01');
+    if(betas.length) headers['anthropic-beta']=betas.join(',');
     const res=await fetch(API_URL,{method:'POST',headers,body:JSON.stringify(b),signal});
     if(!res.ok){
       let msg='HTTP '+res.status; let raw='';
@@ -870,6 +882,7 @@ async function claude({system, user, tools=null, maxTokens=16000, effort=null, o
   catch(e){
     if(useFallback&&e.status===400&&/fallback|beta|unsupported|not supported|unknown/i.test(e.message)){ useFallback=false; res=await attempt(false); }
     else if(e.status===400&&/output_config|effort/i.test(e.message)&&body.output_config){ delete body.output_config; res=await attempt(useFallback); }
+    else if(body.speed&&(e.status===400||e.status===429)&&/speed|fast/i.test(e.message)){ delete body.speed; res=await attempt(useFallback); }
     else throw e;
   }
 
@@ -940,11 +953,12 @@ function progressBox(container, title){
   container.hidden=false;
   container.innerHTML=`<div class="progress"><div style="display:flex;align-items:center;gap:10px"><span class="spin" style="width:18px;height:18px"></span><b>${esc(title)}</b><span class="faint" style="margin-inline-start:auto;font-size:.76rem" data-el="q"></span></div>
     <div class="steps"><span data-s="search">${t('st.search')}</span><span data-s="think">${t('st.think')}</span><span data-s="write">${t('st.write')}</span><span data-s="parse">${t('st.parse')}</span></div><div class="live" data-el="live"></div></div>`;
-  const order=['search','think','write','parse']; let cur=-1;
+  const order=['search','think','write','parse']; let cur=-1, searches=0; const t0=Date.now();
+  const tick=setInterval(()=>{ const el=$('[data-el=q]',container); if(!el){ clearInterval(tick); return; } el.textContent=`${Math.round((Date.now()-t0)/1000)} ${t('elapsed')}${searches?' · '+searches+' '+t('searches'):''}`; },1000);
   return {
-    set(stage,q){ const i=order.indexOf(stage); if(i<0) return; if(i<cur) return; cur=i; $$('[data-s]',container).forEach((el,j)=>{ el.classList.toggle('on',j===i); el.classList.toggle('done',j<i); }); if(q) $('[data-el=q]',container).textContent='"'+q.slice(0,60)+'"'; },
+    set(stage,q){ const i=order.indexOf(stage); if(i<0) return; if(stage==='search') searches++; if(i<cur) return; cur=i; $$('[data-s]',container).forEach((el,j)=>{ el.classList.toggle('on',j===i); el.classList.toggle('done',j<i); }); },
     live(txt){ const el=$('[data-el=live]',container); if(el) el.textContent=txt.slice(-420); },
-    done(){ container.hidden=true; container.innerHTML=''; }
+    done(){ clearInterval(tick); container.hidden=true; container.innerHTML=''; }
   };
 }
 
@@ -954,14 +968,14 @@ function progressBox(container, title){
 async function fetchQuotes(onStatus){
   const list=S.holdings.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
   if(!list.length) throw new Error(t('q.nohold'));
-  const user=`Fetch the latest available market quotes for these securities (last trade or close, and previous close). Use web search efficiently: batch tickers per search when possible (e.g. search several TASE tickers together on tase.co.il / bizportal / globes / investing.com, and US tickers on Yahoo Finance / Google Finance / CNBC).
+  const user=`Fetch the latest available market quotes for these securities (last trade or close, and previous close). Be FAST: use as few searches as possible — batch several tickers per query (e.g. search several TASE tickers together on tase.co.il / bizportal / globes / investing.com, and US tickers on Yahoo Finance / Google Finance / CNBC).
 Securities:
 ${list.map(x=>`- ${x.ticker} (${x.exchange})${x.name?' — '+x.name:''}`).join('\n')}
 
 Return JSON exactly in this shape:
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}],"warnings":["..."]}
 Rules: TASE price and prevClose in ILS (shekels, NOT agorot). US in USD. If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(14,4+Math.ceil(list.length/2)))], maxTokens:6000, effort:'medium', onStatus});
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(list.length/3)))], maxTokens:4000, effort:'low', model:S.settings.dataModel, onStatus});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)) { const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return {...j, sources:r.sources};
 }
@@ -981,7 +995,7 @@ async function fetchFx(){
   const user=`Find the CURRENT USD/ILS (US dollar to Israeli shekel) exchange rate. You MUST use web search — never answer from memory. Search e.g. "USD ILS" on Google Finance, xe.com, investing.com, or the Bank of Israel site (boi.org.il, שער יציג). Return the latest market (spot) rate and, if available, the latest Bank of Israel representative rate (שער יציג) with its date.
 Return JSON exactly: {"spot":3.1234,"boiRepresentative":3.1200,"asOf":"YYYY-MM-DD HH:MM (timezone)","source":"site name","note":null}
 Sanity: the rate is ILS per 1 USD and in 2025–2026 it lies roughly between 2.8 and 4.2. If a source shows ILS→USD (≈0.3), invert it.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(3)], maxTokens:800, effort:'medium'});
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(2)], maxTokens:600, effort:'low', model:S.settings.dataModel});
   const j=extractJSON(r.text); const rate=+(j&&(j.spot||j.boiRepresentative)); if(!j||!(rate>2.5&&rate<4.5)) throw new Error(t('q.none'));
   return {rate:+rate.toFixed(4), rep:j.boiRepresentative?+(+j.boiRepresentative).toFixed(4):null, asOf:j.asOf||null, source:j.source||(r.sources[0]&&r.sources[0].title)||null};
 }
@@ -1004,7 +1018,7 @@ Sectors / themes: ${secNames.join(', ')||'all sectors'}.
 Scan type: ${modeTxt}.
 ${focus?'Extra focus from the user: '+focus+'.':''}
 ${held?'The user already holds: '+held+' — you may include them only if the signal is exceptional; prefer new ideas.':''}
-Research recent price action, volume, news and sector flows (last 1–10 trading days). Find 6–12 actionable names total. For each pick give concrete levels in the stock's own currency (TASE in ILS, US in USD).
+Research recent price action, volume, news and sector flows (last 1–10 trading days) using at most 8 well-chosen searches. Find 6–10 actionable names total. Keep every text field tight (1–2 sentences). For each pick give concrete levels in the stock's own currency (TASE in ILS, US in USD).
 
 Return JSON:
 {"asOf":"YYYY-MM-DD","marketPulse":{"summary":"3–5 sentences on the tape: indices, breadth, rates, USD/ILS, geopolitics, what is leading","regime":"risk-on|risk-off|mixed","keyDates":["upcoming events with dates"]},
@@ -1013,7 +1027,7 @@ Return JSON:
  "watch":["short notes on 2–4 names that are close to a trigger"],
  "caveats":"data freshness / limitations"}
 Order picks by conviction desc. Ensure every pick has a real, currently traded ticker on the stated exchange.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(12)], maxTokens:16000, effort:S.settings.effort, onStatus, onText});
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(8)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, sources:r.sources, ts:Date.now(), params:{sectors,markets,mode,focus}};
 }
@@ -1031,7 +1045,7 @@ async function analyzePortfolio({profile, useWeb, onStatus, onText}){
   const brief=portfolioBrief();
   const profTxt={conservative:'Conservative (capital preservation, low volatility, equity 0–40%)',balanced:'Balanced (equity 40–60%, moderate drawdown tolerance)',growth:'Growth (equity 60–80%, accepts volatility for return)',aggressive:'Aggressive (equity 80–100%, high conviction, momentum welcome)'}[profile];
   const user=`Perform a deep, institutional-quality review of this investor's portfolio. Investor mandate: ${profTxt}. Home currency: ILS (Israeli investor; USD assets carry FX exposure).
-${useWeb?'Use web search (max ~8 searches) to check: the latest price action and any breakout/breakdown signals for the largest holdings, recent material news on holdings, and the current macro backdrop (Bank of Israel rate, Fed, USD/ILS trend, TA-125 vs S&P 500). Batch tickers per search.':'Do NOT use web search; rely on the data provided and your knowledge, and flag where fresher data would change the view.'}
+${useWeb?'Use web search (max 5 searches, batch several tickers per query) to check: the latest price action and any breakout/breakdown signals for the largest holdings, recent material news on holdings, and the current macro backdrop (Bank of Israel rate, Fed, USD/ILS trend, TA-125 vs S&P 500). Batch tickers per search.':'Do NOT use web search; rely on the data provided and your knowledge, and flag where fresher data would change the view.'}
 
 PORTFOLIO (JSON):
 ${JSON.stringify(brief)}
@@ -1047,8 +1061,8 @@ Return JSON:
  "fxHedge":{"needed":true,"detail":"USD exposure X% — hedge ratio suggestion and instrument (forward / hedged ETF / partial), with cost consideration"},
  "macro":"3–4 sentences on the macro context relevant to this portfolio",
  "nextReview":"what to check and when"}
-Be specific: use the actual tickers, weights and P&L from the data.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:useWeb?[webSearchTool(8)]:null, maxTokens:16000, effort:S.settings.effort, onStatus, onText});
+Be specific: use the actual tickers, weights and P&L from the data. Keep text fields concise (1–3 sentences each); at most 5 strengths, 5 risks, 8 actions.`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:useWeb?[webSearchTool(5)]:null, maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, sources:r.sources, ts:Date.now(), profile};
 }
@@ -1061,7 +1075,7 @@ async function deepDive(h,{onStatus,onText}){
   const pos=r0?`User position: ${h.qty} shares, avg cost ${h.avgCost} ${r0.ccy}, current price ${r0.price??'unknown'}, P&L ${r0.pnlPct!=null?r0.pnlPct.toFixed(1)+'%':'n/a'}, weight ${r0.weightEq.toFixed(1)}% of portfolio.`:'';
   const user=`Produce a complete analyst deep-dive on ${h.ticker} (${h.exchange})${h.name?' — '+h.name:''}${h.name_he?' / '+h.name_he:''}.
 ${pos}
-Use web search (up to ~10 searches): (1) latest price, 52-week range, volume trend; (2) the most recent quarterly/annual results — revenue, EPS/net profit, vs. consensus, guidance, margins; (3) news from the last 30 days (earnings, contracts, M&A, regulation, analyst rating changes, insider activity); (4) technical picture — trend, key support/resistance, moving averages, breakout/breakdown status; (5) valuation vs peers; (6) upcoming catalysts with dates. ${h.exchange==='TASE'?'Prefer Israeli sources (tase.co.il, globes, bizportal, calcalist, themarker) and MAYA filings; prices in ILS.':'Prices in USD.'}
+Use web search (at most 6 focused searches, e.g. "TICKER stock", "TICKER earnings", "TICKER news"): (1) latest price, 52-week range, volume trend; (2) the most recent quarterly/annual results — revenue, EPS/net profit, vs. consensus, guidance, margins; (3) news from the last 30 days (earnings, contracts, M&A, regulation, analyst rating changes, insider activity); (4) technical picture — trend, key support/resistance, moving averages, breakout/breakdown status; (5) valuation vs peers; (6) upcoming catalysts with dates. ${h.exchange==='TASE'?'Prefer Israeli sources (tase.co.il, globes, bizportal, calcalist, themarker) and MAYA filings; prices in ILS.':'Prices in USD.'}
 
 Return JSON:
 {"ticker":"${h.ticker}","name":"","currency":"ILS|USD","asOf":"YYYY-MM-DD",
@@ -1076,8 +1090,8 @@ Return JSON:
  "risks":["3–5 specific risks"],
  "positionAdvice":"${pos?'2–3 sentences tailored to the user position: hold/add/trim, stop level, sizing':'general entry guidance with levels'}",
  "sources":["short list of sources used"]}
-Bull/base/bear probabilities must sum to 100. News sorted newest first (max 8).`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(10)], maxTokens:16000, effort:S.settings.effort, onStatus, onText});
+Bull/base/bear probabilities must sum to 100. News sorted newest first (max 6). Keep every text field concise (1–2 sentences).`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(6)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, webSources:r.sources, ts:Date.now()};
 }
@@ -1093,7 +1107,7 @@ async function lookupSecurity(ticker, hintExchange){
 Return JSON exactly:
 {"found":true,"ticker":"${ticker}","exchange":"TASE|NYSE|NASDAQ","name_en":"Official short company name","name_he":"שם החברה בעברית (transliterate if no official Hebrew name)","sector":"one of: ${codes}","industry":"short free-text industry","currency":"ILS|USD","price":0,"prevClose":0,"asOf":"YYYY-MM-DD","marketCap":"e.g. $12.4B","description":"one sentence on what the company does","confidence":0-100}
 If the ticker cannot be identified return {"found":false,"reason":"..."}. TASE prices in shekels (not agorot).`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(3)], maxTokens:1500, effort:'medium'});
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel});
   const j=extractJSON(r.text); if(!j) throw new Error(t('err.parse'));
   if(j.found===false) return {found:false,reason:j.reason||''};
   if(!['TASE','NYSE','NASDAQ'].includes(j.exchange)) j.exchange=hintExchange||'NASDAQ';
@@ -1120,6 +1134,7 @@ function applyI18n(){
   $$('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
   $$('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.dataset.i18nPh); });
   document.title='MarketMaster · '+(L==='he'?'ניהול תיק השקעות':'Portfolio Manager');
+  const dm=$('#set-datamodel'); if(dm){ dm.options[0].text=L==='he'?'Claude Haiku 4.5 — הכי מהיר':'Claude Haiku 4.5 — fastest'; dm.options[1].text=L==='he'?'Claude Sonnet 5 — מהיר ומדויק (מומלץ)':'Claude Sonnet 5 — fast & accurate (recommended)'; dm.options[2].text=L==='he'?'Claude Opus 5 — איטי יותר':'Claude Opus 5 — slower'; }
   const m=$('#set-model'); if(m){ m.options[0].text=L==='he'?'Claude Opus 5 — איכות מקסימלית (מומלץ)':'Claude Opus 5 — best quality (recommended)'; m.options[1].text=L==='he'?'Claude Sonnet 5 — מהיר וחסכוני':'Claude Sonnet 5 — fast & economical'; m.options[2].text=L==='he'?'Claude Haiku 4.5 — הכי מהיר':'Claude Haiku 4.5 — fastest'; }
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===L));
   $('#page-title').textContent=t('nav.'+currentPage);
@@ -1488,7 +1503,7 @@ async function doRefresh(){
 
 /* ---------- Settings ---------- */
 function renderSettings(){
-  const s=S.settings; $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-fx').value=s.usdIls; $('#set-cash-ils').value=s.cashIls||''; $('#set-cash-usd').value=s.cashUsd||'';
+  const s=S.settings; $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-datamodel').value=s.dataModel||'claude-sonnet-5'; $('#set-fast').checked=!!s.fastMode; $('#set-fx').value=s.usdIls; $('#set-cash-ils').value=s.cashIls||''; $('#set-cash-usd').value=s.cashUsd||'';
   $$('#set-effort button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.e===s.effort));
   $$('#set-theme button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===s.theme));
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
@@ -1542,6 +1557,8 @@ function bind(){
   $('#set-key').addEventListener('change',e=>{ S.settings.apiKey=e.target.value.trim(); save(); renderSettings(); });
   $('#btn-showkey').onclick=()=>{ const i=$('#set-key'); i.type=i.type==='password'?'text':'password'; };
   $('#set-model').addEventListener('change',e=>{ S.settings.model=e.target.value; save(); });
+  $('#set-datamodel').addEventListener('change',e=>{ S.settings.dataModel=e.target.value; save(); });
+  $('#set-fast').addEventListener('change',e=>{ S.settings.fastMode=e.target.checked; save(); });
   $$('#set-effort button').forEach(b=>b.onclick=()=>{ S.settings.effort=b.dataset.e; save(); renderSettings(); });
   $$('#set-lang button').forEach(b=>b.onclick=()=>{ S.settings.lang=b.dataset.l; save(); applyI18n(); renderAll(); });
   $$('#set-theme button').forEach(b=>b.onclick=()=>{ S.settings.theme=b.dataset.t; save(); applyTheme(); renderAll(); });
