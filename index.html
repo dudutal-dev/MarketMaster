@@ -678,7 +678,7 @@ const I18N = {
     'dd.title':'ניתוח עומק','dd.run':'הפעל ניתוח מלא','dd.rerun':'רענן ניתוח','dd.snapshot':'תמונת מצב','dd.results':'תוצאות אחרונות','dd.news':'חדשות אחרונות','dd.tech':'ניתוח טכני','dd.forecast':'תחזית','dd.catalysts':'קטליזטורים','dd.risks':'סיכונים','dd.bull':'אופטימי','dd.base':'בסיס','dd.bear':'פסימי','dd.rating':'דירוג','dd.conf':'ביטחון','dd.horizon':'אופק','dd.pos':'הפוזיציה שלי','dd.trend':'מגמה','dd.support':'תמיכה','dd.resist':'התנגדות','dd.breakout':'סטטוס פריצה','dd.momentum':'מומנטום','dd.revenue':'הכנסות','dd.eps':'רווח למניה','dd.surprise':'הפתעה','dd.guidance':'תחזית החברה','dd.empty':'לחץ "הפעל ניתוח מלא" — Claude יאסוף תוצאות, חדשות ותחזית עם חיפוש ברשת.','dd.updated':'עודכן',
     'risk.low':'נמוך','risk.med':'בינוני','risk.high':'גבוה','risk.vhigh':'גבוה מאוד',
     'qi.conc':'ריכוזיות גבוהה','qi.conc.d':'{t} מהווה {p} מהתיק. שקול הקטנה מתחת ל-15%.','qi.fx':'חשיפת מט"ח','qi.fx.d':'{p} מהתיק נקוב בדולר. תנודת 5% בשער תזיז את התיק ב-{v}.','qi.div':'פיזור סקטוריאלי','qi.div.d':'{n} סקטורים, הגדול ביניהם {s} ({p}).','qi.ok':'התיק מאוזן','qi.ok.d':'אין ריכוזיות חריגה במניה בודדת.','qi.stale':'שערים לא עדכניים','qi.stale.d':'העדכון האחרון לפני {h} שעות. לחץ "עדכן שערים".','qi.winners':'מובילים ומפגרים','qi.winners.d':'מוביל: {w} ({wp}) · מפגר: {l} ({lp}).','qi.noprice':'חסרים שערים','qi.noprice.d':'ל-{n} ניירות אין שער. עדכן שערים או הזן ידנית.',
-    'err.api':'שגיאת API','err.parse':'לא הצלחתי לפענח את תשובת המודל — מוצג טקסט גולמי','err.refusal':'המודל סירב לבקשה','err.net':'שגיאת רשת — בדוק חיבור/מפתח',
+    'err.api':'שגיאת API','err.parse':'לא הצלחתי לפענח את תשובת המודל — מוצג טקסט גולמי','err.refusal':'המודל סירב לבקשה','err.net':'שגיאת רשת — בדוק חיבור/מפתח','err.netdrop':'החיבור נותק באמצע הבקשה (Load failed). זה קורה כשהמסך ננעל, כשעוברים לאפליקציה אחרת או במעבר רשת. נסה שוב והשאר את האפליקציה פתוחה.','net.retry':'החיבור נותק — מנסה שוב ({n}/{m})…',
     'sample':'דוגמה','hours':'שעות','ago':'לפני','never':'טרם עודכן','shares':'יח׳','of':'מתוך','more':'עוד','less':'פחות','raw':'תשובה גולמית','copy':'העתק','copied':'הועתק',
   },
   en: {
@@ -707,7 +707,7 @@ const I18N = {
     'dd.title':'Deep dive','dd.run':'Run full analysis','dd.rerun':'Refresh analysis','dd.snapshot':'Snapshot','dd.results':'Latest results','dd.news':'Recent news','dd.tech':'Technical view','dd.forecast':'Forecast','dd.catalysts':'Catalysts','dd.risks':'Risks','dd.bull':'Bull','dd.base':'Base','dd.bear':'Bear','dd.rating':'Rating','dd.conf':'Confidence','dd.horizon':'Horizon','dd.pos':'My position','dd.trend':'Trend','dd.support':'Support','dd.resist':'Resistance','dd.breakout':'Breakout status','dd.momentum':'Momentum','dd.revenue':'Revenue','dd.eps':'EPS','dd.surprise':'Surprise','dd.guidance':'Guidance','dd.empty':'Click "Run full analysis" — Claude will gather results, news and a forecast using web search.','dd.updated':'Updated',
     'risk.low':'Low','risk.med':'Medium','risk.high':'High','risk.vhigh':'Very high',
     'qi.conc':'High concentration','qi.conc.d':'{t} is {p} of the portfolio. Consider trimming below 15%.','qi.fx':'FX exposure','qi.fx.d':'{p} of the portfolio is USD-denominated. A 5% FX move shifts the portfolio by {v}.','qi.div':'Sector diversification','qi.div.d':'{n} sectors, the largest is {s} ({p}).','qi.ok':'Portfolio is balanced','qi.ok.d':'No outsized single-stock concentration.','qi.stale':'Stale quotes','qi.stale.d':'Last update {h} hours ago. Click "Refresh quotes".','qi.winners':'Leaders & laggards','qi.winners.d':'Leader: {w} ({wp}) · Laggard: {l} ({lp}).','qi.noprice':'Missing prices','qi.noprice.d':'{n} securities have no price. Refresh quotes or enter manually.',
-    'err.api':'API error','err.parse':'Could not parse the model response — showing raw text','err.refusal':'The model declined the request','err.net':'Network error — check connection/key',
+    'err.api':'API error','err.parse':'Could not parse the model response — showing raw text','err.refusal':'The model declined the request','err.net':'Network error — check connection/key','err.netdrop':'The connection dropped mid-request (Load failed). This happens when the screen locks, you switch apps, or the network hands over. Try again and keep the app open.','net.retry':'Connection dropped — retrying ({n}/{m})…',
     'sample':'Sample','hours':'hours','ago':'ago','never':'Never updated','shares':'sh','of':'of','more':'more','less':'less','raw':'Raw response','copy':'Copy','copied':'Copied',
   }
 };
@@ -852,7 +852,25 @@ function supportsFallback(model){ return /opus-5|fable/.test(model); }
  * Streaming call to the Messages API from the browser.
  * Returns {text, sources, stopReason, usage, refusal}
  */
-async function claude({system, user, tools=null, maxTokens=16000, effort=null, model:modelOverride=null, onStatus=()=>{}, onText=()=>{}, signal}={}){
+const isNetErr=e=>!e.status&&!e.refusal&&/load failed|failed to fetch|networkerror|network request failed|the network connection was lost|aborted|stream error|body stream|terminated/i.test(e.message||'');
+let wakeLock=null, wakeUsers=0;
+async function holdWake(){ wakeUsers++; try{ if(!wakeLock&&navigator.wakeLock){ wakeLock=await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release',()=>{ wakeLock=null; }); } }catch(_){ } }
+function releaseWake(){ wakeUsers=Math.max(0,wakeUsers-1); if(!wakeUsers&&wakeLock){ try{ wakeLock.release(); }catch(_){ } wakeLock=null; } }
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'&&wakeUsers&&!wakeLock) holdWake(); });
+/** Retrying wrapper: network drops (iOS "Load failed", tab suspended, cell handover) are retried up to 3 attempts. */
+async function claude(opts={}){
+  const max=3; await holdWake();
+  try{
+    for(let attempt=1;;attempt++){
+      try{ return await claudeOnce(opts); }
+      catch(e){
+        if(attempt<max&&isNetErr(e)){ (opts.onStatus||(()=>{}))('retry'); toast(t('net.retry',{n:attempt+1,m:max})); if(document.visibilityState!=='visible') await new Promise(r=>{ const h=()=>{ if(document.visibilityState==='visible'){ document.removeEventListener('visibilitychange',h); r(); } }; document.addEventListener('visibilitychange',h); setTimeout(()=>{ document.removeEventListener('visibilitychange',h); r(); },30000); }); await new Promise(r=>setTimeout(r,1200*attempt)); continue; }
+        if(isNetErr(e)) e.message=t('err.netdrop'); throw e;
+      }
+    }
+  } finally{ releaseWake(); }
+}
+async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=null, model:modelOverride=null, onStatus=()=>{}, onText=()=>{}, signal}={}){
   const key=(S.settings.apiKey||'').trim();
   if(!key) throw new Error(t('q.needkey'));
   const model=modelOverride||S.settings.model||'claude-opus-5';
