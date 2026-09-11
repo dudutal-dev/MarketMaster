@@ -802,7 +802,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2324';
+const APP_VERSION='2026.09.11-2337';
 
 const I18N = {
   he: {
@@ -822,7 +822,7 @@ const I18N = {
     'set.cash.help':'יתרת מזומן לכל תיק, בשקלים ובדולרים. נכללת בשווי הכולל וניתנת לעדכון אוטומטי בקנייה ומכירה.','pf.cash':'מזומן','kpi.realized':'ממומש',
     'ins.tab.analyze':'ניתוח התיק','ins.tab.build':'בניית תיק AI','bld.title':'בניית תיק מומלץ ב-AI','bld.sub':'Claude מרכיב תיק מודל מאפס לפי פרופיל הסיכון, אופק ההשקעה והתקציב שלך, עם מחירים עדכניים מהרשת. אפשר ליצור ממנו תיק חדש באפליקציה בלחיצה.','bld.profile':'פרופיל משקיע','prof.income':'דיבידנד','bld.budget':'תקציב','bld.horizon':'אופק השקעה','hor.short':'עד שנה','hor.mid':'1–3 שנים','hor.long':'3+ שנים','bld.markets':'שווקים','bld.n':'מספר פוזיציות','bld.prefs':'העדפות ומגבלות (אופציונלי)','bld.prefs.ph':'למשל: דגש על טכנולוגיה, בלי נדל"ן, לכלול תעודות סל…','bld.run':'בנה תיק מומלץ','bld.err.budget':'יש להזין תקציב','bld.err.markets':'יש לבחור לפחות שוק אחד','bld.empty':'עדיין לא נבנה תיק','bld.empty.d':'בחרו פרופיל, תקציב ושווקים ולחצו "בנה תיק מומלץ". התוצאה נשמרת כאן.',
     'bld.invested':'מושקע','bld.cashleft':'נשאר במזומן','bld.positions':'פוזיציות','bld.vol':'תנודתיות צפויה','bld.yield':'תשואת דיבידנד','bld.beta':'β S&P 500','bld.alloc':'הרכב התיק','bld.sector':'חלוקה לפי סקטור','bld.risks':'סיכונים עיקריים','bld.fx':'חשיפת מט"ח','bld.rebal':'איזון מחדש','bld.drawdown':'תרחיש שנה גרועה','bld.alts':'חלופות','bld.create':'צור תיק חדש מההמלצה','bld.watch':'הוסף הכל למעקב','bld.created':'נוצר תיק "{n}" עם {k} פוזיציות','bld.create.confirm':'ליצור תיק חדש "{n}" עם {k} פוזיציות בסך {v}? פוזיציות ללא מחיר יתווספו למעקב.','bld.shares':'{n} יח׳ × {p}','bld.noprice':'ללא מחיר','bld.weight':'משקל','bld.amount':'סכום','bld.asof':'מחירים נכון ל-{d}','bld.role.core':'ליבה','bld.role.growth':'צמיחה','bld.role.defensive':'הגנתי','bld.role.income':'הכנסה','bld.role.satellite':'לוויין','bld.budget.of':'תקציב','bld.pfname':'תיק AI','bld.watched':'{n} מניות נוספו למעקב',
-    'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
+    'upd.applying':'נמצאה גרסה חדשה ({v}) — מעדכן…','about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
     // dynamic
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
@@ -857,7 +857,7 @@ const I18N = {
     'set.cash.help':'Cash balance per portfolio, in ILS and USD. Included in total value and can be updated automatically on buys and sells.','pf.cash':'Cash','kpi.realized':'realized',
     'ins.tab.analyze':'Portfolio analysis','ins.tab.build':'AI portfolio builder','bld.title':'AI-recommended portfolio','bld.sub':'Claude designs a model portfolio from scratch for your risk profile, horizon and budget, with current prices from the web. Create it as a new portfolio in the app with one tap.','bld.profile':'Investor profile','prof.income':'Income','bld.budget':'Budget','bld.horizon':'Horizon','hor.short':'Up to 1 year','hor.mid':'1–3 years','hor.long':'3+ years','bld.markets':'Markets','bld.n':'Positions','bld.prefs':'Preferences & constraints (optional)','bld.prefs.ph':'e.g. tech tilt, no real estate, include ETFs…','bld.run':'Build portfolio','bld.err.budget':'Enter a budget','bld.err.markets':'Pick at least one market','bld.empty':'No portfolio built yet','bld.empty.d':'Choose a profile, budget and markets and tap "Build portfolio". The result is kept here.',
     'bld.invested':'Invested','bld.cashleft':'Cash left','bld.positions':'Positions','bld.vol':'Expected volatility','bld.yield':'Dividend yield','bld.beta':'β S&P 500','bld.alloc':'Allocation','bld.sector':'By sector','bld.risks':'Key risks','bld.fx':'FX exposure','bld.rebal':'Rebalancing','bld.drawdown':'Bad-year scenario','bld.alts':'Alternatives','bld.create':'Create portfolio from plan','bld.watch':'Add all to watchlist','bld.created':'Created portfolio "{n}" with {k} positions','bld.create.confirm':'Create a new portfolio "{n}" with {k} positions totalling {v}? Positions without a price go to the watchlist.','bld.shares':'{n} sh × {p}','bld.noprice':'no price','bld.weight':'Weight','bld.amount':'Amount','bld.asof':'Prices as of {d}','bld.role.core':'Core','bld.role.growth':'Growth','bld.role.defensive':'Defensive','bld.role.income':'Income','bld.role.satellite':'Satellite','bld.budget.of':'Budget','bld.pfname':'AI portfolio','bld.watched':'{n} stocks added to watchlist',
-    'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
+    'upd.applying':'New version found ({v}) — updating…','about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
@@ -2176,12 +2176,17 @@ async function runAlerts({auto}={}){
 function autoAlertsOnOpen(){ if(!S.settings.autoAlerts||!S.settings.apiKey||!S.holdings.length) return; setTimeout(()=>runAlerts({auto:true}),1200); }
 
 /* ---------- Update check (GitHub Pages / home-screen cache) ---------- */
+/** Returns the newer version string if one is published, null otherwise (never throws). */
+async function latestVersion(ms=4000){
+  if(!/^https?:/.test(location.protocol)) return null;
+  try{ const r=await fetchWithTimeout('version.json?_='+Date.now(),ms); if(!r.ok) return null; const j=await r.json(); return (j.version&&j.version!==APP_VERSION)?j.version:null; }catch(_){ return null; }
+}
+function applyUpdate(v,{resume}={}){ try{ if(resume) sessionStorage.setItem('mm.resume',resume); }catch(_){} clearTimeout(saveT); try{ localStorage.setItem(LS_KEY,JSON.stringify(S)); }catch(_){} location.href='index.html?v='+encodeURIComponent(v)+(location.hash||''); }
 async function checkUpdate({manual}={}){
   if(!/^https?:/.test(location.protocol)){ if(manual) toast(t('upd.latest'),'ok'); return; }
-  try{ const r=await fetch('version.json?_='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error(r.status); const j=await r.json();
-    if(j.version&&j.version!==APP_VERSION){ const el=document.createElement('div'); el.className='toast'; el.style.cursor='pointer'; el.style.background='var(--primary)'; el.style.color='#fff'; el.innerHTML=`<svg class="ic sm"><use href="#i-refresh"/></svg><span>${t('upd.available')}</span>`; el.onclick=()=>{ location.href='index.html?v='+encodeURIComponent(j.version)+(location.hash||''); }; $('#toasts').appendChild(el); }
-    else if(manual) toast(t('upd.latest'),'ok'); }
-  catch(e){ if(manual) toast(t('upd.fail'),'err'); }
+  const v=await latestVersion(8000);
+  if(v){ const el=document.createElement('div'); el.className='toast'; el.style.cursor='pointer'; el.style.background='var(--primary)'; el.style.color='#fff'; el.innerHTML=`<svg class="ic sm"><use href="#i-refresh"/></svg><span>${t('upd.available')}</span>`; el.onclick=()=>applyUpdate(v); $('#toasts').appendChild(el); }
+  else if(manual) toast(t('upd.latest'),'ok');
 }
 
 /* ---------- Job bar (visible progress + cancel for long requests) ---------- */
@@ -2197,9 +2202,11 @@ function jobStart(title){
 function jobEnd(){ if(!currentJob) return; clearInterval(currentJob.tick); currentJob.el.remove(); currentJob=null; }
 
 /* ---------- Quotes refresh ---------- */
-async function doRefresh(){
+async function doRefresh({afterUpdate}={}){
   const btn=$('#btn-refresh'); if(currentJob) return; const anySec=S.holdings.length||S.watchlist.length; if(anySec&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   setLoading(btn,true);
+  if(!afterUpdate){ // the home-screen app is rarely closed: refresh also pulls the latest build, then continues the refresh in the new version
+    const v=await latestVersion(); if(v){ toast(t('upd.applying',{v}),'ok'); setTimeout(()=>applyUpdate(v,{resume:'refresh'}),350); return; } }
   if(!anySec){ // no holdings: refresh the FX rate only
     const job=jobStart(t('q.fxonly'));
     try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+fxLabel(fx.source)+(fx.repDate?' '+fx.repDate:'')+(fx.source?' · '+fx.source:''),'ok'); } }
@@ -2312,7 +2319,7 @@ function bind(){
 function fillDatalist(){ const d=$('#ticker-list'); if(d) d.innerHTML=UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join(''); }
 function init(){
   applyTheme(); applyI18n(); fillDatalist(); bind(); renderAll();
-  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','watchlist','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen(); setTimeout(()=>checkUpdate(),2500); const vb=$('#btn-update'); if(vb) vb.onclick=()=>checkUpdate({manual:true}); const vl=$('#app-version'); if(vl) vl.textContent=APP_VERSION;
+  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','watchlist','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen(); let resume=null; try{ resume=sessionStorage.getItem('mm.resume'); sessionStorage.removeItem('mm.resume'); }catch(_){} if(resume==='refresh') setTimeout(()=>doRefresh({afterUpdate:true}),600); else setTimeout(()=>checkUpdate(),2500); const vb=$('#btn-update'); if(vb) vb.onclick=()=>checkUpdate({manual:true}); const vl=$('#app-version'); if(vl) vl.textContent=APP_VERSION;
   document.documentElement.style.setProperty('--dirx',lang()==='he'?'-1':'1');
 }
 document.addEventListener('DOMContentLoaded',init);
