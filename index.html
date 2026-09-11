@@ -198,6 +198,8 @@ select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
 .chip-toggle:hover{border-color:var(--text-3)}
 .chip-toggle[aria-pressed="true"]{background:var(--primary-soft);color:var(--primary);border-color:color-mix(in srgb, var(--primary) 50%, transparent)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
+label.chip{white-space:normal;line-height:1.35;padding:8px 12px;align-items:flex-start;max-width:100%;border-radius:12px}
+label.chip input{margin-top:3px;flex:none;width:18px;height:18px}
 
 /* ---------- Cards ---------- */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-1);padding:18px;min-width:0}
@@ -553,7 +555,7 @@ td.num,th.num{text-align:end}
             <div class="sub" data-i18n="ins.sub">ניתוח מעמיק של התיק הנוכחי: ציון איכות, ריכוזיות, חשיפות, אותות פריצה באחזקות, המלצות פעולה ותוכנית איזון.</div></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <div class="seg" id="ins-profile"><button aria-pressed="false" data-p="conservative" data-i18n="prof.cons">שמרני</button><button aria-pressed="true" data-p="balanced" data-i18n="prof.bal">מאוזן</button><button aria-pressed="false" data-p="growth" data-i18n="prof.growth">צמיחה</button><button aria-pressed="false" data-p="aggressive" data-i18n="prof.aggr">אגרסיבי</button></div>
-            <label class="chip outline" style="min-height:36px;cursor:pointer"><input type="checkbox" id="ins-web" checked style="accent-color:var(--primary)"> <span data-i18n="ins.web">כלול נתוני שוק עדכניים (Web)</span></label>
+            <label class="chip outline" style="cursor:pointer"><input type="checkbox" id="ins-web" checked style="accent-color:var(--primary)"> <span data-i18n="ins.web">כלול נתוני שוק עדכניים (Web)</span></label>
             <div style="flex:1"></div>
             <button class="btn primary" id="btn-analyze"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl" data-i18n="ins.run">נתח את התיק</span></button>
           </div>
@@ -583,7 +585,7 @@ td.num,th.num{text-align:end}
                   <option value="claude-sonnet-5">Claude Sonnet 5 — מהיר ומדויק (מומלץ)</option>
                   <option value="claude-opus-5">Claude Opus 5 — איטי יותר</option>
                 </select></div>
-              <label class="chip outline" style="min-height:40px;cursor:pointer;justify-content:flex-start"><input type="checkbox" id="set-fast" style="accent-color:var(--primary)"> <span data-i18n="set.fast">מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה</span></label>
+              <label class="chip outline" style="cursor:pointer;justify-content:flex-start"><input type="checkbox" id="set-fast" style="accent-color:var(--primary)"> <span data-i18n="set.fast">מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה</span></label>
               <div class="field"><label data-i18n="set.effort">עומק חשיבה לניתוחים</label>
                 <div class="seg" id="set-effort"><button aria-pressed="false" data-e="medium" data-i18n="eff.med">בינוני</button><button aria-pressed="true" data-e="high" data-i18n="eff.high">גבוה</button><button aria-pressed="false" data-e="xhigh" data-i18n="eff.xhigh">מקסימלי</button></div></div>
               <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" id="btn-test"><span class="spin"></span><span class="lbl" data-i18n="set.test">בדוק חיבור</span></button><button class="btn ghost" id="btn-clearkey" data-i18n="set.clearkey">מחק מפתח</button></div>
