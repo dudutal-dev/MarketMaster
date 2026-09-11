@@ -1617,7 +1617,7 @@ function renderSettings(){
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
   $$('#ins-profile button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===insProfile));
   $$('[data-ccy]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ccy===s.currency));
-  const ok=!!s.apiKey; $('#api-dot').classList.toggle('ok',ok); $('#api-status').textContent=ok?t('api.set'):t('api.notset'); $('#side-fx').textContent=fmtN(s.usdIls,3); const fxm=$('#fx-meta'); if(fxm){ fxm.textContent=s.fxUpdated?`${s.fxKind==='spot'?t('fx.live'):s.fxKind==='rep'?t('fx.reponly'):''}${s.fxSource?' · '+s.fxSource:''}${s.fxAsOf?' · '+s.fxAsOf:''} · ${t('dd.updated')} ${fmtDate(s.fxUpdated)}${s.fxRep?' · '+t('fx.rep')+' '+fmtN(s.fxRep,4)+(s.fxRepDate?' ('+s.fxRepDate+')':''):''}${s.fxNote?' · '+s.fxNote:''}`:t('never'); fxm.style.color=''; } $('#side-updated').textContent=s.lastQuotes?t('dd.updated')+' '+fmtDate(s.lastQuotes):t('never');
+  const ok=!!s.apiKey; $('#api-dot').classList.toggle('ok',ok); $('#api-status').textContent=ok?t('api.set'):t('api.notset'); $('#side-fx').textContent=fmtN(s.usdIls,3); const fxm=$('#fx-meta'); if(fxm){ fxm.textContent=s.fxUpdated?`${s.fxKind==='spot'?t('fx.live'):s.fxKind==='rep'?fxLabel(s.fxSource):s.fxKind==='manual'?t('fx.manual'):''}${s.fxSource?' · '+s.fxSource:''}${s.fxAsOf?' · '+s.fxAsOf:''} · ${t('dd.updated')} ${fmtDate(s.fxUpdated)}${s.fxRep?' · '+t('fx.rep')+' '+fmtN(s.fxRep,4)+(s.fxRepDate?' ('+s.fxRepDate+')':''):''}${s.fxNote?' · '+s.fxNote:''}`:t('never'); fxm.style.color=''; } $('#side-updated').textContent=s.lastQuotes?t('dd.updated')+' '+fmtDate(s.lastQuotes):t('never');
 }
 function loadSample(){
   const now=Date.now();
