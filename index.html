@@ -363,6 +363,17 @@ td.num,th.num{text-align:end}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.88rem}
 .kv dt{color:var(--text-3)}.kv dd{margin:0;font-weight:600}
 
+.jobbar{position:sticky;top:calc(var(--topbar-h) + var(--sat));z-index:25;margin:-6px 0 4px;padding:10px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-2);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.jobbar .t{font-weight:700;font-size:.9rem}
+.jobbar .m{font-size:.78rem;color:var(--text-3);font-variant-numeric:tabular-nums}
+.jobbar .live{width:100%;font-size:.74rem;color:var(--text-3);font-family:ui-monospace,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr;text-align:left}
+.jobbar .bar{width:100%;height:4px;border-radius:3px;background:var(--surface-3);overflow:hidden}
+.jobbar .bar i{display:block;height:100%;background:var(--primary);transition:width .3s var(--ease)}
+.dlg{position:fixed;inset:0;z-index:300;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.55);backdrop-filter:blur(3px)}
+.dlg.open{display:grid}
+.dlg .box{width:min(420px,100%);background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-3);padding:20px;animation:pageIn .2s var(--ease)}
+.dlg .box p{line-height:1.6;margin-bottom:16px;font-size:.95rem}
+.dlg .acts{display:flex;gap:10px;justify-content:flex-end}
 /* ---------- Responsive ---------- */
 @media (max-width:1100px){
   .grid.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -646,6 +657,7 @@ td.num,th.num{text-align:end}
   <div class="sb" id="sheet-body"></div>
 </div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
+<div class="dlg" id="dlg" role="alertdialog" aria-modal="true"><div class="box"><p id="dlg-msg"></p><div class="acts"><button class="btn" id="dlg-no"></button><button class="btn primary" id="dlg-yes"></button></div></div></div>
 <script>
 /* ============================================================
    MarketMaster — Core: i18n, universe, state, utils
@@ -672,7 +684,7 @@ const I18N = {
     'th.sym':'נייר','th.qty':'כמות','th.cost':'עלות ממוצעת','th.price':'שער','th.chg':'שינוי יומי','th.value':'שווי','th.pnl':'רווח/הפסד','th.weight':'משקל','th.act':'',
     'empty.pf':'התיק ריק','empty.pf.d':'הוסף מניות ידנית, ייבא קובץ, או טען תיק לדוגמה כדי להתחיל.','empty.hist':'אין עדיין היסטוריה','empty.hist.d':'כל עדכון שערים שומר נקודת נתונים. לאחר כמה עדכונים יופיע כאן גרף.','empty.scan':'טרם בוצעה סריקה','empty.scan.d':'בחר תחומים ובורסות ולחץ על "הפעל סריקה".','empty.ins':'אין ניתוח עדיין','empty.ins.d':'לחץ על "נתח את התיק" כדי לקבל ציון, סיכונים והמלצות.',
     'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'הקלד סימול ולחץ "זהה" — האפליקציה תמלא לבד בורסה, שם, סקטור ושער','f.detect':'זהה','f.detecting':'מזהה את הנייר ברשת…','f.detected':'זוהה: {n} · {e} · {s}','f.notfound':'לא זוהה נייר עם הסימול הזה — מלא ידנית','f.nokey':'להזנת פרטים אוטומטית הגדר מפתח API בהגדרות','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
-    'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…','fx.bigchange':'שער הדולר שהתקבל ({n}, מקור: {s}) שונה ב-{p}% מהשער הקודם ({o}). לעדכן בכל זאת?','fx.manual':'הוזן ידנית','fx.rep':'יציג','fx.live':'שער שוק','fx.reponly':'שער יציג בנק ישראל',
+    'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…','fx.bigchange':'שער הדולר עודכן מ-{o} ל-{n} ({p}) לפי {s}','ok':'אישור','cancel.job':'בטל','job.quotes':'מעדכן שערים','job.chunk':'{d} מתוך {t} ניירות','job.cancelled':'בוטל','job.timeout':'הבקשה חרגה מהזמן המוקצב — נסה שוב','q.quotesfail':'שגיאה בחלק מהניירות','fx.manual':'הוזן ידנית','fx.rep':'יציג','fx.live':'שער שוק','fx.reponly':'שער יציג בנק ישראל',
     'conn.ok':'החיבור תקין ✓','conn.fail':'החיבור נכשל','saved':'נשמר','exported':'הקובץ יוצא','imported':'יובאו {n} אחזקות','sample.loaded':'תיק לדוגמה נטען — לחץ "עדכן שערים" לשערים עדכניים','wiped':'הנתונים נמחקו',
     'st.search':'מחפש ברשת','st.think':'מנתח','st.write':'מגבש תובנות','st.parse':'מעבד תוצאות',
     'scan.pulse':'דופק השוק','scan.picks':'מניות שאותרו','scan.sectorview':'תמונת סקטורים','scan.asof':'נכון ל','scan.entry':'אזור כניסה','scan.stop':'סטופ','scan.target':'יעד','scan.risk':'סיכון עיקרי','scan.add':'הוסף לתיק','scan.conv':'ביטחון','scan.catalyst':'קטליזטור','scan.sources':'מקורות','scan.type.hot':'חמה','scan.type.breakout':'פריצה','scan.type.momentum':'מומנטום','scan.type.value':'ערך',
@@ -701,7 +713,7 @@ const I18N = {
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
     'empty.pf':'Portfolio is empty','empty.pf.d':'Add stocks manually, import a file, or load the sample portfolio to get started.','empty.hist':'No history yet','empty.hist.d':'Every quote refresh stores a data point. A chart will appear after a few refreshes.','empty.scan':'No scan yet','empty.scan.d':'Choose sectors and exchanges, then click "Run scan".','empty.ins':'No analysis yet','empty.ins.d':'Click "Analyze portfolio" to get a score, risks and recommendations.',
     'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Type a ticker and press "Detect" — exchange, name, sector and price are filled automatically','f.detect':'Detect','f.detecting':'Identifying the security online…','f.detected':'Found: {n} · {e} · {s}','f.notfound':'No security found for this ticker — fill in manually','f.nokey':'Set an API key in Settings to auto-fill details','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
-    'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…','fx.bigchange':'The fetched USD/ILS rate ({n}, source: {s}) differs by {p}% from the previous rate ({o}). Update anyway?','fx.manual':'Manual','fx.rep':'BoI rep.','fx.live':'Market rate','fx.reponly':'Bank of Israel representative rate',
+    'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…','fx.bigchange':'USD/ILS updated from {o} to {n} ({p}) per {s}','ok':'OK','cancel.job':'Cancel','job.quotes':'Updating quotes','job.chunk':'{d} of {t} securities','job.cancelled':'Cancelled','job.timeout':'The request timed out — try again','q.quotesfail':'Some securities failed','fx.manual':'Manual','fx.rep':'BoI rep.','fx.live':'Market rate','fx.reponly':'Bank of Israel representative rate',
     'conn.ok':'Connection OK ✓','conn.fail':'Connection failed','saved':'Saved','exported':'File exported','imported':'Imported {n} holdings','sample.loaded':'Sample loaded — click "Refresh quotes" for live prices','wiped':'Data deleted',
     'st.search':'Searching the web','st.think':'Analyzing','st.write':'Composing insights','st.parse':'Processing results',
     'scan.pulse':'Market pulse','scan.picks':'Stocks found','scan.sectorview':'Sector view','scan.asof':'As of','scan.entry':'Entry zone','scan.stop':'Stop','scan.target':'Target','scan.risk':'Key risk','scan.add':'Add to portfolio','scan.conv':'Conviction','scan.catalyst':'Catalyst','scan.sources':'Sources','scan.type.hot':'Hot','scan.type.breakout':'Breakout','scan.type.momentum':'Momentum','scan.type.value':'Value',
@@ -799,6 +811,10 @@ function hoursSince(ts){ return ts?(Date.now()-ts)/36e5:Infinity; }
 function sectorLabel(code){ const s=SECTORS.find(x=>x[0]===code); return s?(lang()==='he'?s[1]:s[2]):code||'—'; }
 function exName(x){ return x; }
 function colorFor(str){ let h=0; for(const c of str) h=(h*31+c.charCodeAt(0))>>>0; const hues=[212,18,158,42,335,120,252,0]; return `hsl(${hues[h%8]} 62% ${document.documentElement.dataset.theme==='dark'?52:44}%)`; }
+/** Non-blocking in-app confirm (window.confirm is unreliable in iOS home-screen apps). */
+function confirmDlg(msg,{yes,no,danger}={}){ return new Promise(res=>{ const d=$('#dlg'); $('#dlg-msg').textContent=msg; const y=$('#dlg-yes'), n=$('#dlg-no'); y.textContent=yes||t('ok'); n.textContent=no||t('cancel'); y.className='btn '+(danger?'danger':'primary');
+  const done=v=>{ d.classList.remove('open'); y.onclick=n.onclick=null; document.removeEventListener('keydown',esc); res(v); }; const esc=e=>{ if(e.key==='Escape') done(false); };
+  y.onclick=()=>done(true); n.onclick=()=>done(false); d.onclick=e=>{ if(e.target===d) done(false); }; document.addEventListener('keydown',esc); d.classList.add('open'); setTimeout(()=>y.focus(),50); }); }
 function toast(msg,type=''){ const el=document.createElement('div'); el.className='toast '+type; el.textContent=msg; $('#toasts').appendChild(el); setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),320)},type==='err'?5200:3200); }
 function download(name,content,mime='application/json'){ const b=new Blob([content],{type:mime}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500); }
 function setLoading(btn,on){ btn.classList.toggle('loading',on); btn.disabled=on; }
@@ -866,6 +882,7 @@ async function claude(opts={}){
     for(let attempt=1;;attempt++){
       try{ return await claudeOnce(opts); }
       catch(e){
+        if(opts.signal&&opts.signal.aborted){ const ce=new Error(opts.signal.reason==='timeout'?t('job.timeout'):t('job.cancelled')); ce.cancelled=true; throw ce; }
         if(attempt<max&&isNetErr(e)){ (opts.onStatus||(()=>{}))('retry'); toast(t('net.retry',{n:attempt+1,m:max})); if(document.visibilityState!=='visible') await new Promise(r=>{ const h=()=>{ if(document.visibilityState==='visible'){ document.removeEventListener('visibilitychange',h); r(); } }; document.addEventListener('visibilitychange',h); setTimeout(()=>{ document.removeEventListener('visibilitychange',h); r(); },30000); }); await new Promise(r=>setTimeout(r,1200*attempt)); continue; }
         if(isNetErr(e)) e.message=t('err.netdrop'); throw e;
       }
@@ -985,31 +1002,51 @@ function progressBox(container, title){
 /* ============================================================
    Engine 1 — Quotes (Claude + web search)
    ============================================================ */
-async function fetchQuotes(onStatus){
-  const list=S.holdings.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
-  if(!list.length) throw new Error(t('q.nohold'));
-  const user=`Fetch the latest available market quotes for these securities (last trade or close, and previous close). Be FAST: use as few searches as possible — batch several tickers per query (e.g. search several TASE tickers together on tase.co.il / bizportal / globes / investing.com, and US tickers on Yahoo Finance / Google Finance / CNBC).
+/** Combine a user cancel signal with a hard timeout. */
+function withTimeout(signal,ms){ const c=new AbortController(); const id=setTimeout(()=>c.abort('timeout'),ms); if(signal){ if(signal.aborted) c.abort(signal.reason); else signal.addEventListener('abort',()=>c.abort(signal.reason),{once:true}); } c.signal.addEventListener('abort',()=>clearTimeout(id),{once:true}); return c.signal; }
+async function fetchQuotesChunk(list,{signal,onStatus,onText}={}){
+  const tase=list.filter(x=>x.exchange==='TASE'), us=list.filter(x=>x.exchange!=='TASE');
+  const user=`Fetch the latest available market quotes for these ${list.length} securities (last trade or close, and previous close). Be FAST: ${list.length===1?'one search is enough':'batch the tickers into as few searches as possible (one search per exchange)'}.
+${tase.length?'TASE tickers: use tase.co.il, bizportal.co.il or globes.co.il; prices in ILS (shekels, NOT agorot). ':''}${us.length?'US tickers: use Yahoo Finance / Google Finance / CNBC; prices in USD. ':''}
 Securities:
 ${list.map(x=>`- ${x.ticker} (${x.exchange})${x.name?' — '+x.name:''}`).join('\n')}
 
 Return JSON exactly in this shape:
-{"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}],"warnings":["..."]}
-Rules: TASE price and prevClose in ILS (shekels, NOT agorot). US in USD. If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(list.length/3)))], maxTokens:4000, effort:'low', model:S.settings.dataModel, onStatus});
-  const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)) { const e=new Error(t('q.none')); e.raw=r.text; throw e; }
-  return {...j, sources:r.sources};
+{"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}]}
+If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(4,list.length+1))], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
+  const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
+  return j;
 }
-function applyQuotes(j){
+/** Fetch quotes for all holdings in parallel chunks (max 3 tickers per request, 3 requests at a time), applying each chunk as it lands. */
+async function fetchQuotes({signal,onProgress,onText}={}){
+  const list=S.holdings.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
+  if(!list.length) throw new Error(t('q.nohold'));
+  const groups={}; list.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
+  const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=3) chunks.push(g.slice(i,i+3)); });
+  let done=0, applied=0, failed=0; const errors=[];
+  const run=async(chunk)=>{ try{ const j=await fetchQuotesChunk(chunk,{signal,onText}); applied+=applyQuotes(j,{noHistory:true}); }
+    catch(e){ if(e.cancelled) throw e; failed+=chunk.length; errors.push(e); console.warn('chunk failed',chunk.map(c=>c.ticker),e); }
+    finally{ done+=chunk.length; onProgress&&onProgress(done,list.length); } };
+  const queue=[...chunks]; const workers=Array.from({length:Math.min(3,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
+  const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
+  return {applied,failed,total:list.length,errors};
+}
+function applyQuotes(j,opts={}){
   let n=0; const now=Date.now();
   for(const q of j.quotes){ if(q.price==null) continue;
     const h=S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase()&&(!q.exchange||x.exchange===q.exchange))||S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase());
     if(!h) continue; let p=+q.price, pc=q.prevClose!=null?+q.prevClose:null;
-    if(h.exchange==='TASE'&&p>0&&h.avgCost>0&&p/h.avgCost>40){ p=p/100; if(pc) pc=pc/100; } // agorot guard
+    if(h.exchange==='TASE'&&p>=100&&h.avgCost>0&&p/h.avgCost>40&&(p/100)/h.avgCost>0.2&&(p/100)/h.avgCost<5){ p=p/100; if(pc) pc=pc/100; } // agorot guard (e.g. 4410 → 44.10)
     h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; n++;
   }
   S.settings.lastQuotes=now;
-  const c=computed(); if(c.totalIls>0){ S.history.push({ts:now,ils:+c.totalIls.toFixed(2),usd:+(c.totalIls/c.fx).toFixed(2),nav:+c.nav.toFixed(2)}); if(S.history.length>2000) S.history=S.history.slice(-2000); }
+  if(!opts.noHistory) recordHistory();
   save(); return n;
+}
+function recordHistory(){ const now=Date.now();
+  const c=computed(); if(c.totalIls>0){ S.history.push({ts:now,ils:+c.totalIls.toFixed(2),usd:+(c.totalIls/c.fx).toFixed(2),nav:+c.nav.toFixed(2)}); if(S.history.length>2000) S.history=S.history.slice(-2000); }
+  save();
 }
 /* USD/ILS — Bank of Israel representative rate (שער יציג).
    1) Direct fetch from Bank of Israel public endpoints (free, exact, no AI). 2) Fallback: Claude web search. */
@@ -1041,7 +1078,7 @@ function fxIsFresh(){ const s=S.settings; if(s.fxKind!=='rep'||!s.fxUpdated) ret
 /** Apply a fetched FX result. Asks for confirmation when the jump vs. the previous fetched rate is > 3%. */
 function applyFx(fx){
   const prev=S.settings.usdIls, hadFetched=!!S.settings.fxUpdated;
-  if(hadFetched&&prev&&Math.abs(fx.rate/prev-1)>0.03){ if(!confirm(t('fx.bigchange',{o:fmtN(prev,4),n:fmtN(fx.rate,4),p:fmtN((fx.rate/prev-1)*100,1),s:fx.source||'?'}))) return false; }
+  if(hadFetched&&prev&&Math.abs(fx.rate/prev-1)>0.03) setTimeout(()=>toast(t('fx.bigchange',{o:fmtN(prev,4),n:fmtN(fx.rate,4),p:fmtP((fx.rate/prev-1)*100,1),s:fx.source||'?'})),400);
   S.settings.usdIls=fx.rate; S.settings.fxUpdated=Date.now(); S.settings.fxSource=fx.source; S.settings.fxAsOf=fx.asOf; S.settings.fxRep=fx.rep; S.settings.fxRepDate=fx.repDate||null; S.settings.fxKind=fx.kind; S.settings.fxNote=fx.note||null; save(); return true;
 }
 /* ============================================================
@@ -1360,7 +1397,7 @@ function openForm(h,prefill){
   $('#f-detect').onclick=()=>detect(false);
   tk.addEventListener('change',autofill); tk.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); detect(false); } }); tk.addEventListener('input',()=>{ tk.value=tk.value.toUpperCase(); }); ex.addEventListener('change',()=>{ $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; });
   $('#f-cancel').onclick=closeSheet;
-  if(isEdit) $('#f-del').onclick=()=>{ if(confirm(t('confirm.del'))){ S.holdings=S.holdings.filter(x=>x.id!==h.id); save(); closeSheet(); renderAll(); } };
+  if(isEdit) $('#f-del').onclick=async()=>{ if(await confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true})){ S.holdings=S.holdings.filter(x=>x.id!==h.id); save(); closeSheet(); renderAll(); } };
   $('#hform').onsubmit=e=>{ e.preventDefault(); let ok=true;
     const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),price:$('#f-price').value!==''?parseFloat($('#f-price').value):null,sector:$('#f-sector').value,note:$('#f-note').value.trim()};
     [['#f-ticker',!v.ticker],['#f-qty',!(v.qty>0)],['#f-cost',!(v.avgCost>=0)]].forEach(([s,bad])=>{ $(s).closest('.field').classList.toggle('invalid',bad); if(bad) ok=false; });
@@ -1525,19 +1562,39 @@ function ddHTML(a,h){
    ${sourcesHTML(a.webSources)}`;
 }
 
+/* ---------- Job bar (visible progress + cancel for long requests) ---------- */
+let currentJob=null;
+function jobStart(title){
+  jobEnd(); const ctrl=new AbortController(); const el=document.createElement('div'); el.className='jobbar'; const t0=Date.now();
+  el.innerHTML=`<span class="spin" style="width:18px;height:18px"></span><span class="t">${esc(title)}</span><span class="m" data-el="m">0 ${t('elapsed')}</span><span style="flex:1"></span><button class="btn sm danger" data-el="cancel">${t('cancel.job')}</button><div class="bar"><i style="width:4%"></i></div><div class="live" data-el="live"></div>`;
+  $('.content').prepend(el); $('[data-el=cancel]',el).onclick=()=>{ ctrl.abort('user'); $('[data-el=cancel]',el).disabled=true; };
+  const tick=setInterval(()=>{ const m=$('[data-el=m]',el); if(m) m.textContent=`${Math.round((Date.now()-t0)/1000)} ${t('elapsed')}${job.note?' · '+job.note:''}`; },1000);
+  const job={el,ctrl,signal:ctrl.signal,note:'',tick,progress(d,tt){ job.note=t('job.chunk',{d,t:tt}); $('.bar i',el).style.width=Math.max(4,Math.round(d/tt*100))+'%'; },live(txt){ const l=$('[data-el=live]',el); if(l) l.textContent=txt.slice(-160); }};
+  currentJob=job; return job;
+}
+function jobEnd(){ if(!currentJob) return; clearInterval(currentJob.tick); currentJob.el.remove(); currentJob=null; }
+
 /* ---------- Quotes refresh ---------- */
 async function doRefresh(){
-  const btn=$('#btn-refresh'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
+  const btn=$('#btn-refresh'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; } if(currentJob) return;
+  setLoading(btn,true);
   if(!S.holdings.length){ // no holdings: refresh the FX rate only
-    setLoading(btn,true); toast(t('q.fxonly'));
-    try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+(fx.kind==='rep'?t('fx.reponly')+(fx.repDate?' '+fx.repDate:''):t('fx.live'))+(fx.source?' · '+fx.source:''),'ok'); } }
-    catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); }
-    finally{ setLoading(btn,false); }
+    const job=jobStart(t('q.fxonly'));
+    try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+t('fx.reponly')+(fx.repDate?' '+fx.repDate:''),'ok'); } }
+    catch(e){ console.error(e); if(!e.cancelled) toast(t('err.api')+': '+e.message,'err'); }
+    finally{ jobEnd(); setLoading(btn,false); }
     return; }
-  setLoading(btn,true); toast(t('q.updating'));
-  try{ const [j,fxr]=await Promise.all([fetchQuotes(()=>{}), fxIsFresh()?Promise.resolve(null):fetchFx().catch(e=>{ console.warn('fx failed',e); return null; })]); if(fxr) applyFx(fxr); const n=applyQuotes(j); S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<6e4) delete h.sample; }); save(); renderAll(); toast(n===S.holdings.length?t('q.done'):t('q.partial',{n,t:S.holdings.length}),n?'ok':'err'); if(j.warnings&&j.warnings.length) console.info('quote warnings',j.warnings); }
-  catch(e){ console.error(e); toast((e.refusal?'':t('err.api')+': ')+e.message,'err'); }
-  finally{ setLoading(btn,false); }
+  const job=jobStart(t('job.quotes'));
+  try{
+    const fxP=fxIsFresh()?Promise.resolve(null):fetchFx().catch(e=>{ console.warn('fx failed',e); return null; });
+    const res=await fetchQuotes({signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderPortfolio(); renderDashboard(); },onText:x=>job.live(x)});
+    const fxr=await fxP; if(fxr) applyFx(fxr);
+    S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<12e4) delete h.sample; });
+    recordHistory(); save(); renderAll();
+    if(res.applied===res.total) toast(t('q.done'),'ok'); else toast(t('q.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err');
+  }
+  catch(e){ if(e.cancelled) console.info('refresh cancelled'); else console.error(e); renderAll(); toast(e.cancelled?e.message:(t('err.api')+': '+e.message),e.cancelled?'':'err'); }
+  finally{ jobEnd(); setLoading(btn,false); }
 }
 
 /* ---------- Settings ---------- */
@@ -1557,14 +1614,14 @@ function loadSample(){
 }
 function exportJSON(full){ if(full){ download(`marketmaster-backup-${todayStr()}.json`,JSON.stringify(S,null,2)); } else { const rows=S.holdings.map(({id,sample,...h})=>h); download(`marketmaster-holdings-${todayStr()}.json`,JSON.stringify(rows,null,2)); } toast(t('exported'),'ok'); }
 function importFile(file){
-  const rd=new FileReader(); rd.onload=()=>{ try{ const txt=rd.result; let n=0;
+  const rd=new FileReader(); rd.onload=async()=>{ try{ const txt=rd.result; let n=0;
     if(file.name.toLowerCase().endsWith('.csv')){ const lines=txt.split(/\r?\n/).filter(l=>l.trim()); const hdr=lines[0].toLowerCase().split(/[,;\t]/).map(x=>x.trim()); const ix=k=>hdr.findIndex(h=>h===k||h.includes(k));
       const iT=ix('ticker')>=0?ix('ticker'):ix('symbol'), iE=ix('exchange'), iQ=ix('qty')>=0?ix('qty'):ix('quantity'), iC=ix('cost')>=0?ix('cost'):ix('avg'), iP=ix('price');
       lines.slice(1).forEach(l=>{ const c=l.split(/[,;\t]/).map(x=>x.trim().replace(/^"|"$/g,'')); const tk=(c[iT]||'').toUpperCase(); if(!tk) return; const u=findSec(tk,c[iE]); const ex=(c[iE]||(u&&u.exchange)||'NASDAQ').toUpperCase(); const q=parseFloat(c[iQ]),ac=parseFloat(c[iC]); if(!(q>0)) return;
         S.holdings.push({id:uid(),ticker:tk,exchange:ex,qty:q,avgCost:ac||0,price:iP>=0&&c[iP]?parseFloat(c[iP]):null,prevClose:null,sector:u?u.sector:'Other',name:u?u.name_en:tk,name_he:u?u.name_he:tk,note:'',updatedAt:null,addedAt:Date.now()}); n++; }); }
     else { const j=JSON.parse(txt);
       if(Array.isArray(j)){ j.forEach(h=>{ if(!h.ticker) return; const u=findSec(h.ticker,h.exchange); S.holdings.push({id:uid(),ticker:String(h.ticker).toUpperCase(),exchange:h.exchange||(u&&u.exchange)||'NASDAQ',qty:+h.qty||0,avgCost:+h.avgCost||0,price:h.price!=null?+h.price:null,prevClose:h.prevClose!=null?+h.prevClose:null,sector:h.sector||(u&&u.sector)||'Other',name:h.name||(u&&u.name_en)||h.ticker,name_he:h.name_he||(u&&u.name_he)||h.name||h.ticker,note:h.note||'',updatedAt:h.updatedAt||null,addedAt:Date.now()}); n++; }); }
-      else if(j&&j.holdings){ if(confirm(t('set.restore')+'?')){ const keepKey=S.settings.apiKey; S={...structuredClone(DEFAULTS),...j,settings:{...DEFAULTS.settings,...(j.settings||{})}}; if(!S.settings.apiKey) S.settings.apiKey=keepKey; n=S.holdings.length; } } }
+      else if(j&&j.holdings){ if(await confirmDlg(t('set.restore')+'?')){ const keepKey=S.settings.apiKey; S={...structuredClone(DEFAULTS),...j,settings:{...DEFAULTS.settings,...(j.settings||{})}}; if(!S.settings.apiKey) S.settings.apiKey=keepKey; n=S.holdings.length; } } }
     save(); applyI18n(); applyTheme(); renderAll(); toast(t('imported',{n}),'ok'); }catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); } }; rd.readAsText(file);
 }
 
@@ -1579,7 +1636,7 @@ function bind(){
   $$('#hist-range button').forEach(b=>b.onclick=()=>{ histRange=+b.dataset.r; $$('#hist-range button').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderDashboard(); });
   document.addEventListener('click',e=>{ const dd=e.target.closest('[data-dd]'); if(dd&&!e.target.closest('button')) { openDeepDive(dd.dataset.dd); return; }
     const ed=e.target.closest('[data-edit]'); if(ed){ e.stopPropagation(); const h=S.holdings.find(x=>x.id===ed.dataset.edit); if(h) openForm(h); return; }
-    const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); if(confirm(t('confirm.del'))){ S.holdings=S.holdings.filter(x=>x.id!==dl.dataset.del); save(); renderAll(); } return; } });
+    const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true}).then(ok=>{ if(ok){ S.holdings=S.holdings.filter(x=>x.id!==dl.dataset.del); save(); renderAll(); } }); return; } });
   $('#pf-table').tHead.addEventListener('click',e=>{ const th=e.target.closest('th'); if(!th||th.dataset.k==='act') return; if(sortKey===th.dataset.k) sortDir*=-1; else { sortKey=th.dataset.k; sortDir=th.dataset.k==='sym'?1:-1; } renderPortfolio(); });
   $('#pf-search').addEventListener('input',e=>{ pfFilter=e.target.value.trim().toLowerCase(); renderPortfolio(); });
   $('#btn-add').onclick=()=>openForm(); $('#btn-export').onclick=()=>exportJSON(false); $('#btn-export2').onclick=()=>exportJSON(true);
@@ -1608,7 +1665,7 @@ function bind(){
   $('#btn-test').onclick=async()=>{ const b=$('#btn-test'); S.settings.apiKey=$('#set-key').value.trim(); save(); renderSettings(); setLoading(b,true); try{ const ok=await testConnection(); toast(ok?t('conn.ok'):t('conn.fail'),ok?'ok':'err'); }catch(e){ toast(t('conn.fail')+': '+e.message,'err'); } finally{ setLoading(b,false); } };
   $('#btn-clearkey').onclick=()=>{ S.settings.apiKey=''; save(); renderSettings(); };
   $('#btn-sample').onclick=loadSample;
-  $('#btn-wipe').onclick=()=>{ if(confirm(t('confirm.wipe'))){ localStorage.removeItem(LS_KEY); S=structuredClone(DEFAULTS); applyI18n(); applyTheme(); renderAll(); toast(t('wiped')); } };
+  $('#btn-wipe').onclick=async()=>{ if(await confirmDlg(t('confirm.wipe'),{yes:t('set.wipe'),danger:true})){ localStorage.removeItem(LS_KEY); S=structuredClone(DEFAULTS); applyI18n(); applyTheme(); renderAll(); toast(t('wiped')); } };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ if(S.settings.theme==='auto'){ applyTheme(); renderAll(); } });
   window.addEventListener('resize',()=>{ clearTimeout(window.__rz); window.__rz=setTimeout(renderDashboard,150); });
 }
