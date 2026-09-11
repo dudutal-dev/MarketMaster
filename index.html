@@ -335,6 +335,18 @@ td.num,th.num{text-align:end}
 .ledger .r{text-align:end;font-weight:700;font-size:.9rem;white-space:nowrap}
 .btn.buy{color:var(--gain);border-color:color-mix(in srgb, var(--gain) 40%, transparent)}.btn.buy:hover{background:var(--gain-soft)}
 .pf-tbl{width:100%;font-size:.86rem}.pf-tbl th,.pf-tbl td{padding:8px 10px;white-space:nowrap}
+.ins-tabs{display:inline-flex;margin-bottom:4px}.ins-tabs button{display:inline-flex;align-items:center;gap:6px}
+.bld-form{display:flex;flex-direction:column;gap:14px}
+.bld-seg{flex-wrap:wrap}
+.bld-pos{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border)}
+.bld-pos .top{display:flex;align-items:center;gap:10px}
+.bld-pos .top .tick{flex:1;min-width:0}.bld-pos .top .tick .m{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bld-pos .amt{text-align:end;white-space:nowrap}.bld-pos .amt b{display:block;font-size:.95rem}.bld-pos .amt span{font-size:.74rem;color:var(--text-3)}
+.bld-pos .w{height:6px;border-radius:4px;background:var(--surface-3);overflow:hidden}.bld-pos .w i{display:block;height:100%;border-radius:4px;background:var(--primary)}
+.bld-pos .why{font-size:.82rem;color:var(--text-2);line-height:1.5}
+.bld-pos .risk{font-size:.76rem;color:var(--text-3)}
+.chip.role{font-size:.64rem;padding:1px 7px;background:var(--surface-3);color:var(--text-2)}
+@media (max-width:480px){.ins-tabs{width:100%}.ins-tabs button{flex:1;justify-content:center}}
 .chart-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .chart-tools .seg.sm button{padding:4px 9px}
 .chart-tools .chip-toggle{min-height:30px;padding:4px 10px;font-size:.76rem}
@@ -642,6 +654,33 @@ td.num,th.num{text-align:end}
 
       <!-- ======== Insights ======== -->
       <section class="page" id="page-insights">
+        <div class="seg ins-tabs" id="ins-tabs" role="tablist"><button aria-pressed="true" data-tab="analyze"><svg class="ic sm"><use href="#i-sparkles"/></svg><span data-i18n="ins.tab.analyze">ניתוח התיק</span></button><button aria-pressed="false" data-tab="build"><svg class="ic sm"><use href="#i-pie"/></svg><span data-i18n="ins.tab.build">בניית תיק AI</span></button></div>
+        <div id="ins-tab-build" hidden>
+          <div class="card">
+            <div class="card-h"><h2 data-i18n="bld.title">בניית תיק מומלץ ב-AI</h2><span class="chip accent"><svg class="ic sm"><use href="#i-sparkles"/></svg>AI Builder</span>
+              <div class="sub" data-i18n="bld.sub">Claude מרכיב תיק מודל מאפס לפי פרופיל הסיכון, אופק ההשקעה והתקציב שלך, עם מחירים עדכניים מהרשת. אפשר ליצור ממנו תיק חדש באפליקציה בלחיצה.</div></div>
+            <div class="bld-form">
+              <div class="field"><label data-i18n="bld.profile">פרופיל משקיע</label><div class="seg bld-seg" id="bld-profile"><button data-p="conservative" data-i18n="prof.cons">שמרני</button><button data-p="balanced" data-i18n="prof.bal">מאוזן</button><button data-p="growth" data-i18n="prof.growth">צמיחה</button><button data-p="aggressive" data-i18n="prof.aggr">אגרסיבי</button><button data-p="income" data-i18n="prof.income">דיבידנד</button></div></div>
+              <div class="grid two" style="gap:12px">
+                <div class="field"><label for="bld-budget" data-i18n="bld.budget">תקציב</label><div style="display:flex;gap:8px;align-items:center"><input class="input num" id="bld-budget" type="number" inputmode="decimal" min="0" step="any" style="flex:1;min-width:0"><div class="seg sm" id="bld-ccy"><button data-c="ILS">₪</button><button data-c="USD">$</button></div></div></div>
+                <div class="field"><label data-i18n="bld.horizon">אופק השקעה</label><div class="seg bld-seg" id="bld-horizon"><button data-h="short" data-i18n="hor.short">עד שנה</button><button data-h="mid" data-i18n="hor.mid">1–3 שנים</button><button data-h="long" data-i18n="hor.long">3+ שנים</button></div></div>
+              </div>
+              <div class="grid two" style="gap:12px">
+                <div class="field"><label data-i18n="bld.markets">שווקים</label><div style="display:flex;gap:6px;flex-wrap:wrap" id="bld-markets"><button type="button" class="chip chip-toggle" data-m="TASE">TASE</button><button type="button" class="chip chip-toggle" data-m="NASDAQ">NASDAQ</button><button type="button" class="chip chip-toggle" data-m="NYSE">NYSE</button></div></div>
+                <div class="field"><label data-i18n="bld.n">מספר פוזיציות</label><div class="seg bld-seg" id="bld-n"><button data-n="5">5</button><button data-n="8">8</button><button data-n="12">12</button><button data-n="15">15</button></div></div>
+              </div>
+              <div class="field"><label for="bld-prefs" data-i18n="bld.prefs">העדפות ומגבלות (אופציונלי)</label><input class="input" id="bld-prefs" maxlength="240" data-i18n-ph="bld.prefs.ph" placeholder="למשל: דגש על טכנולוגיה, בלי נדל&quot;ן, לכלול תעודות סל…"></div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <label class="chip outline" style="cursor:pointer"><input type="checkbox" id="bld-web" checked style="accent-color:var(--primary)"> <span data-i18n="ins.web">כלול נתוני שוק עדכניים (Web)</span></label>
+                <div style="flex:1"></div>
+                <button class="btn primary" id="btn-build"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl" data-i18n="bld.run">בנה תיק מומלץ</span></button>
+              </div>
+            </div>
+          </div>
+          <div id="bld-progress" hidden></div>
+          <div id="bld-results"></div>
+        </div>
+        <div id="ins-tab-analyze">
         <div class="view-bar"><div class="seg view-seg" role="group" aria-label="View"></div></div>
         <div class="card">
           <div class="card-h"><h2 data-i18n="ins.title">מנוע תובנות — ניתוח התיק</h2><span class="chip accent"><svg class="ic sm"><use href="#i-sparkles"/></svg>Deep Analysis</span>
@@ -655,6 +694,7 @@ td.num,th.num{text-align:end}
         </div>
         <div id="ins-progress" hidden></div>
         <div id="ins-results"></div>
+        </div>
       </section>
 
       <!-- ======== Alerts ======== -->
@@ -762,7 +802,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2305';
+const APP_VERSION='2026.09.11-2324';
 
 const I18N = {
   he: {
@@ -780,6 +820,8 @@ const I18N = {
     'trade.buy':'קנייה נוספת','trade.sell':'מכירה','trade.buy.title':'קנייה · {t}','trade.sell.title':'מכירה · {t}','trade.qty':'כמות','trade.price':'מחיר ליחידה','trade.date':'תאריך','trade.fee':'עמלה','trade.cash':'עדכן את המזומן בתיק "{p}"','trade.all':'הכל','trade.held':'באחזקה','trade.newavg':'עלות ממוצעת חדשה','trade.newqty':'כמות לאחר הקנייה','trade.total':'סה"כ עסקה','trade.realized':'רווח/הפסד ממומש','trade.toWatch':'להעביר לרשימת מעקב אם נמכר הכל','trade.done.buy':'הקנייה נרשמה: {t} · {q} יח׳ · עלות ממוצעת {p}','trade.done.sell':'המכירה נרשמה: ממומש {p}','trade.closed':'הפוזיציה ב-{t} נסגרה','trade.closedShort':'הפוזיציה נסגרה','trade.err.qty':'הכמות גדולה מהאחזקה','merged':'{t} כבר קיים בתיק "{p}" — הכמות אוחדה והעלות הממוצעת חושבה מחדש','side.buy':'קנייה','side.sell':'מכירה',
     'stats.title':'סטטיסטיקה ותוצאות','stats.open':'פירוט מלא','stats.nav':'שווי נוכחי','stats.cost':'עלות פוזיציות פתוחות','stats.unreal':'רווח לא ממומש','stats.real':'רווח ממומש','stats.total':'רווח כולל','stats.cash':'מזומן','stats.byPf':'לפי תיק','stats.closed':'מכירות','stats.winrate':'אחוז הצלחה','stats.avgwin':'רווח ממוצע למכירה','stats.avgloss':'הפסד ממוצע למכירה','stats.best':'העסקה הטובה','stats.worst':'העסקה הגרועה','stats.bought':'סך קניות','stats.sold':'סך מכירות','stats.topPos':'פוזיציות מובילות','stats.botPos':'פוזיציות חלשות','stats.ledger':'יומן עסקאות','stats.ledger.empty':'אין עסקאות עדיין. כל הוספה, קנייה ומכירה נרשמות כאן אוטומטית.','stats.export':'ייצוא עסקאות (CSV)','stats.delTrade':'למחוק את הרשומה מהיומן? האחזקה והמזומן לא ישתנו.','stats.realByTicker':'רווח ממומש לפי מניה','stats.noReal':'עדיין אין מכירות — רווח ממומש יופיע אחרי המכירה הראשונה.','stats.pf':'תיק','stats.weight':'משקל','stats.pos':'פוזיציות','stats.sub':'{o} פוזיציות פתוחות · {s} מכירות','stats.perf':'ביצועים','stats.trades':'עסקאות','stats.realNote':'ממומש: {v}',
     'set.cash.help':'יתרת מזומן לכל תיק, בשקלים ובדולרים. נכללת בשווי הכולל וניתנת לעדכון אוטומטי בקנייה ומכירה.','pf.cash':'מזומן','kpi.realized':'ממומש',
+    'ins.tab.analyze':'ניתוח התיק','ins.tab.build':'בניית תיק AI','bld.title':'בניית תיק מומלץ ב-AI','bld.sub':'Claude מרכיב תיק מודל מאפס לפי פרופיל הסיכון, אופק ההשקעה והתקציב שלך, עם מחירים עדכניים מהרשת. אפשר ליצור ממנו תיק חדש באפליקציה בלחיצה.','bld.profile':'פרופיל משקיע','prof.income':'דיבידנד','bld.budget':'תקציב','bld.horizon':'אופק השקעה','hor.short':'עד שנה','hor.mid':'1–3 שנים','hor.long':'3+ שנים','bld.markets':'שווקים','bld.n':'מספר פוזיציות','bld.prefs':'העדפות ומגבלות (אופציונלי)','bld.prefs.ph':'למשל: דגש על טכנולוגיה, בלי נדל"ן, לכלול תעודות סל…','bld.run':'בנה תיק מומלץ','bld.err.budget':'יש להזין תקציב','bld.err.markets':'יש לבחור לפחות שוק אחד','bld.empty':'עדיין לא נבנה תיק','bld.empty.d':'בחרו פרופיל, תקציב ושווקים ולחצו "בנה תיק מומלץ". התוצאה נשמרת כאן.',
+    'bld.invested':'מושקע','bld.cashleft':'נשאר במזומן','bld.positions':'פוזיציות','bld.vol':'תנודתיות צפויה','bld.yield':'תשואת דיבידנד','bld.beta':'β S&P 500','bld.alloc':'הרכב התיק','bld.sector':'חלוקה לפי סקטור','bld.risks':'סיכונים עיקריים','bld.fx':'חשיפת מט"ח','bld.rebal':'איזון מחדש','bld.drawdown':'תרחיש שנה גרועה','bld.alts':'חלופות','bld.create':'צור תיק חדש מההמלצה','bld.watch':'הוסף הכל למעקב','bld.created':'נוצר תיק "{n}" עם {k} פוזיציות','bld.create.confirm':'ליצור תיק חדש "{n}" עם {k} פוזיציות בסך {v}? פוזיציות ללא מחיר יתווספו למעקב.','bld.shares':'{n} יח׳ × {p}','bld.noprice':'ללא מחיר','bld.weight':'משקל','bld.amount':'סכום','bld.asof':'מחירים נכון ל-{d}','bld.role.core':'ליבה','bld.role.growth':'צמיחה','bld.role.defensive':'הגנתי','bld.role.income':'הכנסה','bld.role.satellite':'לוויין','bld.budget.of':'תקציב','bld.pfname':'תיק AI','bld.watched':'{n} מניות נוספו למעקב',
     'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
     // dynamic
@@ -813,6 +855,8 @@ const I18N = {
     'trade.buy':'Buy more','trade.sell':'Sell','trade.buy.title':'Buy · {t}','trade.sell.title':'Sell · {t}','trade.qty':'Quantity','trade.price':'Price per unit','trade.date':'Date','trade.fee':'Fee','trade.cash':'Update cash in "{p}"','trade.all':'All','trade.held':'Held','trade.newavg':'New average cost','trade.newqty':'Quantity after buy','trade.total':'Trade total','trade.realized':'Realized P&L','trade.toWatch':'Move to watchlist if fully sold','trade.done.buy':'Buy recorded: {t} · {q} units · avg cost {p}','trade.done.sell':'Sale recorded: realized {p}','trade.closed':'Position in {t} closed','trade.closedShort':'position closed','trade.err.qty':'Quantity exceeds holding','merged':'{t} already exists in "{p}" — quantity merged and average cost recalculated','side.buy':'Buy','side.sell':'Sell',
     'stats.title':'Statistics & results','stats.open':'Full breakdown','stats.nav':'Current value','stats.cost':'Open positions cost','stats.unreal':'Unrealized P&L','stats.real':'Realized P&L','stats.total':'Total P&L','stats.cash':'Cash','stats.byPf':'By portfolio','stats.closed':'Sales','stats.winrate':'Win rate','stats.avgwin':'Avg gain per sale','stats.avgloss':'Avg loss per sale','stats.best':'Best trade','stats.worst':'Worst trade','stats.bought':'Total bought','stats.sold':'Total sold','stats.topPos':'Top positions','stats.botPos':'Weakest positions','stats.ledger':'Trade ledger','stats.ledger.empty':'No trades yet. Every add, buy and sell is recorded here automatically.','stats.export':'Export trades (CSV)','stats.delTrade':'Delete this ledger record? Holdings and cash stay unchanged.','stats.realByTicker':'Realized P&L by stock','stats.noReal':'No sales yet — realized P&L appears after the first sale.','stats.pf':'Portfolio','stats.weight':'Weight','stats.pos':'Positions','stats.sub':'{o} open positions · {s} sales','stats.perf':'Performance','stats.trades':'Trades','stats.realNote':'Realized: {v}',
     'set.cash.help':'Cash balance per portfolio, in ILS and USD. Included in total value and can be updated automatically on buys and sells.','pf.cash':'Cash','kpi.realized':'realized',
+    'ins.tab.analyze':'Portfolio analysis','ins.tab.build':'AI portfolio builder','bld.title':'AI-recommended portfolio','bld.sub':'Claude designs a model portfolio from scratch for your risk profile, horizon and budget, with current prices from the web. Create it as a new portfolio in the app with one tap.','bld.profile':'Investor profile','prof.income':'Income','bld.budget':'Budget','bld.horizon':'Horizon','hor.short':'Up to 1 year','hor.mid':'1–3 years','hor.long':'3+ years','bld.markets':'Markets','bld.n':'Positions','bld.prefs':'Preferences & constraints (optional)','bld.prefs.ph':'e.g. tech tilt, no real estate, include ETFs…','bld.run':'Build portfolio','bld.err.budget':'Enter a budget','bld.err.markets':'Pick at least one market','bld.empty':'No portfolio built yet','bld.empty.d':'Choose a profile, budget and markets and tap "Build portfolio". The result is kept here.',
+    'bld.invested':'Invested','bld.cashleft':'Cash left','bld.positions':'Positions','bld.vol':'Expected volatility','bld.yield':'Dividend yield','bld.beta':'β S&P 500','bld.alloc':'Allocation','bld.sector':'By sector','bld.risks':'Key risks','bld.fx':'FX exposure','bld.rebal':'Rebalancing','bld.drawdown':'Bad-year scenario','bld.alts':'Alternatives','bld.create':'Create portfolio from plan','bld.watch':'Add all to watchlist','bld.created':'Created portfolio "{n}" with {k} positions','bld.create.confirm':'Create a new portfolio "{n}" with {k} positions totalling {v}? Positions without a price go to the watchlist.','bld.shares':'{n} sh × {p}','bld.noprice':'no price','bld.weight':'Weight','bld.amount':'Amount','bld.asof':'Prices as of {d}','bld.role.core':'Core','bld.role.growth':'Growth','bld.role.defensive':'Defensive','bld.role.income':'Income','bld.role.satellite':'Satellite','bld.budget.of':'Budget','bld.pfname':'AI portfolio','bld.watched':'{n} stocks added to watchlist',
     'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
@@ -896,6 +940,7 @@ function load(){
     st.holdings.forEach(h=>{ if(!h.pid||!st.portfolios.some(x=>x.id===h.pid)) h.pid=st.portfolios[0].id; });
     if(st.view!=='all'&&!st.portfolios.some(x=>x.id===st.view)) st.view='all';
     if(!Array.isArray(st.trades)) st.trades=[];
+    if(st.portfolios.length===1){ const pid=st.portfolios[0].id; st.history.forEach(h=>{ const v=h.nav??h.ils; if(v!=null) h.byPid={[pid]:v}; }); } // single portfolio: per-portfolio series == total series
     st.portfolios.forEach(pf=>{ pf.cashIls=+pf.cashIls||0; pf.cashUsd=+pf.cashUsd||0; });
     // one-time: global cash (settings) → first portfolio
     if((+st.settings.cashIls||0)||(+st.settings.cashUsd||0)){ st.portfolios[0].cashIls+=+st.settings.cashIls||0; st.portfolios[0].cashUsd+=+st.settings.cashUsd||0; st.settings.cashIls=0; st.settings.cashUsd=0; }
@@ -1310,6 +1355,44 @@ Be specific: use the actual tickers, weights and P&L from the data. Keep text fi
   return {...j, sources:r.sources, ts:Date.now(), profile};
 }
 
+/* ---------- AI portfolio builder ---------- */
+function normEx(x){ x=String(x||'').toUpperCase(); if(/TASE|TLV|TEL/.test(x)) return 'TASE'; if(/NASDAQ|NMS|NGM/.test(x)) return 'NASDAQ'; if(/NYSE|ARCA|AMEX/.test(x)) return 'NYSE'; return x||'NASDAQ'; }
+async function buildPortfolio({profile,budget,ccy,markets,horizon,n,prefs,useWeb,onStatus,onText}){
+  const fx=S.settings.usdIls||3.35; const budgetIls=ccy==='ILS'?budget:budget*fx;
+  const profTxt={conservative:'Conservative (capital preservation, low volatility, quality large caps, up to 25% broad ETFs allowed, max single position 15%)',balanced:'Balanced (blend of quality growth and defensive/dividend names, moderate drawdown tolerance, max single position 20%)',growth:'Growth (secular growth leaders, accepts volatility for return, max single position 25%)',aggressive:'Aggressive (high conviction, momentum and small/mid caps welcome, max single position 25%)',income:'Income / Dividend (stable cash-flow companies, dividend yield and growth, low beta, max single position 15%)'}[profile]||profile;
+  const horTxt={short:'up to 1 year',mid:'1–3 years',long:'3+ years'}[horizon]||horizon;
+  const held=S.holdings.map(h=>h.ticker+'('+h.exchange+')').join(', ');
+  const user=`Design a model equity portfolio for an Israeli retail investor FROM SCRATCH (this is a new, separate portfolio).
+Mandate: ${profTxt}. Investment horizon: ${horTxt}. Budget: ${budget} ${ccy} (≈ ${Math.round(budgetIls)} ILS at USD/ILS ${fx}). Allowed exchanges: ${markets.join(', ')}. Target number of positions: ${n} (±1).
+${prefs?'User preferences / constraints (must respect): '+prefs+'.':''}
+${held?'For context the user already holds elsewhere: '+held+' (you may overlap if it is the best choice).':''}
+${useWeb?'Use web search (max 6 searches; batch several tickers per query, e.g. "NVMI ESLT TEVA stock price") to get the CURRENT price (last close) of every position you pick and to confirm each thesis is still valid.':'Do NOT use web search; rely on your knowledge and set price to null when you are not confident about the current level.'}
+Rules: diversify across at least 4 sectors unless the preferences say otherwise; if both TASE and US exchanges are allowed include both; prefer liquid large/mid caps (TA-125, S&P 500, NASDAQ-100 members); weightPct of all positions + cashPct must sum to exactly 100; keep cashPct between 0 and 10 unless the mandate is conservative. TASE prices in ILS (never agorot), US prices in USD. "sector" must be one of: ${SECTORS.map(s=>s[0]).join('|')}.
+Return JSON:
+{"name":"short portfolio name (in the output language)","summary":"4–5 sentences: the strategy, why it fits this profile, horizon and budget, and the key bets",
+ "positions":[{"ticker":"","exchange":"TASE|NYSE|NASDAQ","name":"English company name","name_he":"שם החברה בעברית","sector":"sector code","role":"core|growth|defensive|income|satellite","weightPct":0,"price":0,"currency":"ILS|USD","priceAsOf":"YYYY-MM-DD","rationale":"1–2 sentences","risk":"main risk in one sentence","dividendYieldPct":null}],
+ "cashPct":0,
+ "expected":{"volatility":"e.g. ~14% annualized","dividendYieldPct":0,"betaVsSPX":0.9,"drawdownScenario":"one sentence on what a bad year could look like"},
+ "allocation":{"bySectorPct":{"Tech":25},"byExchangePct":{"TASE":40,"NASDAQ":60},"usdSharePct":60},
+ "risks":["3–5 portfolio-level risks, one sentence each"],
+ "fxNote":"one sentence on USD exposure and whether/how to hedge",
+ "rebalance":"when and how to rebalance",
+ "alternatives":[{"ticker":"","exchange":"","name":"","sector":"","why":"one sentence"}]}`;
+  const r=await claude({system:SYSTEM_BASE(),user,tools:useWeb?[webSearchTool(6)]:null,maxTokens:9000,effort:S.settings.effort,onStatus,onText});
+  const j=extractJSON(r.text); if(!j||!Array.isArray(j.positions)){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
+  j.positions=j.positions.filter(p=>p&&p.ticker).map(p=>{ const tk=String(p.ticker).toUpperCase().trim(); const u=findSec(tk,p.exchange); const ex=normEx(p.exchange||(u&&u.exchange)); return {...p,ticker:tk,exchange:ex,currency:ex==='TASE'?'ILS':'USD',name:p.name||(u&&u.name_en)||tk,name_he:p.name_he||(u&&u.name_he)||p.name||tk,sector:SECTORS.some(s=>s[0]===p.sector)?p.sector:(u?u.sector:'Other'),weightPct:Math.max(0,+p.weightPct||0),price:(p.price!=null&&isFinite(+p.price)&&+p.price>0)?+p.price:null}; });
+  j.cashPct=Math.max(0,+j.cashPct||0); const wsum=j.positions.reduce((a,p)=>a+p.weightPct,0)+j.cashPct; if(wsum>0&&Math.abs(wsum-100)>0.5){ const k=100/wsum; j.positions.forEach(p=>p.weightPct=+(p.weightPct*k).toFixed(2)); j.cashPct=+(j.cashPct*k).toFixed(2); }
+  j.alternatives=Array.isArray(j.alternatives)?j.alternatives.filter(a=>a&&a.ticker).map(a=>({...a,ticker:String(a.ticker).toUpperCase(),exchange:normEx(a.exchange)})):[];
+  return {...j,sources:r.sources,ts:Date.now(),input:{profile,budget,ccy,markets,horizon,n,prefs,useWeb},fx};
+}
+/** Turn weights into concrete share counts for the budget; leftovers go to cash. */
+function builderPlan(b){
+  const {budget,ccy}=b.input; const fx=b.fx||S.settings.usdIls||3.35; const toNative=(amt,to)=>ccy===to?amt:(ccy==='ILS'?amt/fx:amt*fx); const toIlsB=(amt,from)=>from==='ILS'?amt:amt*fx;
+  let investedIls=0; const rows=b.positions.map(p=>{ const amt=budget*p.weightPct/100; const nat=toNative(amt,p.currency); const shares=p.price?Math.floor(nat/p.price):null; const inv=shares!=null?shares*p.price:0; investedIls+=toIlsB(inv,p.currency); return {...p,amount:amt,amountNative:nat,shares,investedNative:inv,investedIls:toIlsB(inv,p.currency)}; });
+  const budgetIls=toIlsB(budget,ccy); const cashIls=Math.max(0,budgetIls-investedIls); const bySector={}; rows.forEach(r=>{ bySector[r.sector]=(bySector[r.sector]||0)+r.investedIls; });
+  return {rows,budgetIls,investedIls,cashIls,bySector};
+}
+
 /* ============================================================
    Engine 4 — Single-stock deep dive
    ============================================================ */
@@ -1584,7 +1667,7 @@ function priceChart(container,data,{type='candle',ma=true,volume=true,fmt=v=>fmt
 function renderViewSelectors(){
   const v=curView(); const counts={}; S.holdings.forEach(h=>{ counts[h.pid]=(counts[h.pid]||0)+1; });
   const html=`<button aria-pressed="${v==='all'}" data-view="all">${t('pf.all')}<span class="n">${S.holdings.length}</span></button>${S.portfolios.map(p=>`<button aria-pressed="${v===p.id}" data-view="${esc(p.id)}">${esc(p.name)}<span class="n">${counts[p.id]||0}</span></button>`).join('')}<button data-view="__manage" aria-label="${t('pf.manage')}" title="${t('pf.manage')}"><svg class="ic sm"><use href="#i-settings"/></svg></button>`;
-  $$('.view-seg').forEach(el=>{ el.innerHTML=html; });
+  $$('.view-seg').forEach(el=>{ el.innerHTML=html; const on=el.querySelector('[aria-pressed="true"]'); if(on&&el.scrollWidth>el.clientWidth) try{ on.scrollIntoView({block:'nearest',inline:'nearest'}); }catch(_){} });
 }
 function setView(v){ S.view=v; save(); renderAll(); setTitle(); }
 function setTitle(){ const page=currentPage; $('#page-title').textContent=t('nav.'+page)+((page==='dashboard'||page==='portfolio'||page==='insights')&&curView()!=='all'?' · '+pfName(curView()):''); }
@@ -1612,7 +1695,7 @@ function renderDashboard(){
    <div class="card kpi"><span class="accent-bar" style="background:var(--${pnlCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-target"/></svg>${t('kpi.pnl')}</div><div class="val num ${pnlCls}">${fmtC(dispIls(c.pnlIls))}</div><div class="delta ${pnlCls}">${fmtP(c.pnlPct)} · ${t('kpi.cost')} ${fmtCompact(dispIls(c.costIls))}</div>${c.realizedIls?`<div class="delta ${c.realizedIls>=0?'gain':'loss'}" style="font-weight:500">${t('kpi.realized')} ${fmtCompact(dispIls(c.realizedIls))}</div>`:''}</div>`;
   renderStatsMini(c);
   // history
-  const since=histRange?Date.now()-histRange*864e5:0; const view=curView(); const pts=S.history.filter(p=>p.ts>=since).map(p=>({x:p.ts,y:view==='all'?(p.nav??p.ils):(p.byPid&&p.byPid[view])})).filter(p=>p.y!=null);
+  const since=histRange?Date.now()-histRange*864e5:0; const view=curView(); const pts=S.history.filter(p=>p.ts>=since).map(p=>({x:p.ts,y:view==='all'?(p.nav??p.ils):((p.byPid&&p.byPid[view])??(S.portfolios.length===1?(p.nav??p.ils):null))})).filter(p=>p.y!=null);
   if(pts.length===1&&c.nav>0) pts.push({x:Date.now(),y:c.nav});
   lineChart($('#chart-history'),pts);
   donut($('#chart-sector'),Object.entries(c.bySector).map(([s,v])=>({label:sectorLabel(s),value:v,color:SECTOR_COLOR[s]||'var(--s8)'})));
@@ -1814,6 +1897,64 @@ function openStats(){
   openSheet(t('stats.title')+(view!=='all'?' · '+pfName(view):''),`<div class="faint" style="font-size:.8rem;margin-top:-6px">${view==='all'?t('pf.all'):esc(pfName(view))} · ${t('stats.sub',{o:c.rows.length,s:rz.sells})}</div>${head}${byPf}${perf}${pos}${ledger}<div class="disclaimer">${t('disclaimer')}</div>`);
   const hb=$('#st-real'); if(hb){ const items=Object.entries(rz.byTicker).map(([k,v])=>({label:k.split('|')[0],value:Math.abs(v),raw:v})); const tot2=items.reduce((a,i)=>a+i.value,0); hbars(hb,items,tot2,it=>it.raw>=0?'var(--gain)':'var(--loss)'); hb.querySelectorAll('.r').forEach((r,i)=>{ const it=[...items].sort((a,b)=>b.value-a.value)[i]; r.querySelector('.v').textContent=fmtCompact(dispIls(it.raw)); r.querySelector('.v').classList.add(it.raw>=0?'gain':'loss'); }); }
   const ex=$('#st-export'); if(ex) ex.onclick=()=>{ const hdr=['date','portfolio','side','ticker','exchange','qty','price','currency','fee','fx','avgCost','realizedNative','realizedILS','note']; const lines=[hdr.join(',')].concat(S.trades.map(x=>[new Date(x.ts).toISOString().slice(0,10),JSON.stringify(pfName(x.pid)),x.side,x.ticker,x.exchange,x.qty,x.price,x.ccy,x.fee||0,x.fx||'',x.avgCost??'',x.realizedNative??'',x.realizedIls??'',JSON.stringify(x.note||'')].join(','))); download(`marketmaster-trades-${todayStr()}.csv`,'﻿'+lines.join('\n'),'text/csv'); toast(t('exported'),'ok'); };
+}
+
+/* ---------- AI portfolio builder ---------- */
+let insTab='analyze';
+function bldState(){ if(!S.settings.bld) S.settings.bld={profile:'balanced',ccy:S.settings.currency||'ILS',budget:null,markets:['TASE','NASDAQ','NYSE'],horizon:'long',n:8,prefs:''}; return S.settings.bld; }
+function setInsTab(tab){ insTab=tab; $$('#ins-tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===tab)); $('#ins-tab-analyze').hidden=tab!=='analyze'; $('#ins-tab-build').hidden=tab!=='build'; }
+function renderBuilderForm(){
+  const b=bldState();
+  $$('#bld-profile button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p===b.profile));
+  $$('#bld-horizon button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.h===b.horizon));
+  $$('#bld-n button').forEach(x=>x.setAttribute('aria-pressed',+x.dataset.n===+b.n));
+  $$('#bld-ccy button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===b.ccy));
+  $$('#bld-markets [data-m]').forEach(x=>x.setAttribute('aria-pressed',b.markets.includes(x.dataset.m)));
+  const inp=$('#bld-budget'); if(document.activeElement!==inp){ if(b.budget==null){ const cash=pfCash(curView()); const v=b.ccy==='ILS'?cash.ils:cash.usd; inp.value=v>0?Math.round(v):''; } else inp.value=b.budget; }
+  if(document.activeElement!==$('#bld-prefs')) $('#bld-prefs').value=b.prefs||'';
+}
+function roleChip(r){ return r?`<span class="chip role">${t('bld.role.'+r)===('bld.role.'+r)?esc(r):t('bld.role.'+r)}</span>`:''; }
+function renderBuilder(){
+  renderBuilderForm(); const box=$('#bld-results'); const b=S.analyses.builder;
+  if(!b){ box.innerHTML=`<div class="card">${emptyHTML('i-pie',t('bld.empty'),t('bld.empty.d'))}</div>`; return; }
+  const plan=builderPlan(b); const inp=b.input; const dispB=v=>fmtC(dispIls(v)); const asOf=(b.positions.find(p=>p.priceAsOf)||{}).priceAsOf;
+  const profKey={conservative:'cons',balanced:'bal',growth:'growth',aggressive:'aggr',income:'income'}[inp.profile]||'bal';
+  const head=`<div class="card"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h2 style="flex:1;min-width:200px">${esc(b.name||t('bld.pfname'))}</h2><span class="chip outline">${t('prof.'+profKey)}</span><span class="chip outline">${t('hor.'+inp.horizon)}</span><span class="faint" style="font-size:.76rem">${fmtDate(b.ts)}</span></div>
+    <p style="margin-top:8px;line-height:1.65">${esc(b.summary||'')}</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:12px">${tile(t('bld.budget.of'),fmtC(inp.budget,inp.ccy))}${tile(t('bld.invested'),dispB(plan.investedIls),'',plan.budgetIls?fmtN(plan.investedIls/plan.budgetIls*100,1)+'%':'')}${tile(t('bld.cashleft'),dispB(plan.cashIls),'',b.cashPct?`${t('stats.cash')} ${fmtN(b.cashPct,0)}%`:'')}${tile(t('bld.positions'),String(plan.rows.length))}${b.expected&&b.expected.volatility?tile(t('bld.vol'),esc(b.expected.volatility)):''}${b.expected&&b.expected.dividendYieldPct!=null?tile(t('bld.yield'),fmtP(+b.expected.dividendYieldPct,1,false)):''}${b.expected&&b.expected.betaVsSPX!=null?tile(t('bld.beta'),String(b.expected.betaVsSPX)):''}</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" id="bld-create"><svg class="ic sm"><use href="#i-briefcase"/></svg>${t('bld.create')}</button><button class="btn" id="bld-watch"><svg class="ic sm"><use href="#i-eye"/></svg>${t('bld.watch')}</button>${asOf?`<span class="faint" style="font-size:.76rem;align-self:center">${t('bld.asof',{d:esc(asOf)})}</span>`:''}</div></div>`;
+  const pos=`<div class="card"><div class="card-h"><h3>${t('bld.alloc')}</h3></div><div class="list">${plan.rows.map(r=>`<div class="bld-pos"><div class="top"><div class="tick">${avatar(r)}<div style="min-width:0"><div class="n">${esc(r.ticker)} ${exChip(r.exchange)} ${roleChip(r.role)}</div><div class="m"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(lang()==='he'?(r.name_he||r.name):(r.name||r.name_he))}</span><span class="faint">· ${sectorLabel(r.sector)}</span></div></div></div><div class="amt"><b class="num">${fmtC(r.amount,inp.ccy)}</b><span class="num">${r.shares!=null?t('bld.shares',{n:fmtN(r.shares,0),p:fmtC(r.price,r.currency)}):t('bld.noprice')}</span></div></div><div style="display:flex;align-items:center;gap:8px"><div class="w" style="flex:1"><i style="width:${clamp(r.weightPct,0,100)}%"></i></div><span class="num" style="font-size:.78rem;font-weight:700;min-width:44px;text-align:end">${fmtN(r.weightPct,1)}%</span></div>${r.rationale?`<div class="why">${esc(r.rationale)}</div>`:''}${r.risk?`<div class="risk">⚠ ${esc(r.risk)}</div>`:''}</div>`).join('')}</div></div>`;
+  const secItems=Object.entries(b.allocation&&b.allocation.bySectorPct&&Object.keys(b.allocation.bySectorPct).length?b.allocation.bySectorPct:Object.fromEntries(Object.entries(plan.bySector).map(([k,v])=>[k,plan.investedIls?v/plan.investedIls*100:0]))).map(([k,v])=>({label:sectorLabel(k),value:+v||0,code:k}));
+  const side=`<div class="grid two"><div class="card"><div class="card-h"><h3>${t('bld.sector')}</h3></div><div class="hbar" id="bld-sec"></div>${b.allocation&&b.allocation.usdSharePct!=null?`<p class="faint" style="font-size:.8rem;margin-top:10px">USD ${fmtN(+b.allocation.usdSharePct,0)}%${b.fxNote?' · '+esc(b.fxNote):''}</p>`:(b.fxNote?`<p class="faint" style="font-size:.8rem;margin-top:10px">${esc(b.fxNote)}</p>`:'')}</div>
+    <div class="card"><div class="card-h"><h3>${t('bld.risks')}</h3></div><ul style="margin:0;padding-inline-start:18px;line-height:1.6;font-size:.88rem">${(b.risks||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${b.expected&&b.expected.drawdownScenario?`<p class="faint" style="font-size:.8rem;margin-top:10px"><b>${t('bld.drawdown')}:</b> ${esc(b.expected.drawdownScenario)}</p>`:''}${b.rebalance?`<p class="faint" style="font-size:.8rem;margin-top:6px"><b>${t('bld.rebal')}:</b> ${esc(b.rebalance)}</p>`:''}</div></div>`;
+  const alts=b.alternatives&&b.alternatives.length?`<div class="card"><div class="card-h"><h3>${t('bld.alts')}</h3></div><div class="list">${b.alternatives.map((a,i)=>`<div class="row" style="padding:8px 12px"><div style="flex:1;min-width:0"><b>${esc(a.ticker)}</b> ${exChip(a.exchange)} <span class="faint" style="font-size:.8rem">${esc(a.name||'')}</span><div class="faint" style="font-size:.78rem">${esc(a.why||'')}</div></div><button class="btn ghost icon sm" data-balt="${i}" aria-label="${t('watch.add')}" title="${t('watch.add')}"><svg class="ic sm"><use href="#i-eye"/></svg></button></div>`).join('')}</div></div>`:'';
+  box.innerHTML=head+pos+side+alts+(b.sources&&b.sources.length?sourcesHTML(b.sources):'')+`<div class="disclaimer">${t('disclaimer')}</div>`;
+  hbars($('#bld-sec'),secItems,secItems.reduce((a,i)=>a+i.value,0)||1,it=>SECTOR_COLOR[it.code]||'var(--primary)');
+  $('#bld-create').onclick=createFromBuilder; $('#bld-watch').onclick=()=>{ let k=0; b.positions.forEach(p=>{ if(addToWatch({ticker:p.ticker,exchange:p.exchange,sector:p.sector,name:p.name,name_he:p.name_he,price:p.price,source:'ai-builder'},{silent:true})) k++; }); save(); renderAll(); toast(t('bld.watched',{n:k}),'ok'); };
+  $$('[data-balt]').forEach(x=>x.onclick=()=>{ const a=b.alternatives[+x.dataset.balt]; if(a&&addToWatch({ticker:a.ticker,exchange:a.exchange,sector:a.sector,name:a.name,name_he:a.name,source:'ai-builder'},{silent:true})){ save(); renderAll(); toast(t('watch.added',{t:a.ticker}),'ok'); } });
+}
+async function doBuild(){
+  const btn=$('#btn-build'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
+  const b=bldState(); b.budget=parseFloat($('#bld-budget').value); b.prefs=$('#bld-prefs').value.trim();
+  if(!(b.budget>0)){ toast(t('bld.err.budget'),'err'); $('#bld-budget').focus(); return; } if(!b.markets.length){ toast(t('bld.err.markets'),'err'); return; }
+  save(); setLoading(btn,true); const pb=progressBox($('#bld-progress'),t('bld.run'));
+  try{ const r=await buildPortfolio({...b,useWeb:$('#bld-web').checked,onStatus:(s,q)=>pb.set(s,q),onText:x=>pb.live(x)}); pb.set('parse'); S.analyses.builder=r; save(); renderBuilder(); setTimeout(()=>{ const el=$('#bld-results'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },50); }
+  catch(e){ console.error(e); toast((e.refusal?'':t('err.api')+': ')+e.message,'err'); if(e.raw) $('#bld-results').insertAdjacentHTML('afterbegin',rawHTML(e.raw)); }
+  finally{ pb.done(); setLoading(btn,false); }
+}
+async function createFromBuilder(){
+  const b=S.analyses.builder; if(!b) return; const plan=builderPlan(b); const name=b.name||(t('bld.pfname')+' · '+t('prof.'+({conservative:'cons',balanced:'bal',growth:'growth',aggressive:'aggr',income:'income'}[b.input.profile]||'bal')));
+  const buyable=plan.rows.filter(r=>r.shares>0);
+  if(!(await confirmDlg(t('bld.create.confirm',{n:name,k:buyable.length,v:fmtC(dispIls(plan.investedIls))}),{yes:t('pf.create')}))) return;
+  const id='pf_'+uid(); const pf={id,name,createdAt:Date.now(),cashIls:0,cashUsd:0}; S.portfolios.push(pf);
+  const fx=b.fx||S.settings.usdIls||3.35; const {budget,ccy}=b.input;
+  if(ccy==='ILS') pf.cashIls=budget; else pf.cashUsd=budget;
+  const ts=Date.now();
+  buyable.forEach(r=>{ applyTrade({side:'buy',pid:id,ticker:r.ticker,exchange:r.exchange,qty:r.shares,price:r.price,ts,cash:true,note:'AI builder',meta:{sector:r.sector,name:r.name,name_he:r.name_he,price:r.price,prevClose:null,updatedAt:ts,note:r.rationale?String(r.rationale).slice(0,140):''}}); });
+  // cash was deducted in each position's own currency; convert any negative side back into the budget currency
+  if(ccy==='ILS'&&pf.cashUsd<0){ pf.cashIls=+(pf.cashIls+pf.cashUsd*fx).toFixed(2); pf.cashUsd=0; } if(ccy==='USD'&&pf.cashIls<0){ pf.cashUsd=+(pf.cashUsd+pf.cashIls/fx).toFixed(2); pf.cashIls=0; }
+  plan.rows.filter(r=>!(r.shares>0)).forEach(r=>addToWatch({ticker:r.ticker,exchange:r.exchange,sector:r.sector,name:r.name,name_he:r.name_he,price:r.price,source:'ai-builder'},{silent:true}));
+  S.view=id; save(); renderAll(); setTitle(); toast(t('bld.created',{n:name,k:buyable.length}),'ok'); go('portfolio');
 }
 
 /* ---------- Sheet ---------- */
@@ -2110,7 +2251,7 @@ function importFile(file){
 }
 
 /* ---------- Render all & events ---------- */
-function renderAll(){ renderViewSelectors(); renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderAlerts(); renderSettings(); }
+function renderAll(){ renderViewSelectors(); renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderBuilder(); renderAlerts(); renderSettings(); }
 function bind(){
   $$('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
   $$('[data-ccy]').forEach(b=>b.addEventListener('click',()=>{ S.settings.currency=b.dataset.ccy; save(); renderAll(); }));
@@ -2135,7 +2276,15 @@ function bind(){
   $('#scan-sectors').addEventListener('click',e=>{ const b=e.target.closest('[data-s]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.sectors.add(b.dataset.s):scanSel.sectors.delete(b.dataset.s); });
   $('#scan-markets').addEventListener('click',e=>{ const b=e.target.closest('[data-m]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.markets.add(b.dataset.m):scanSel.markets.delete(b.dataset.m); });
   $$('#scan-mode button').forEach(b=>b.onclick=()=>{ scanSel.mode=b.dataset.m; $$('#scan-mode button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
-  $('#btn-scan').onclick=doScan; $('#btn-analyze').onclick=doAnalyze;
+  $('#btn-scan').onclick=doScan; $('#btn-analyze').onclick=doAnalyze; $('#btn-build').onclick=doBuild;
+  $$('#ins-tabs button').forEach(b=>b.onclick=()=>setInsTab(b.dataset.tab));
+  $$('#bld-profile button').forEach(b=>b.onclick=()=>{ bldState().profile=b.dataset.p; save(); renderBuilderForm(); });
+  $$('#bld-horizon button').forEach(b=>b.onclick=()=>{ bldState().horizon=b.dataset.h; save(); renderBuilderForm(); });
+  $$('#bld-n button').forEach(b=>b.onclick=()=>{ bldState().n=+b.dataset.n; save(); renderBuilderForm(); });
+  $$('#bld-ccy button').forEach(b=>b.onclick=()=>{ const st=bldState(); const cur=parseFloat($('#bld-budget').value); const fx=S.settings.usdIls||3.35; if(cur>0&&st.ccy!==b.dataset.c) st.budget=Math.round(b.dataset.c==='USD'?cur/fx:cur*fx); st.ccy=b.dataset.c; save(); renderBuilderForm(); });
+  $('#bld-markets').addEventListener('click',e=>{ const b=e.target.closest('[data-m]'); if(!b) return; const st=bldState(); const on=!st.markets.includes(b.dataset.m); st.markets=on?[...st.markets,b.dataset.m]:st.markets.filter(m=>m!==b.dataset.m); save(); renderBuilderForm(); });
+  $('#bld-budget').addEventListener('change',e=>{ const v=parseFloat(e.target.value); bldState().budget=v>0?v:null; save(); });
+  $('#bld-prefs').addEventListener('change',e=>{ bldState().prefs=e.target.value.trim(); save(); });
   $$('#ins-profile button').forEach(b=>b.onclick=()=>{ insProfile=b.dataset.p; $$('#ins-profile button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
   $('#sheet-close').onclick=closeSheet; $('#scrim').onclick=closeSheet; document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSheet(); });
   // swipe-down to dismiss sheet (mobile)
