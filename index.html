@@ -9,6 +9,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MarketMaster · ניהול תיק השקעות</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="MarketMaster">
+<meta name="application-name" content="MarketMaster">
+<meta name="description" content="ניהול תיק השקעות למניות בתל אביב ובניו יורק עם מנוע תובנות Claude: סורק פריצות, ניתוח תוצאות, חדשות ותחזיות.">
+<meta property="og:title" content="MarketMaster — AI Portfolio Intelligence">
+<meta property="og:description" content="TASE · NYSE · NASDAQ — ניהול תיק, סורק פריצות, תחזיות ותובנות Claude">
+<meta property="og:image" content="assets/social-preview.png">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -431,7 +443,7 @@ td.num,th.num{text-align:end}
   <!-- ============ Sidebar (desktop) ============ -->
   <aside class="sidebar" aria-label="Navigation">
     <div class="brand">
-      <div class="logo"><svg class="ic lg" style="stroke-width:2.2"><use href="#i-trend"/></svg></div>
+      <div class="logo" style="background:transparent;box-shadow:0 8px 22px rgba(34,196,138,.28);overflow:hidden"><img src="assets/icon.svg" alt="" width="40" height="40" style="display:block;width:40px;height:40px" onerror="this.replaceWith(Object.assign(document.createElement('span'),{innerHTML:'<svg class=ic><use href=#i-trend></use></svg>'}))"></div>
       <div><div class="t">MarketMaster</div><div class="s" data-i18n="tagline">TASE · NYSE · AI Insights</div></div>
     </div>
     <button class="nav-btn" data-nav="dashboard"><svg class="ic"><use href="#i-home"/></svg><span data-i18n="nav.dashboard">דשבורד</span></button>
