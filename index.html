@@ -115,8 +115,11 @@ svg.ic.sm{width:16px;height:16px}svg.ic.lg{width:24px;height:24px}
 }
 .nav-btn:hover{background:var(--surface-3);color:var(--text)}
 .nav-btn:active{transform:scale(.98)}
-.nav-btn[aria-current="page"]{background:var(--primary-soft);color:var(--primary);font-weight:600}
-.nav-btn[aria-current="page"]::before{content:"";position:absolute;inset-inline-start:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--primary)}
+.nav-ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none;color:var(--nav-c,var(--text-2));background:color-mix(in srgb, var(--nav-c,var(--text-3)) 12%, transparent);transition:transform .18s var(--ease),background .18s}
+.nav-btn:hover .nav-ico{transform:translateY(-1px)}
+.nav-btn[aria-current="page"]{background:color-mix(in srgb, var(--nav-c,var(--primary)) 12%, transparent);color:var(--text);font-weight:700}
+.nav-btn[aria-current="page"] .nav-ico{background:linear-gradient(135deg,color-mix(in srgb, var(--nav-c,var(--primary)) 90%, #fff 0%),color-mix(in srgb, var(--nav-c,var(--primary)) 70%, #000 10%));color:#fff;box-shadow:0 6px 14px color-mix(in srgb, var(--nav-c,var(--primary)) 35%, transparent)}
+.nav-btn[aria-current="page"]::before{content:"";position:absolute;inset-inline-start:0;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--nav-c,var(--primary))}
 .nav-btn .badge{margin-inline-start:auto;font-size:.7rem;padding:2px 7px;border-radius:99px;background:var(--surface-3);color:var(--text-2)}
 .sidebar .spacer{flex:1}
 .side-card{margin-top:8px;padding:12px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border);font-size:.82rem;color:var(--text-2)}
@@ -396,26 +399,36 @@ td.num,th.num{text-align:end}
   .sidebar{display:none}
   .content{padding:14px 14px calc(var(--bottom-nav-h) + var(--sab) + 24px)}
   .bottom-nav{
-    display:grid;grid-template-columns:repeat(5,1fr);position:fixed;inset-inline:0;bottom:0;z-index:40;
-    height:calc(var(--bottom-nav-h) + var(--sab));padding-bottom:var(--sab);
-    background:color-mix(in srgb, var(--surface) 88%, transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    border-top:1px solid var(--border);
+    display:grid;grid-template-columns:repeat(6,1fr);position:fixed;inset-inline:0;bottom:0;z-index:40;
+    height:calc(var(--bottom-nav-h) + var(--sab));padding:6px 4px var(--sab);
+    background:color-mix(in srgb, var(--surface) 90%, transparent);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+    border-top:1px solid var(--border);box-shadow:0 -8px 24px rgba(0,0,0,.08);
   }
-  .bottom-nav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);font-size:.68rem;font-weight:600;min-height:44px;transition:color .16s}
-  .bottom-nav button[aria-current="page"]{color:var(--primary)}
-  .bottom-nav button svg{width:22px;height:22px}
+  .bottom-nav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--text-3);font-size:.62rem;font-weight:600;min-height:44px;padding:0;transition:color .18s;letter-spacing:.01em}
+  .bottom-nav .nav-ico{width:44px;height:28px;border-radius:14px;background:color-mix(in srgb, var(--nav-c) 10%, transparent);color:color-mix(in srgb, var(--nav-c) 80%, var(--text-2));transition:background .22s var(--ease),color .22s,transform .22s var(--ease),box-shadow .22s}
+  .bottom-nav button{color:var(--text-2)}
+  .bottom-nav .nav-ico svg{width:21px;height:21px}
+  .bottom-nav button:active .nav-ico{transform:scale(.92)}
+  .bottom-nav button[aria-current="page"]{color:var(--nav-c)}
+  .bottom-nav button[aria-current="page"] .nav-ico{background:linear-gradient(135deg,var(--nav-c),color-mix(in srgb, var(--nav-c) 70%, #000 12%));color:#fff;box-shadow:0 6px 16px color-mix(in srgb, var(--nav-c) 40%, transparent);transform:translateY(-2px)}
+  .bottom-nav button[aria-current="page"] span:last-child{font-weight:800}
   .grid.two,.grid.three{grid-template-columns:1fr}
   .kpi .val{font-size:1.35rem}.kpi.hero .val{font-size:1.65rem}
   .scen{grid-template-columns:1fr}
   .hbar .r{grid-template-columns:86px 1fr 56px}
   .hide-m{display:none!important}
+  .bottom-nav button span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .topbar{padding-inline:14px}
   #btn-refresh .lbl{display:none}
   #btn-refresh{padding:0 10px;min-width:42px}
   .topbar{gap:6px}
   .topbar .btn.icon{width:38px;min-height:38px}
   .topbar .seg.sm button{padding:4px 9px}
-  .topbar .title{font-size:1rem}
+  .topbar .title{font-size:1.05rem;order:-1}
+  .topbar .seg.sm{padding:2px}
+  .topbar .seg.sm button{padding:3px 8px;min-height:28px;font-size:.74rem}
+  .topbar .btn.icon{width:36px;min-height:36px}
+  #btn-refresh{min-width:38px;padding:0 8px}
   .card-h .input-wrap{flex-basis:100%;order:9}
 }
 @media (max-width:520px){
@@ -477,12 +490,13 @@ td.num,th.num{text-align:end}
       <div class="logo" style="background:transparent;box-shadow:0 8px 22px rgba(34,196,138,.28);overflow:hidden"><img src="assets/icon.svg" alt="" width="40" height="40" style="display:block;width:40px;height:40px" onerror="this.replaceWith(Object.assign(document.createElement('span'),{innerHTML:'<svg class=ic><use href=#i-trend></use></svg>'}))"></div>
       <div><div class="t">MarketMaster</div><div class="s" data-i18n="tagline">TASE · NYSE · AI Insights</div></div>
     </div>
-    <button class="nav-btn" data-nav="dashboard"><svg class="ic"><use href="#i-home"/></svg><span data-i18n="nav.dashboard">דשבורד</span></button>
-    <button class="nav-btn" data-nav="portfolio"><svg class="ic"><use href="#i-briefcase"/></svg><span data-i18n="nav.portfolio">התיק שלי</span><span class="badge" id="nav-count">0</span></button>
-    <button class="nav-btn" data-nav="scanner"><svg class="ic"><use href="#i-radar"/></svg><span data-i18n="nav.scanner">סורק שוק</span></button>
-    <button class="nav-btn" data-nav="insights"><svg class="ic"><use href="#i-sparkles"/></svg><span data-i18n="nav.insights">מנוע תובנות</span></button>
-    <button class="nav-btn" data-nav="alerts"><svg class="ic"><use href="#i-bell"/></svg><span data-i18n="nav.alerts">התראות</span><span class="badge" id="nav-alerts" hidden>0</span></button>
-    <button class="nav-btn" data-nav="settings"><svg class="ic"><use href="#i-settings"/></svg><span data-i18n="nav.settings">הגדרות</span></button>
+    <button class="nav-btn" data-nav="dashboard" style="--nav-c:var(--s1)"><span class="nav-ico"><svg class="ic"><use href="#i-home"/></svg></span><span data-i18n="nav.dashboard">דשבורד</span></button>
+    <button class="nav-btn" data-nav="portfolio" style="--nav-c:var(--s3)"><span class="nav-ico"><svg class="ic"><use href="#i-briefcase"/></svg></span><span data-i18n="nav.portfolio">התיק שלי</span><span class="badge" id="nav-count">0</span></button>
+    <button class="nav-btn" data-nav="watchlist" style="--nav-c:var(--s4)"><span class="nav-ico"><svg class="ic"><use href="#i-eye"/></svg></span><span data-i18n="nav.watchlist">מעקב</span><span class="badge" id="nav-watch">0</span></button>
+    <button class="nav-btn" data-nav="scanner" style="--nav-c:var(--s7)"><span class="nav-ico"><svg class="ic"><use href="#i-radar"/></svg></span><span data-i18n="nav.scanner">סורק שוק</span></button>
+    <button class="nav-btn" data-nav="insights" style="--nav-c:var(--s5)"><span class="nav-ico"><svg class="ic"><use href="#i-sparkles"/></svg></span><span data-i18n="nav.insights">מנוע תובנות</span></button>
+    <button class="nav-btn" data-nav="alerts" style="--nav-c:var(--s2)"><span class="nav-ico"><svg class="ic"><use href="#i-bell"/></svg></span><span data-i18n="nav.alerts">התראות</span><span class="badge" id="nav-alerts" hidden>0</span></button>
+    <button class="nav-btn" data-nav="settings" style="--nav-c:var(--text-3)"><span class="nav-ico"><svg class="ic"><use href="#i-settings"/></svg></span><span data-i18n="nav.settings">הגדרות</span></button>
     <div class="spacer"></div>
     <div class="side-card">
       <div><span class="status-dot" id="api-dot"></span><span id="api-status" data-i18n="api.notset">API לא מוגדר</span></div>
@@ -501,8 +515,8 @@ td.num,th.num{text-align:end}
         <button id="ccy-usd" aria-pressed="false" data-ccy="USD">$</button>
       </div>
       <button class="btn ghost icon bell" id="btn-bell" data-nav="alerts" aria-label="Alerts"><svg class="ic"><use href="#i-bell"/></svg><span class="cnt" id="bell-cnt" hidden>0</span></button>
-      <button class="btn ghost icon" id="btn-lang" title="עברית / English" aria-label="Language"><svg class="ic"><use href="#i-globe"/></svg></button>
-      <button class="btn ghost icon" id="btn-theme" aria-label="Theme"><svg class="ic" id="theme-ic"><use href="#i-sun"/></svg></button>
+      <button class="btn ghost icon hide-m" id="btn-lang" title="עברית / English" aria-label="Language"><svg class="ic"><use href="#i-globe"/></svg></button>
+      <button class="btn ghost icon hide-m" id="btn-theme" aria-label="Theme"><svg class="ic" id="theme-ic"><use href="#i-sun"/></svg></button>
       <button class="btn primary sm" id="btn-refresh"><span class="spin"></span><svg class="ic sm"><use href="#i-refresh"/></svg><span class="lbl" data-i18n="refresh">עדכן שערים</span></button>
     </header>
 
@@ -547,13 +561,17 @@ td.num,th.num{text-align:end}
           <div class="tbl-wrap" id="pf-tblwrap"><table id="pf-table" aria-describedby="pf-note"><thead></thead><tbody></tbody></table></div><div id="pf-empty" hidden></div>
           <p class="faint" id="pf-note" style="font-size:.76rem;margin-top:8px" data-i18n="pf.note">שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.</p>
         </div>
-        <div class="card">
-          <div class="card-h"><h2 data-i18n="watch.title">רשימת מעקב</h2><span class="badge chip" id="watch-count">0</span><div style="flex:1"></div><button class="btn sm" id="btn-watch-add"><svg class="ic sm"><use href="#i-eye"/></svg><span data-i18n="watch.add">הוסף למעקב</span></button></div>
-          <div class="tbl-wrap" id="watch-tblwrap"><table id="watch-table"><thead></thead><tbody></tbody></table></div><div id="watch-empty" hidden></div>
-        </div>
         <div class="grid two">
           <div class="card"><div class="card-h"><h3 data-i18n="pf.bysector">משקל לפי סקטור</h3></div><div class="hbar" id="pf-sector-bars"></div></div>
           <div class="card"><div class="card-h"><h3 data-i18n="pf.pnl">רווח/הפסד לפי אחזקה</h3></div><div class="chart" id="chart-pnl"></div></div>
+        </div>
+      </section>
+
+      <!-- ======== Watchlist ======== -->
+      <section class="page" id="page-watchlist">
+        <div class="card">
+          <div class="card-h"><h2 data-i18n="watch.title">רשימת מעקב</h2><span class="badge chip" id="watch-count">0</span><div style="flex:1"></div><button class="btn sm" id="btn-watch-add"><svg class="ic sm"><use href="#i-eye"/></svg><span data-i18n="watch.add">הוסף למעקב</span></button></div>
+          <div class="tbl-wrap" id="watch-tblwrap"><table id="watch-table"><thead></thead><tbody></tbody></table></div><div id="watch-empty" hidden></div>
         </div>
       </section>
 
@@ -675,11 +693,12 @@ td.num,th.num{text-align:end}
 
 <!-- ============ Bottom nav (mobile) ============ -->
 <nav class="bottom-nav" aria-label="Main">
-  <button data-nav="dashboard"><svg class="ic"><use href="#i-home"/></svg><span data-i18n="nav.dashboard">דשבורד</span></button>
-  <button data-nav="portfolio"><svg class="ic"><use href="#i-briefcase"/></svg><span data-i18n="nav.portfolio">התיק</span></button>
-  <button data-nav="scanner"><svg class="ic"><use href="#i-radar"/></svg><span data-i18n="nav.scanner">סורק</span></button>
-  <button data-nav="insights"><svg class="ic"><use href="#i-sparkles"/></svg><span data-i18n="nav.insights">תובנות</span></button>
-  <button data-nav="settings"><svg class="ic"><use href="#i-settings"/></svg><span data-i18n="nav.settings">הגדרות</span></button>
+  <button data-nav="dashboard" style="--nav-c:var(--s1)"><span class="nav-ico"><svg class="ic"><use href="#i-home"/></svg></span><span data-i18n="nav.s.dashboard">דשבורד</span></button>
+  <button data-nav="portfolio" style="--nav-c:var(--s3)"><span class="nav-ico"><svg class="ic"><use href="#i-briefcase"/></svg></span><span data-i18n="nav.s.portfolio">התיק</span></button>
+  <button data-nav="watchlist" style="--nav-c:var(--s4)"><span class="nav-ico"><svg class="ic"><use href="#i-eye"/></svg></span><span data-i18n="nav.s.watchlist">מעקב</span></button>
+  <button data-nav="scanner" style="--nav-c:var(--s7)"><span class="nav-ico"><svg class="ic"><use href="#i-radar"/></svg></span><span data-i18n="nav.s.scanner">סורק</span></button>
+  <button data-nav="insights" style="--nav-c:var(--s5)"><span class="nav-ico"><svg class="ic"><use href="#i-sparkles"/></svg></span><span data-i18n="nav.s.insights">תובנות</span></button>
+  <button data-nav="settings" style="--nav-c:var(--text-2)"><span class="nav-ico"><svg class="ic"><use href="#i-settings"/></svg></span><span data-i18n="nav.s.settings">הגדרות</span></button>
 </nav>
 
 <!-- ============ Sheet ============ -->
@@ -700,7 +719,7 @@ td.num,th.num{text-align:end}
 
 const I18N = {
   he: {
-    tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות','nav.alerts':'התראות','al.title':'התראות על התיק','al.quick':'סריקה מהירה','al.sub':'בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות — לטובה ולרעה: תנועות חדות, דוחות, שינויי המלצות, עסקאות, רגולציה, שיאים ושפלים.','al.auto':'סריקה אוטומטית בפתיחה','al.run':'סרוק עכשיו','al.last':'סריקה אחרונה: {t}','al.never':'טרם נסרק','al.scanning':'סורק התראות…','al.found':'נמצאו {n} התראות חדשות','al.none':'אין אירועים חריגים במניות התיק','al.none.d':'הסריקה האחרונה לא מצאה חדשות מהותיות או תנועות חדות ב-48 השעות האחרונות.','al.empty':'אין עדיין סריקה','al.empty.d':'לחץ על סרוק עכשיו, או הפעל סריקה אוטומטית בפתיחה.','al.nohold':'אין מניות בתיק לסריקה','al.local':'התראות מקומיות','al.ai':'אירועים מהרשת','al.quiet':'ללא אירועים','al.open':'פתח ניתוח','al.markread':'סמן הכל כנקרא','al.new':'חדש','al.dayjump':'תנועה יומית חדה: {p}','al.dayjump.d':'{t} זז {p} היום. בדוק חדשות לפני פעולה.','al.target':'מחיר יעד הושג','al.target.d':'{t} נסחר ב-{p}, מעל היעד שהגדרת ({g}).','al.stale':'שערים לא עדכניים','al.stale.d':'העדכון האחרון לפני {h} שעות.','al.sev.high':'דחוף','al.sev.medium':'חשוב','al.sev.low':'לידיעה','al.types.earnings':'דוחות','al.types.analyst':'אנליסטים','al.types.news':'חדשות','al.types.price':'מחיר','al.types.ma':'עסקה','al.types.regulatory':'רגולציה','al.types.insider':'בעלי עניין','al.types.dividend':'דיבידנד','al.types.technical':'טכני','al.types.macro':'מאקרו','al.types.other':'אחר',
+    tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות','nav.watchlist':'מעקב','nav.s.dashboard':'דשבורד','nav.s.portfolio':'התיק','nav.s.watchlist':'מעקב','nav.s.scanner':'סורק','nav.s.insights':'תובנות','nav.s.settings':'הגדרות','nav.alerts':'התראות','al.title':'התראות על התיק','al.quick':'סריקה מהירה','al.sub':'בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות — לטובה ולרעה: תנועות חדות, דוחות, שינויי המלצות, עסקאות, רגולציה, שיאים ושפלים.','al.auto':'סריקה אוטומטית בפתיחה','al.run':'סרוק עכשיו','al.last':'סריקה אחרונה: {t}','al.never':'טרם נסרק','al.scanning':'סורק התראות…','al.found':'נמצאו {n} התראות חדשות','al.none':'אין אירועים חריגים במניות התיק','al.none.d':'הסריקה האחרונה לא מצאה חדשות מהותיות או תנועות חדות ב-48 השעות האחרונות.','al.empty':'אין עדיין סריקה','al.empty.d':'לחץ על סרוק עכשיו, או הפעל סריקה אוטומטית בפתיחה.','al.nohold':'אין מניות בתיק לסריקה','al.local':'התראות מקומיות','al.ai':'אירועים מהרשת','al.quiet':'ללא אירועים','al.open':'פתח ניתוח','al.markread':'סמן הכל כנקרא','al.new':'חדש','al.dayjump':'תנועה יומית חדה: {p}','al.dayjump.d':'{t} זז {p} היום. בדוק חדשות לפני פעולה.','al.target':'מחיר יעד הושג','al.target.d':'{t} נסחר ב-{p}, מעל היעד שהגדרת ({g}).','al.stale':'שערים לא עדכניים','al.stale.d':'העדכון האחרון לפני {h} שעות.','al.sev.high':'דחוף','al.sev.medium':'חשוב','al.sev.low':'לידיעה','al.types.earnings':'דוחות','al.types.analyst':'אנליסטים','al.types.news':'חדשות','al.types.price':'מחיר','al.types.ma':'עסקה','al.types.regulatory':'רגולציה','al.types.insider':'בעלי עניין','al.types.dividend':'דיבידנד','al.types.technical':'טכני','al.types.macro':'מאקרו','al.types.other':'אחר',
     'api.notset':'API לא מוגדר','api.set':'API מחובר','fx.label':'USD/ILS', refresh:'עדכן שערים', all:'הכל', local:'חישוב מקומי',
     'dash.history':'שווי התיק לאורך זמן','dash.alloc':'חלוקה לפי סקטור','dash.exch':'חשיפה לפי בורסה','dash.ccy':'חשיפת מטבע','dash.movers':'תנועות היום','dash.quick':'תובנות מהירות',
     'pf.title':'אחזקות','watch.title':'רשימת מעקב','watch.add':'הוסף למעקב','watch.empty':'אין מניות במעקב','watch.empty.d':'הוסף מניות שאתה שוקל לקנות — ידנית או בלחיצה מסורק השוק. השערים מתעדכנים יחד עם התיק.','watch.since':'מאז הוספה','watch.toPf':'העבר לתיק','watch.added':'{t} נוסף למעקב','watch.exists':'{t} כבר במעקב','watch.remove':'הסר ממעקב','watch.inlist':'במעקב','th.added':'נוסף','watch.form':'הוספה למעקב','watch.target':'מחיר יעד (אופציונלי)','chart.title':'גרף היסטורי','chart.load':'טען גרף','chart.loading':'טוען נתונים היסטוריים…','chart.fail':'לא הצלחתי לטעון היסטוריה','chart.range.1M':'חודש','chart.range.3M':'3 חודשים','chart.range.1Y':'שנה','chart.range.5Y':'5 שנים','chart.change':'שינוי בתקופה','chart.hi':'גבוה','chart.lo':'נמוך','chart.src':'מקור: {s} · סגירות','chart.snap':'נתונים שנאספו על ידי האפליקציה בכל עדכון שערים','chart.snap.hint':'האפליקציה שומרת נקודת מחיר בכל עדכון שערים — הגרף ייבנה בהדרגה גם בלי מקור חיצוני.','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
@@ -730,7 +749,7 @@ const I18N = {
     'sample':'דוגמה','hours':'שעות','ago':'לפני','never':'טרם עודכן','shares':'יח׳','of':'מתוך','more':'עוד','less':'פחות','raw':'תשובה גולמית','copy':'העתק','copied':'הועתק',
   },
   en: {
-    tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings','nav.alerts':'Alerts','al.title':'Portfolio alerts','al.quick':'Quick scan','al.sub':'On every app open, your holdings are scanned for unusual events from the last 48 hours — good and bad: sharp moves, earnings, rating changes, deals, regulation, highs and lows.','al.auto':'Auto-scan on open','al.run':'Scan now','al.last':'Last scan: {t}','al.never':'Not scanned yet','al.scanning':'Scanning alerts…','al.found':'{n} new alerts found','al.none':'No unusual events in your holdings','al.none.d':'The last scan found no material news or sharp moves in the last 48 hours.','al.empty':'No scan yet','al.empty.d':'Tap Scan now, or enable auto-scan on open.','al.nohold':'No holdings to scan','al.local':'Local alerts','al.ai':'Events from the web','al.quiet':'No events','al.open':'Open analysis','al.markread':'Mark all read','al.new':'New','al.dayjump':'Sharp daily move: {p}','al.dayjump.d':'{t} moved {p} today. Check the news before acting.','al.target':'Target price reached','al.target.d':'{t} trades at {p}, above your target ({g}).','al.stale':'Stale quotes','al.stale.d':'Last update {h} hours ago.','al.sev.high':'Urgent','al.sev.medium':'Important','al.sev.low':'FYI','al.types.earnings':'Earnings','al.types.analyst':'Analysts','al.types.news':'News','al.types.price':'Price','al.types.ma':'Deal','al.types.regulatory':'Regulatory','al.types.insider':'Insiders','al.types.dividend':'Dividend','al.types.technical':'Technical','al.types.macro':'Macro','al.types.other':'Other',
+    tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings','nav.watchlist':'Watchlist','nav.s.dashboard':'Home','nav.s.portfolio':'Portfolio','nav.s.watchlist':'Watch','nav.s.scanner':'Scanner','nav.s.insights':'Insights','nav.s.settings':'Settings','nav.alerts':'Alerts','al.title':'Portfolio alerts','al.quick':'Quick scan','al.sub':'On every app open, your holdings are scanned for unusual events from the last 48 hours — good and bad: sharp moves, earnings, rating changes, deals, regulation, highs and lows.','al.auto':'Auto-scan on open','al.run':'Scan now','al.last':'Last scan: {t}','al.never':'Not scanned yet','al.scanning':'Scanning alerts…','al.found':'{n} new alerts found','al.none':'No unusual events in your holdings','al.none.d':'The last scan found no material news or sharp moves in the last 48 hours.','al.empty':'No scan yet','al.empty.d':'Tap Scan now, or enable auto-scan on open.','al.nohold':'No holdings to scan','al.local':'Local alerts','al.ai':'Events from the web','al.quiet':'No events','al.open':'Open analysis','al.markread':'Mark all read','al.new':'New','al.dayjump':'Sharp daily move: {p}','al.dayjump.d':'{t} moved {p} today. Check the news before acting.','al.target':'Target price reached','al.target.d':'{t} trades at {p}, above your target ({g}).','al.stale':'Stale quotes','al.stale.d':'Last update {h} hours ago.','al.sev.high':'Urgent','al.sev.medium':'Important','al.sev.low':'FYI','al.types.earnings':'Earnings','al.types.analyst':'Analysts','al.types.news':'News','al.types.price':'Price','al.types.ma':'Deal','al.types.regulatory':'Regulatory','al.types.insider':'Insiders','al.types.dividend':'Dividend','al.types.technical':'Technical','al.types.macro':'Macro','al.types.other':'Other',
     'api.notset':'API not set','api.set':'API connected','fx.label':'USD/ILS', refresh:'Refresh quotes', all:'All', local:'Local calc',
     'dash.history':'Portfolio value over time','dash.alloc':'Allocation by sector','dash.exch':'Exposure by exchange','dash.ccy':'Currency exposure','dash.movers':"Today's movers",'dash.quick':'Quick insights',
     'pf.title':'Holdings','watch.title':'Watchlist','watch.add':'Add to watchlist','watch.empty':'Watchlist is empty','watch.empty.d':'Add stocks you are considering — manually or with one tap from the scanner. Prices update together with the portfolio.','watch.since':'Since added','watch.toPf':'Move to portfolio','watch.added':'{t} added to watchlist','watch.exists':'{t} is already on the watchlist','watch.remove':'Remove from watchlist','watch.inlist':'Watching','th.added':'Added','watch.form':'Add to watchlist','watch.target':'Target price (optional)','chart.title':'Price history','chart.load':'Load chart','chart.loading':'Loading price history…','chart.fail':'Could not load history','chart.range.1M':'1M','chart.range.3M':'3M','chart.range.1Y':'1Y','chart.range.5Y':'5Y','chart.change':'Period change','chart.hi':'High','chart.lo':'Low','chart.src':'Source: {s} · closes','chart.snap':'Data collected by the app on each quote refresh','chart.snap.hint':'The app stores one price point per refresh — the chart builds up over time even without an external source.','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
@@ -1485,7 +1504,7 @@ function addToWatch(w,{silent}={}){
   save(); renderAll(); if(!silent) toast(t('watch.added',{t:tk}),'ok'); return true;
 }
 function renderWatchlist(){
-  const tbl=$('#watch-table'), wrap=$('#watch-tblwrap'), empty=$('#watch-empty'); if(!tbl) return; $('#watch-count').textContent=S.watchlist.length;
+  const tbl=$('#watch-table'), wrap=$('#watch-tblwrap'), empty=$('#watch-empty'); if(!tbl) return; $('#watch-count').textContent=S.watchlist.length; const nw=$('#nav-watch'); if(nw) nw.textContent=S.watchlist.length;
   if(!S.watchlist.length){ wrap.hidden=true; empty.hidden=false; empty.innerHTML=emptyHTML('i-eye',t('watch.empty'),t('watch.empty.d')); return; }
   wrap.hidden=false; empty.hidden=true;
   tbl.tHead.innerHTML=`<tr><th>${t('th.sym')}</th><th class="num">${t('th.price')}</th><th class="num">${t('th.chg')}</th><th class="num">${t('watch.since')}</th><th class="num">${t('watch.target')}</th><th></th></tr>`;
@@ -1892,7 +1911,7 @@ function bind(){
 function fillDatalist(){ const d=$('#ticker-list'); if(d) d.innerHTML=UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join(''); }
 function init(){
   applyTheme(); applyI18n(); fillDatalist(); bind(); renderAll();
-  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen();
+  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','watchlist','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen();
   document.documentElement.style.setProperty('--dirx',lang()==='he'?'-1':'1');
 }
 document.addEventListener('DOMContentLoaded',init);
