@@ -1154,8 +1154,8 @@ function applyI18n(){
   $$('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
   $$('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.dataset.i18nPh); });
   document.title='MarketMaster · '+(L==='he'?'ניהול תיק השקעות':'Portfolio Manager');
-  const dm=$('#set-datamodel'); if(dm){ dm.options[0].text=L==='he'?'Claude Haiku 4.5 — הכי מהיר':'Claude Haiku 4.5 — fastest'; dm.options[1].text=L==='he'?'Claude Sonnet 5 — מהיר ומדויק (מומלץ)':'Claude Sonnet 5 — fast & accurate (recommended)'; dm.options[2].text=L==='he'?'Claude Opus 5 — איטי יותר':'Claude Opus 5 — slower'; }
-  const m=$('#set-model'); if(m){ m.options[0].text=L==='he'?'Claude Opus 5 — איכות מקסימלית (מומלץ)':'Claude Opus 5 — best quality (recommended)'; m.options[1].text=L==='he'?'Claude Sonnet 5 — מהיר וחסכוני':'Claude Sonnet 5 — fast & economical'; m.options[2].text=L==='he'?'Claude Haiku 4.5 — הכי מהיר':'Claude Haiku 4.5 — fastest'; }
+  const dm=$('#set-datamodel'); if(dm){ dm.options[0].text=L==='he'?'Haiku 4.5 — הכי מהיר':'Haiku 4.5 — fastest'; dm.options[1].text=L==='he'?'Sonnet 5 — מומלץ':'Sonnet 5 — recommended'; dm.options[2].text=L==='he'?'Opus 5 — איטי יותר':'Opus 5 — slower'; }
+  const m=$('#set-model'); if(m){ m.options[0].text=L==='he'?'Opus 5 — איכות מקסימלית':'Opus 5 — best quality'; m.options[1].text=L==='he'?'Sonnet 5 — מהיר וחסכוני':'Sonnet 5 — fast & economical'; m.options[2].text=L==='he'?'Haiku 4.5 — הכי מהיר':'Haiku 4.5 — fastest'; }
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===L));
   $('#page-title').textContent=t('nav.'+currentPage);
 }
