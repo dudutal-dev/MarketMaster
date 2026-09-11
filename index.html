@@ -314,6 +314,12 @@ td.num,th.num{text-align:end}
 /* ---------- Charts ---------- */
 .chart{width:100%;position:relative}
 .chart svg{width:100%;height:auto;display:block;overflow:visible}
+.view-bar{display:flex;align-items:center;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+.view-bar::-webkit-scrollbar{display:none}
+.view-seg{flex:none}
+.view-seg button{white-space:nowrap}
+.view-seg button .n{margin-inline-start:6px;font-size:.7rem;opacity:.7}
+.pf-chip{font-size:.62rem;padding:0 6px;border-radius:5px;background:var(--primary-soft);color:var(--primary);font-weight:700}
 .chart-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .chart-tools .seg.sm button{padding:4px 9px}
 .chart-tools .chip-toggle{min-height:30px;padding:4px 10px;font-size:.76rem}
@@ -540,6 +546,7 @@ td.num,th.num{text-align:end}
     <main class="content">
       <!-- ======== Dashboard ======== -->
       <section class="page" id="page-dashboard" aria-labelledby="page-title">
+        <div class="view-bar"><div class="seg view-seg" role="group" aria-label="View"></div></div>
         <div class="grid kpis" id="kpis"></div>
         <div class="grid main-side">
           <div class="card">
@@ -567,6 +574,7 @@ td.num,th.num{text-align:end}
       <!-- ======== Portfolio ======== -->
       <section class="page" id="page-portfolio">
         <div class="card">
+          <div class="view-bar" style="margin-bottom:12px"><div class="seg view-seg" role="group" aria-label="View"></div></div>
           <div class="card-h">
             <h2 data-i18n="pf.title">אחזקות</h2>
             <div class="input-wrap" style="width:min(320px,100%)"><input class="input" id="pf-search" data-i18n-ph="pf.search" placeholder="חיפוש בתיק…" autocomplete="off"></div>
@@ -614,6 +622,7 @@ td.num,th.num{text-align:end}
 
       <!-- ======== Insights ======== -->
       <section class="page" id="page-insights">
+        <div class="view-bar"><div class="seg view-seg" role="group" aria-label="View"></div></div>
         <div class="card">
           <div class="card-h"><h2 data-i18n="ins.title">מנוע תובנות — ניתוח התיק</h2><span class="chip accent"><svg class="ic sm"><use href="#i-sparkles"/></svg>Deep Analysis</span>
             <div class="sub" data-i18n="ins.sub">ניתוח מעמיק של התיק הנוכחי: ציון איכות, ריכוזיות, חשיפות, אותות פריצה באחזקות, המלצות פעולה ותוכנית איזון.</div></div>
@@ -631,8 +640,7 @@ td.num,th.num{text-align:end}
       <!-- ======== Alerts ======== -->
       <section class="page" id="page-alerts">
         <div class="card">
-          <div class="card-h"><h2 data-i18n="al.title">התראות על התיק</h2><span class="chip accent"><svg class="ic sm"><use href="#i-bolt"/></svg><span data-i18n="al.quick">סריקה מהירה</span></span>
-            <div class="sub" data-i18n="al.sub">בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות.</div></div>
+          <div class="card-h"><h2 data-i18n="al.title">התראות על התיק</h2><span class="chip accent"><svg class="ic sm"><use href="#i-bolt"/></svg><span data-i18n="al.quick">סריקה מהירה</span></span></div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <span class="faint" style="font-size:.82rem" id="al-last"></span>
             <label class="chip outline" style="cursor:pointer"><input type="checkbox" id="al-auto" checked style="accent-color:var(--primary)"> <span data-i18n="al.auto">סריקה אוטומטית בפתיחה</span></label>
@@ -733,14 +741,14 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2224';
+const APP_VERSION='2026.09.11-2233';
 
 const I18N = {
   he: {
     tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות','nav.watchlist':'מעקב','nav.s.dashboard':'דשבורד','nav.s.portfolio':'התיק','nav.s.watchlist':'מעקב','nav.s.scanner':'סורק','nav.s.insights':'תובנות','nav.s.settings':'הגדרות','nav.alerts':'התראות','al.title':'התראות על התיק','al.quick':'סריקה מהירה','al.sub':'בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות — לטובה ולרעה: תנועות חדות, דוחות, שינויי המלצות, עסקאות, רגולציה, שיאים ושפלים.','al.auto':'סריקה אוטומטית בפתיחה','al.run':'סרוק עכשיו','al.last':'סריקה אחרונה: {t}','al.never':'טרם נסרק','al.scanning':'סורק התראות…','al.found':'נמצאו {n} התראות חדשות','al.none':'אין אירועים חריגים במניות התיק','al.none.d':'הסריקה האחרונה לא מצאה חדשות מהותיות או תנועות חדות ב-48 השעות האחרונות.','al.empty':'אין עדיין סריקה','al.empty.d':'לחץ על סרוק עכשיו, או הפעל סריקה אוטומטית בפתיחה.','al.nohold':'אין מניות בתיק לסריקה','al.local':'התראות מקומיות','al.ai':'אירועים מהרשת','al.quiet':'ללא אירועים','al.open':'פתח ניתוח','al.markread':'סמן הכל כנקרא','al.clear':'נקה הכל','al.dismiss':'הסר התראה','al.cleared':'ההתראות נוקו','al.expiry':'התראות נמחקות אוטומטית אחרי 7 ימים. אפשר להסיר התראה בודדת ב-X או לנקות הכל.','upd.available':'גרסה חדשה זמינה — לחץ כאן לעדכון','upd.version':'גרסה','upd.check':'בדוק עדכון','upd.latest':'הגרסה עדכנית','upd.fail':'לא ניתן לבדוק עדכון כרגע','al.new':'חדש','al.dayjump':'תנועה יומית חדה: {p}','al.dayjump.d':'{t} זז {p} היום. בדוק חדשות לפני פעולה.','al.target':'מחיר יעד הושג','al.target.d':'{t} נסחר ב-{p}, מעל היעד שהגדרת ({g}).','al.stale':'שערים לא עדכניים','al.stale.d':'העדכון האחרון לפני {h} שעות.','al.sev.high':'דחוף','al.sev.medium':'חשוב','al.sev.low':'לידיעה','al.types.earnings':'דוחות','al.types.analyst':'אנליסטים','al.types.news':'חדשות','al.types.price':'מחיר','al.types.ma':'עסקה','al.types.regulatory':'רגולציה','al.types.insider':'בעלי עניין','al.types.dividend':'דיבידנד','al.types.technical':'טכני','al.types.macro':'מאקרו','al.types.other':'אחר',
     'api.notset':'API לא מוגדר','api.set':'API מחובר','fx.label':'USD/ILS', refresh:'עדכן שערים', all:'הכל', local:'חישוב מקומי',
     'dash.history':'שווי התיק לאורך זמן','dash.alloc':'חלוקה לפי סקטור','dash.exch':'חשיפה לפי בורסה','dash.ccy':'חשיפת מטבע','dash.movers':'תנועות היום','dash.quick':'תובנות מהירות',
-    'pf.title':'אחזקות','watch.title':'רשימת מעקב','watch.add':'הוסף למעקב','watch.empty':'אין מניות במעקב','watch.empty.d':'הוסף מניות שאתה שוקל לקנות — ידנית או בלחיצה מסורק השוק. השערים מתעדכנים יחד עם התיק.','watch.since':'מאז הוספה','watch.toPf':'העבר לתיק','watch.added':'{t} נוסף למעקב','watch.exists':'{t} כבר במעקב','watch.remove':'הסר ממעקב','watch.inlist':'במעקב','th.added':'נוסף','watch.form':'הוספה למעקב','watch.target':'מחיר יעד (אופציונלי)','chart.title':'גרף היסטורי','chart.load':'טען גרף','chart.loading':'טוען נתונים היסטוריים…','chart.fail':'לא הצלחתי לטעון היסטוריה','chart.range.1M':'חודש','chart.range.3M':'3 חודשים','chart.range.1Y':'שנה','chart.range.5Y':'5 שנים','chart.change':'שינוי בתקופה','chart.hi':'גבוה','chart.lo':'נמוך','chart.src':'מקור: {s}','chart.type':'סוג גרף','chart.t.line':'קו','chart.t.area':'שטח','chart.t.candle':'נרות','chart.t.ohlc':'OHLC','chart.ma':'ממוצעים 20/50','chart.vol':'נפח','chart.o':'פתיחה','chart.h':'גבוה','chart.l':'נמוך','chart.c':'סגירה','chart.v':'נפח','chart.nocandle':'נרות דורשים נתוני פתיחה/גבוה/נמוך — מוצג קו','chart.snap':'נתונים שנאספו על ידי האפליקציה בכל עדכון שערים','chart.snap.hint':'האפליקציה שומרת נקודת מחיר בכל עדכון שערים — הגרף ייבנה בהדרגה גם בלי מקור חיצוני.','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
+    'pf.title':'אחזקות','pf.all':'מבט כולל','pf.manage':'ניהול תיקים','pf.new':'תיק חדש','pf.newname':'שם התיק החדש','pf.create':'צור תיק','pf.rename':'שם','pf.deletep':'מחק תיק','pf.deletep.confirm':'למחוק את התיק "{n}"? {c} האחזקות שבו יועברו לתיק "{m}".','pf.cannotdel':'לא ניתן למחוק את התיק היחיד','pf.field':'תיק','pf.count':'{n} ניירות','pf.main':'התיק הראשי','pf.view':'תצוגה','pf.created':'התיק נוצר','pf.moved':'הועבר ל-{n}','watch.title':'רשימת מעקב','watch.add':'הוסף למעקב','watch.empty':'אין מניות במעקב','watch.empty.d':'הוסף מניות שאתה שוקל לקנות — ידנית או בלחיצה מסורק השוק. השערים מתעדכנים יחד עם התיק.','watch.since':'מאז הוספה','watch.toPf':'העבר לתיק','watch.added':'{t} נוסף למעקב','watch.exists':'{t} כבר במעקב','watch.remove':'הסר ממעקב','watch.inlist':'במעקב','th.added':'נוסף','watch.form':'הוספה למעקב','watch.target':'מחיר יעד (אופציונלי)','chart.title':'גרף היסטורי','chart.load':'טען גרף','chart.loading':'טוען נתונים היסטוריים…','chart.fail':'לא הצלחתי לטעון היסטוריה','chart.range.1M':'חודש','chart.range.3M':'3 חודשים','chart.range.1Y':'שנה','chart.range.5Y':'5 שנים','chart.change':'שינוי בתקופה','chart.hi':'גבוה','chart.lo':'נמוך','chart.src':'מקור: {s}','chart.type':'סוג גרף','chart.t.line':'קו','chart.t.area':'שטח','chart.t.candle':'נרות','chart.t.ohlc':'OHLC','chart.ma':'ממוצעים 20/50','chart.vol':'נפח','chart.o':'פתיחה','chart.h':'גבוה','chart.l':'נמוך','chart.c':'סגירה','chart.v':'נפח','chart.nocandle':'נרות דורשים נתוני פתיחה/גבוה/נמוך — מוצג קו','chart.snap':'נתונים שנאספו על ידי האפליקציה בכל עדכון שערים','chart.snap.hint':'האפליקציה שומרת נקודת מחיר בכל עדכון שערים — הגרף ייבנה בהדרגה גם בלי מקור חיצוני.','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
     export:'ייצוא', import:'ייבוא',
     'scan.title':'סורק שוק חכם','scan.sub':'בחר תחומי פעילות ובורסות — המנוע יאתר מניות חמות, פריצות טכניות ומומנטום, עם רמות כניסה, סטופ ויעד.','scan.sectors':'תחומי פעילות','scan.markets':'בורסות','scan.mode':'סוג סריקה','scan.m.all':'הכל','scan.m.hot':'מניות חמות','scan.m.breakout':'פריצות','scan.m.value':'ערך','scan.focus':'דגש נוסף (אופציונלי)','scan.focus.ph':'לדוגמה: דיבידנד גבוה, שווי שוק קטן, AI…','scan.run':'הפעל סריקה',
     'ins.title':'מנוע תובנות — ניתוח התיק','ins.sub':'ניתוח מעמיק של התיק הנוכחי: ציון איכות, ריכוזיות, חשיפות, אותות פריצה באחזקות, המלצות פעולה ותוכנית איזון.','ins.web':'כלול נתוני שוק עדכניים (Web)','ins.run':'נתח את התיק',
@@ -770,7 +778,7 @@ const I18N = {
     tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings','nav.watchlist':'Watchlist','nav.s.dashboard':'Home','nav.s.portfolio':'Portfolio','nav.s.watchlist':'Watch','nav.s.scanner':'Scanner','nav.s.insights':'Insights','nav.s.settings':'Settings','nav.alerts':'Alerts','al.title':'Portfolio alerts','al.quick':'Quick scan','al.sub':'On every app open, your holdings are scanned for unusual events from the last 48 hours — good and bad: sharp moves, earnings, rating changes, deals, regulation, highs and lows.','al.auto':'Auto-scan on open','al.run':'Scan now','al.last':'Last scan: {t}','al.never':'Not scanned yet','al.scanning':'Scanning alerts…','al.found':'{n} new alerts found','al.none':'No unusual events in your holdings','al.none.d':'The last scan found no material news or sharp moves in the last 48 hours.','al.empty':'No scan yet','al.empty.d':'Tap Scan now, or enable auto-scan on open.','al.nohold':'No holdings to scan','al.local':'Local alerts','al.ai':'Events from the web','al.quiet':'No events','al.open':'Open analysis','al.markread':'Mark all read','al.clear':'Clear all','al.dismiss':'Dismiss alert','al.cleared':'Alerts cleared','al.expiry':'Alerts expire automatically after 7 days. Dismiss one with X or clear all.','upd.available':'A new version is available — tap to update','upd.version':'Version','upd.check':'Check for update','upd.latest':'You are up to date','upd.fail':'Could not check for updates right now','al.new':'New','al.dayjump':'Sharp daily move: {p}','al.dayjump.d':'{t} moved {p} today. Check the news before acting.','al.target':'Target price reached','al.target.d':'{t} trades at {p}, above your target ({g}).','al.stale':'Stale quotes','al.stale.d':'Last update {h} hours ago.','al.sev.high':'Urgent','al.sev.medium':'Important','al.sev.low':'FYI','al.types.earnings':'Earnings','al.types.analyst':'Analysts','al.types.news':'News','al.types.price':'Price','al.types.ma':'Deal','al.types.regulatory':'Regulatory','al.types.insider':'Insiders','al.types.dividend':'Dividend','al.types.technical':'Technical','al.types.macro':'Macro','al.types.other':'Other',
     'api.notset':'API not set','api.set':'API connected','fx.label':'USD/ILS', refresh:'Refresh quotes', all:'All', local:'Local calc',
     'dash.history':'Portfolio value over time','dash.alloc':'Allocation by sector','dash.exch':'Exposure by exchange','dash.ccy':'Currency exposure','dash.movers':"Today's movers",'dash.quick':'Quick insights',
-    'pf.title':'Holdings','watch.title':'Watchlist','watch.add':'Add to watchlist','watch.empty':'Watchlist is empty','watch.empty.d':'Add stocks you are considering — manually or with one tap from the scanner. Prices update together with the portfolio.','watch.since':'Since added','watch.toPf':'Move to portfolio','watch.added':'{t} added to watchlist','watch.exists':'{t} is already on the watchlist','watch.remove':'Remove from watchlist','watch.inlist':'Watching','th.added':'Added','watch.form':'Add to watchlist','watch.target':'Target price (optional)','chart.title':'Price history','chart.load':'Load chart','chart.loading':'Loading price history…','chart.fail':'Could not load history','chart.range.1M':'1M','chart.range.3M':'3M','chart.range.1Y':'1Y','chart.range.5Y':'5Y','chart.change':'Period change','chart.hi':'High','chart.lo':'Low','chart.src':'Source: {s}','chart.type':'Chart type','chart.t.line':'Line','chart.t.area':'Area','chart.t.candle':'Candles','chart.t.ohlc':'OHLC','chart.ma':'MA 20/50','chart.vol':'Volume','chart.o':'Open','chart.h':'High','chart.l':'Low','chart.c':'Close','chart.v':'Volume','chart.nocandle':'Candles need open/high/low data — showing line','chart.snap':'Data collected by the app on each quote refresh','chart.snap.hint':'The app stores one price point per refresh — the chart builds up over time even without an external source.','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
+    'pf.title':'Holdings','pf.all':'All portfolios','pf.manage':'Manage portfolios','pf.new':'New portfolio','pf.newname':'New portfolio name','pf.create':'Create','pf.rename':'Name','pf.deletep':'Delete portfolio','pf.deletep.confirm':'Delete portfolio "{n}"? Its {c} holdings will move to "{m}".','pf.cannotdel':'The only portfolio cannot be deleted','pf.field':'Portfolio','pf.count':'{n} securities','pf.main':'Main portfolio','pf.view':'View','pf.created':'Portfolio created','pf.moved':'Moved to {n}','watch.title':'Watchlist','watch.add':'Add to watchlist','watch.empty':'Watchlist is empty','watch.empty.d':'Add stocks you are considering — manually or with one tap from the scanner. Prices update together with the portfolio.','watch.since':'Since added','watch.toPf':'Move to portfolio','watch.added':'{t} added to watchlist','watch.exists':'{t} is already on the watchlist','watch.remove':'Remove from watchlist','watch.inlist':'Watching','th.added':'Added','watch.form':'Add to watchlist','watch.target':'Target price (optional)','chart.title':'Price history','chart.load':'Load chart','chart.loading':'Loading price history…','chart.fail':'Could not load history','chart.range.1M':'1M','chart.range.3M':'3M','chart.range.1Y':'1Y','chart.range.5Y':'5Y','chart.change':'Period change','chart.hi':'High','chart.lo':'Low','chart.src':'Source: {s}','chart.type':'Chart type','chart.t.line':'Line','chart.t.area':'Area','chart.t.candle':'Candles','chart.t.ohlc':'OHLC','chart.ma':'MA 20/50','chart.vol':'Volume','chart.o':'Open','chart.h':'High','chart.l':'Low','chart.c':'Close','chart.v':'Volume','chart.nocandle':'Candles need open/high/low data — showing line','chart.snap':'Data collected by the app on each quote refresh','chart.snap.hint':'The app stores one price point per refresh — the chart builds up over time even without an external source.','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
     export:'Export', import:'Import',
     'scan.title':'Smart Market Scanner','scan.sub':'Pick sectors and exchanges — the engine finds hot stocks, technical breakouts and momentum, with entry zone, stop and target.','scan.sectors':'Sectors','scan.markets':'Exchanges','scan.mode':'Scan type','scan.m.all':'All','scan.m.hot':'Hot stocks','scan.m.breakout':'Breakouts','scan.m.value':'Value','scan.focus':'Extra focus (optional)','scan.focus.ph':'e.g. high dividend, small cap, AI…','scan.run':'Run scan',
     'ins.title':'Insights Engine — Portfolio Analysis','ins.sub':'Deep analysis of your current portfolio: quality score, concentration, exposures, breakout signals in holdings, action recommendations and a rebalancing plan.','ins.web':'Include live market data (Web)','ins.run':'Analyze portfolio',
@@ -850,12 +858,16 @@ const SAMPLE_HOLDINGS = [
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
   settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
+  portfolios:[{id:'main',name:'התיק הראשי',createdAt:0}], view:'all',
   holdings:[], watchlist:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{}}
 };
 let S = load();
 function load(){
   try{ const raw=localStorage.getItem(LS_KEY); if(!raw) return structuredClone(DEFAULTS);
     const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}, watchlist:Array.isArray(p.watchlist)?p.watchlist:[], hist:p.hist&&typeof p.hist==='object'?p.hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{},...(p.alerts||{})}};
+    if(!Array.isArray(st.portfolios)||!st.portfolios.length) st.portfolios=[{id:'main',name:'התיק הראשי',createdAt:0}];
+    st.holdings.forEach(h=>{ if(!h.pid||!st.portfolios.some(x=>x.id===h.pid)) h.pid=st.portfolios[0].id; });
+    if(st.view!=='all'&&!st.portfolios.some(x=>x.id===st.view)) st.view='all';
     if(!(p.settings&&p.settings.perfV2)){ st.settings.perfV2=true; st.settings.dataModel='claude-sonnet-5'; if(st.settings.effort==='high') st.settings.effort='medium'; } // one-time speed migration
     return st;
   }catch(e){ console.warn('load failed',e); return structuredClone(DEFAULTS); }
@@ -898,10 +910,13 @@ function toDisp(v,from){ const to=S.settings.currency; if(v==null) return null; 
 function toIls(v,from){ return from==='ILS'?v:v*(S.settings.usdIls||3.35); }
 
 /* ---------- Derived portfolio metrics ---------- */
-function computed(){
+function curView(){ return S.view&&S.view!=='all'&&S.portfolios.some(p=>p.id===S.view)?S.view:'all'; }
+function pfName(id){ const p=S.portfolios.find(x=>x.id===id); return p?p.name:''; }
+function computed(view){
+  view=view===undefined?curView():view; const holds=view==='all'?S.holdings:S.holdings.filter(h=>h.pid===view);
   const fx=S.settings.usdIls||3.35, rows=[];
   let totalIls=0,costIls=0,dayIls=0,missing=0;
-  for(const h of S.holdings){
+  for(const h of holds){
     const ccy=ccyOf(h), price=h.price??null, prev=h.prevClose??null;
     const valNative=price!=null?price*h.qty:null, costNative=h.avgCost*h.qty;
     const valIls=valNative!=null?toIls(valNative,ccy):null, cIls=toIls(costNative,ccy);
@@ -912,12 +927,12 @@ function computed(){
     costIls+=cIls;
     rows.push({h,ccy,price,prev,valNative,valIls,costNative,costIls:cIls,pnlNative,pnlIls:pnlNative!=null?toIls(pnlNative,ccy):null,pnlPct,dayNative,dayIls:dayNative!=null?toIls(dayNative,ccy):null,dayPct});
   }
-  const cashIls=(+S.settings.cashIls||0)+(+S.settings.cashUsd||0)*fx;
+  const cashIls=view==='all'?(+S.settings.cashIls||0)+(+S.settings.cashUsd||0)*fx:0;
   const nav=totalIls+cashIls;
   rows.forEach(r=>{ r.weight=nav>0&&r.valIls!=null?r.valIls/nav*100:0; r.weightEq=totalIls>0&&r.valIls!=null?r.valIls/totalIls*100:0; });
   const bySector={},byEx={},byCcy={ILS:0,USD:0};
   rows.forEach(r=>{ if(r.valIls==null) return; const sec=r.h.sector||'Other'; bySector[sec]=(bySector[sec]||0)+r.valIls; byEx[r.h.exchange]=(byEx[r.h.exchange]||0)+r.valIls; byCcy[r.ccy]+=r.valIls; });
-  byCcy.ILS+=(+S.settings.cashIls||0); byCcy.USD+=(+S.settings.cashUsd||0)*fx;
+  if(view==='all'){ byCcy.ILS+=(+S.settings.cashIls||0); byCcy.USD+=(+S.settings.cashUsd||0)*fx; }
   const hhi=rows.reduce((a,r)=>a+Math.pow(r.weightEq/100,2),0);
   const sorted=[...rows].filter(r=>r.valIls!=null).sort((a,b)=>b.valIls-a.valIls);
   const top=sorted[0]||null, top3=sorted.slice(0,3).reduce((a,r)=>a+r.weightEq,0);
@@ -925,7 +940,7 @@ function computed(){
   const nSectors=Object.keys(bySector).length;
   let risk=0; risk+=hhi>0.25?3:hhi>0.15?2:hhi>0.1?1:0; risk+=usdShare>70?1:0; risk+=nSectors<3?2:nSectors<5?1:0; if(top&&top.weightEq>30) risk+=1;
   const riskLabel=risk>=5?'vhigh':risk>=3?'high':risk>=1?'med':'low';
-  return {rows,totalIls,costIls,dayIls,cashIls,nav,pnlIls:totalIls-costIls,pnlPct:costIls>0?(totalIls-costIls)/costIls*100:null,dayPct:(totalIls-dayIls)>0?dayIls/(totalIls-dayIls)*100:null,bySector,byEx,byCcy,hhi,top,top3,usdShare,nSectors,risk,riskLabel,missing,fx};
+  return {view,rows,totalIls,costIls,dayIls,cashIls,nav,pnlIls:totalIls-costIls,pnlPct:costIls>0?(totalIls-costIls)/costIls*100:null,dayPct:(totalIls-dayIls)>0?dayIls/(totalIls-dayIls)*100:null,bySector,byEx,byCcy,hhi,top,top3,usdShare,nSectors,risk,riskLabel,missing,fx};
 }
 function dispIls(vIls){ return S.settings.currency==='ILS'?vIls:vIls/(S.settings.usdIls||3.35); }
 </script>
@@ -1127,7 +1142,7 @@ function applyQuotes(j,opts={}){
   save(); return n;
 }
 function recordHistory(){ const now=Date.now();
-  const c=computed(); if(c.totalIls>0){ S.history.push({ts:now,ils:+c.totalIls.toFixed(2),usd:+(c.totalIls/c.fx).toFixed(2),nav:+c.nav.toFixed(2)}); if(S.history.length>2000) S.history=S.history.slice(-2000); }
+  const c=computed('all'); if(c.totalIls>0){ const byPid={}; S.portfolios.forEach(p=>{ const cp=computed(p.id); if(cp.totalIls>0) byPid[p.id]=+cp.nav.toFixed(2); }); S.history.push({ts:now,ils:+c.totalIls.toFixed(2),usd:+(c.totalIls/c.fx).toFixed(2),nav:+c.nav.toFixed(2),byPid}); if(S.history.length>2000) S.history=S.history.slice(-2000); }
   save();
 }
 /* USD/ILS — Bank of Israel representative rate (שער יציג).
@@ -1203,8 +1218,8 @@ Order picks by conviction desc. Ensure every pick has a real, currently traded t
    ============================================================ */
 function portfolioBrief(){
   const c=computed();
-  const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he,sector:r.h.sector,qty:r.h.qty,avgCost:r.h.avgCost,price:r.price,currency:r.ccy,valueILS:r.valIls!=null?+r.valIls.toFixed(0):null,weightPct:+r.weightEq.toFixed(1),pnlPct:r.pnlPct!=null?+r.pnlPct.toFixed(1):null,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,note:r.h.note||undefined}));
-  return {asOf:S.settings.lastQuotes?new Date(S.settings.lastQuotes).toISOString():'prices may be stale/manual',usdIls:c.fx,totalValueILS:+c.totalIls.toFixed(0),cashILS:+c.cashIls.toFixed(0),totalCostILS:+c.costIls.toFixed(0),pnlPct:c.pnlPct!=null?+c.pnlPct.toFixed(1):null,
+  const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he,sector:r.h.sector,portfolio:c.view==='all'&&S.portfolios.length>1?pfName(r.h.pid):undefined,qty:r.h.qty,avgCost:r.h.avgCost,price:r.price,currency:r.ccy,valueILS:r.valIls!=null?+r.valIls.toFixed(0):null,weightPct:+r.weightEq.toFixed(1),pnlPct:r.pnlPct!=null?+r.pnlPct.toFixed(1):null,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,note:r.h.note||undefined}));
+  return {portfolio:c.view==='all'?'ALL PORTFOLIOS combined ('+S.portfolios.map(p=>p.name).join(', ')+')':pfName(c.view),asOf:S.settings.lastQuotes?new Date(S.settings.lastQuotes).toISOString():'prices may be stale/manual',usdIls:c.fx,totalValueILS:+c.totalIls.toFixed(0),cashILS:+c.cashIls.toFixed(0),totalCostILS:+c.costIls.toFixed(0),pnlPct:c.pnlPct!=null?+c.pnlPct.toFixed(1):null,
     concentrationHHI:+c.hhi.toFixed(3),top3WeightPct:+c.top3.toFixed(1),usdSharePct:+c.usdShare.toFixed(1),sectorWeightsPct:Object.fromEntries(Object.entries(c.bySector).map(([k,v])=>[k,+(v/c.totalIls*100).toFixed(1)])),exchangeWeightsPct:Object.fromEntries(Object.entries(c.byEx).map(([k,v])=>[k,+(v/c.totalIls*100).toFixed(1)])),holdings:rows};
 }
 async function analyzePortfolio({profile, useWeb, onStatus, onText}){
@@ -1237,7 +1252,7 @@ Be specific: use the actual tickers, weights and P&L from the data. Keep text fi
    Engine 4 — Single-stock deep dive
    ============================================================ */
 async function deepDive(h,{onStatus,onText}){
-  const c=computed(); const r0=c.rows.find(r=>r.h.id===h.id);
+  const c=computed(h.pid||'all'); const r0=c.rows.find(r=>r.h.id===h.id);
   const pos=r0?`User position: ${h.qty} shares, avg cost ${h.avgCost} ${r0.ccy}, current price ${r0.price??'unknown'}, P&L ${r0.pnlPct!=null?r0.pnlPct.toFixed(1)+'%':'n/a'}, weight ${r0.weightEq.toFixed(1)}% of portfolio.`:'';
   const user=`Produce a complete analyst deep-dive on ${h.ticker} (${h.exchange})${h.name?' — '+h.name:''}${h.name_he?' / '+h.name_he:''}.
 ${pos}
@@ -1316,7 +1331,7 @@ function snapshotSeries(sec){ const arr=(S.priceHist&&S.priceHist[sec.ticker+'|'
    Engine 7 — Quick alerts scan (holdings only, last 48h, fast model)
    ============================================================ */
 async function scanAlerts({signal}={}){
-  const c=computed(); const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he||'',price:r.price,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,weightPct:+r.weightEq.toFixed(1)}));
+  const c=computed('all'); const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he||'',price:r.price,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,weightPct:+r.weightEq.toFixed(1)}));
   if(!rows.length) throw new Error(t('al.nohold'));
   const user=`QUICK ALERT SCAN for a portfolio. Today is ${todayStr()} (Israel time ${new Date().toLocaleTimeString('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit'})}). Only report UNUSUAL, MATERIAL events from the last 48 hours — good or bad. Nothing routine.
 Holdings (JSON): ${JSON.stringify(rows)}
@@ -1333,7 +1348,7 @@ Rules: max 3 alerts per ticker, most important first; include the source URL whe
 }
 /** Local alerts computed without AI. */
 function localAlerts(){
-  const c=computed(); const out=[]; const today=ilToday();
+  const c=computed('all'); const out=[]; const today=ilToday();
   c.rows.forEach(r=>{ if(r.dayPct!=null&&Math.abs(r.dayPct)>=3) out.push({id:'loc:day:'+r.h.ticker+':'+today,ticker:r.h.ticker,type:'price',sentiment:r.dayPct>0?'positive':'negative',severity:Math.abs(r.dayPct)>=7?'high':'medium',title:t('al.dayjump',{p:fmtP(r.dayPct)}),detail:t('al.dayjump.d',{t:r.h.ticker,p:fmtP(r.dayPct)}),date:today,src:'local',ts:Date.now()}); });
   S.watchlist.forEach(w=>{ if(w.target&&w.price!=null&&w.price>=w.target) out.push({id:'loc:target:'+w.ticker+':'+today,ticker:w.ticker,type:'price',sentiment:'positive',severity:'medium',title:t('al.target'),detail:t('al.target.d',{t:w.ticker,p:fmtC(w.price,ccyOf(w)),g:fmtC(w.target,ccyOf(w))}),date:today,src:'local',ts:Date.now()}); });
   const hs=hoursSince(S.settings.lastQuotes); if(S.holdings.length&&isFinite(hs)&&hs>30) out.push({id:'loc:stale:'+today,ticker:'',type:'other',sentiment:'neutral',severity:'low',title:t('al.stale'),detail:t('al.stale.d',{h:Math.round(hs)}),date:today,src:'local',ts:Date.now()});
@@ -1381,7 +1396,7 @@ function go(page){
   currentPage=page;
   $$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
   $$('[data-nav]').forEach(b=>{ if(b.dataset.nav===page) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
-  $('#page-title').textContent=t('nav.'+page);
+  $('#page-title').textContent=t('nav.'+page)+((page==='dashboard'||page==='portfolio'||page==='insights')&&curView()!=='all'?' · '+pfName(curView()):'');
   if(page==='alerts'){ renderAlerts(); setTimeout(markAlertsSeen,1500); }
   window.scrollTo({top:0,behavior:'instant'});
   try{ history.replaceState(null,'','#'+page); }catch(_){}
@@ -1503,6 +1518,26 @@ function priceChart(container,data,{type='candle',ma=true,volume=true,fmt=v=>fmt
   return {type};
 }
 
+/* ---------- Portfolios: view selector + management ---------- */
+function renderViewSelectors(){
+  const v=curView(); const counts={}; S.holdings.forEach(h=>{ counts[h.pid]=(counts[h.pid]||0)+1; });
+  const html=`<button aria-pressed="${v==='all'}" data-view="all">${t('pf.all')}<span class="n">${S.holdings.length}</span></button>${S.portfolios.map(p=>`<button aria-pressed="${v===p.id}" data-view="${esc(p.id)}">${esc(p.name)}<span class="n">${counts[p.id]||0}</span></button>`).join('')}<button data-view="__manage" aria-label="${t('pf.manage')}" title="${t('pf.manage')}"><svg class="ic sm"><use href="#i-settings"/></svg></button>`;
+  $$('.view-seg').forEach(el=>{ el.innerHTML=html; });
+}
+function setView(v){ S.view=v; save(); renderAll(); }
+function openPortfolioManager(){
+  const list=()=>S.portfolios.map(p=>{ const c=computed(p.id); const n=S.holdings.filter(h=>h.pid===p.id).length; return `<div class="row" style="gap:10px;flex-wrap:wrap"><input class="input" style="flex:1;min-width:140px;min-height:40px" value="${esc(p.name)}" data-pname="${esc(p.id)}" aria-label="${t('pf.rename')}"><span class="faint" style="font-size:.8rem;white-space:nowrap">${t('pf.count',{n})} · ${fmtCompact(dispIls(c.totalIls))}</span><button class="btn ghost icon sm" data-pdel="${esc(p.id)}" aria-label="${t('pf.deletep')}" ${S.portfolios.length<2?'disabled':''}><svg class="ic sm"><use href="#i-trash"/></svg></button></div>`; }).join('');
+  openSheet(t('pf.manage'),`<div class="list" id="pm-list">${list()}</div>
+    <div class="card flat"><div class="card-h"><h3>${t('pf.new')}</h3></div><form id="pm-new" style="display:flex;gap:8px;flex-wrap:wrap"><input class="input" id="pm-name" placeholder="${t('pf.newname')}" style="flex:1;min-width:160px" required maxlength="40"><button class="btn primary" type="submit"><svg class="ic sm"><use href="#i-plus"/></svg>${t('pf.create')}</button></form></div>`);
+  const bind=()=>{
+    $$('[data-pname]').forEach(inp=>inp.addEventListener('change',()=>{ const p=S.portfolios.find(x=>x.id===inp.dataset.pname); const v=inp.value.trim(); if(p&&v){ p.name=v; save(); renderAll(); toast(t('saved'),'ok'); } else inp.value=p?p.name:''; }));
+    $$('[data-pdel]').forEach(b=>b.onclick=async()=>{ const p=S.portfolios.find(x=>x.id===b.dataset.pdel); if(!p||S.portfolios.length<2){ toast(t('pf.cannotdel'),'err'); return; } const target=S.portfolios.find(x=>x.id!==p.id); const n=S.holdings.filter(h=>h.pid===p.id).length;
+      if(!(await confirmDlg(t('pf.deletep.confirm',{n:p.name,c:n,m:target.name}),{yes:t('pf.deletep'),danger:true}))) return;
+      S.holdings.forEach(h=>{ if(h.pid===p.id) h.pid=target.id; }); S.portfolios=S.portfolios.filter(x=>x.id!==p.id); if(S.view===p.id) S.view='all'; save(); renderAll(); $('#pm-list').innerHTML=list(); bind(); }); };
+  bind();
+  $('#pm-new').onsubmit=e=>{ e.preventDefault(); const v=$('#pm-name').value.trim(); if(!v) return; const id='pf_'+uid(); S.portfolios.push({id,name:v,createdAt:Date.now()}); S.view=id; save(); renderAll(); $('#pm-list').innerHTML=list(); bind(); $('#pm-name').value=''; toast(t('pf.created'),'ok'); };
+}
+
 /* ---------- Dashboard ---------- */
 function renderDashboard(){
   const c=computed(); const cur=S.settings.currency;
@@ -1513,7 +1548,7 @@ function renderDashboard(){
    <div class="card kpi"><span class="accent-bar" style="background:var(--${dayCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-${c.dayIls>=0?'trend':'trend-down'}"/></svg>${t('kpi.day')}</div><div class="val num ${dayCls}">${fmtC(dispIls(c.dayIls))}</div><div class="delta ${dayCls}">${fmtP(c.dayPct)}</div></div>
    <div class="card kpi"><span class="accent-bar" style="background:var(--${pnlCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-target"/></svg>${t('kpi.pnl')}</div><div class="val num ${pnlCls}">${fmtC(dispIls(c.pnlIls))}</div><div class="delta ${pnlCls}">${fmtP(c.pnlPct)} · ${t('kpi.cost')} ${fmtCompact(dispIls(c.costIls))}</div></div>`;
   // history
-  const since=histRange?Date.now()-histRange*864e5:0; const pts=S.history.filter(p=>p.ts>=since).map(p=>({x:p.ts,y:p.nav??p.ils}));
+  const since=histRange?Date.now()-histRange*864e5:0; const view=curView(); const pts=S.history.filter(p=>p.ts>=since).map(p=>({x:p.ts,y:view==='all'?(p.nav??p.ils):(p.byPid&&p.byPid[view])})).filter(p=>p.y!=null);
   if(pts.length===1&&c.nav>0) pts.push({x:Date.now(),y:c.nav});
   lineChart($('#chart-history'),pts);
   donut($('#chart-sector'),Object.entries(c.bySector).map(([s,v])=>({label:sectorLabel(s),value:v,color:SECTOR_COLOR[s]||'var(--s8)'})));
@@ -1543,7 +1578,7 @@ function renderPortfolio(){
   const emptyBox=$('#pf-empty'), wrap=$('#pf-tblwrap');
   if(!S.holdings.length){ wrap.hidden=true; emptyBox.hidden=false; emptyBox.innerHTML=`${emptyHTML('i-briefcase',t('empty.pf'),t('empty.pf.d'),`<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center"><button class="btn primary sm" id="e-add">${t('pf.add')}</button><button class="btn sm" id="e-sample">${t('set.sample')}</button></div>`)}`; tbl.tBodies[0].innerHTML=''; $('#e-add').onclick=()=>openForm(); $('#e-sample').onclick=loadSample; }
   else { wrap.hidden=false; emptyBox.hidden=true; tbl.tBodies[0].innerHTML=rows.map(r=>`<tr data-dd="${r.h.id}">
-    <td><div class="tick">${avatar(r.h)}<div><div class="n">${esc(r.h.ticker)}</div><div class="m">${exChip(r.h.exchange)}<span>${esc(holdName(r.h))}</span></div></div></div></td>
+    <td><div class="tick">${avatar(r.h)}<div><div class="n">${esc(r.h.ticker)}</div><div class="m">${exChip(r.h.exchange)}<span>${esc(holdName(r.h))}</span>${c.view==='all'&&S.portfolios.length>1?`<span class="pf-chip">${esc(pfName(r.h.pid))}</span>`:''}</div></div></div></td>
     <td class="num">${fmtN(r.h.qty,Number.isInteger(r.h.qty)?0:2)}</td>
     <td class="num">${fmtC(r.h.avgCost,r.ccy)}</td>
     <td class="num"><b>${r.price!=null?fmtC(r.price,r.ccy):'<span class="warn">—</span>'}</b>${r.h.sample?`<div class="faint" style="font-size:.66rem">${t('sample')}</div>`:''}</td>
@@ -1617,7 +1652,8 @@ function openForm(h,prefill){
       <div class="field"><label for="f-cost">${t('f.cost')} * <span class="faint" id="f-ccy">(${d.exchange==='TASE'?'₪':'$'})</span></label><input class="input num" id="f-cost" type="number" inputmode="decimal" step="any" min="0" value="${esc(d.avgCost)}" required><div class="err">${t('pos')}</div></div>
       <div class="field"><label for="f-price">${t('f.price')}</label><input class="input num" id="f-price" type="number" inputmode="decimal" step="any" min="0" value="${esc(d.price??'')}"></div>
     </div>
-    <div class="field"><label for="f-note">${t('f.note')}</label><input class="input" id="f-note" value="${esc(d.note||'')}"></div>
+    <div class="grid two" style="gap:12px"><div class="field"><label for="f-pid">${t('pf.field')}</label><select class="input" id="f-pid">${S.portfolios.map(p=>`<option value="${esc(p.id)}" ${(d.pid||(curView()!=='all'?curView():S.portfolios[0].id))===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
+    <div class="field"><label for="f-note">${t('f.note')}</label><input class="input" id="f-note" value="${esc(d.note||'')}"></div></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px">${isEdit?`<button type="button" class="btn danger" id="f-del">${t('delete')}</button><div style="flex:1"></div>`:''}<button type="button" class="btn" id="f-cancel">${t('cancel')}</button><button type="submit" class="btn primary">${t('save')}</button></div></form>`;
   openSheet(isEdit?t('edit.title'):t('add.title'),body);
   const tk=$('#f-ticker'), ex=$('#f-ex');
@@ -1638,7 +1674,7 @@ function openForm(h,prefill){
   $('#f-cancel').onclick=closeSheet;
   if(isEdit) $('#f-del').onclick=async()=>{ if(await confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true})){ S.holdings=S.holdings.filter(x=>x.id!==h.id); save(); closeSheet(); renderAll(); } };
   $('#hform').onsubmit=e=>{ e.preventDefault(); let ok=true;
-    const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),price:$('#f-price').value!==''?parseFloat($('#f-price').value):null,sector:$('#f-sector').value,note:$('#f-note').value.trim()};
+    const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),price:$('#f-price').value!==''?parseFloat($('#f-price').value):null,sector:$('#f-sector').value,note:$('#f-note').value.trim(),pid:$('#f-pid').value||S.portfolios[0].id};
     [['#f-ticker',!v.ticker],['#f-qty',!(v.qty>0)],['#f-cost',!(v.avgCost>=0)]].forEach(([s,bad])=>{ $(s).closest('.field').classList.toggle('invalid',bad); if(bad) ok=false; });
     if(!ok){ $('.field.invalid input').focus(); return; }
     const nm=$('#f-name').value.trim(); const u=findSec(v.ticker,v.exchange)||(S.lookups&&S.lookups[v.ticker]);
@@ -1703,7 +1739,7 @@ function rawHTML(raw){ return `<div class="card"><div class="card-h"><h3>${t('ra
 function renderInsights(){
   const box=$('#ins-results'); const c=computed(); const a=S.analyses.portfolio;
   const riskCol={low:'var(--gain)',med:'var(--warn)',high:'var(--s2)',vhigh:'var(--loss)'}[c.riskLabel];
-  const local=`<div class="card"><div class="card-h"><h3>${t('ins.local.h')}</h3><span class="chip info">${t('local')}</span></div>
+  const local=`<div class="card"><div class="card-h"><h3>${t('ins.local.h')}</h3><span class="chip info">${t('local')}</span><span class="chip outline">${c.view==='all'?t('pf.all'):esc(pfName(c.view))}</span></div>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr))">
       <div class="stat-mini"><span class="l">${t('ins.riskscore')}</span><span class="v" style="color:${riskCol}">${t('risk.'+c.riskLabel)}</span></div>
       <div class="stat-mini"><span class="l">${t('ins.hhi')}</span><span class="v num">${fmtN(c.hhi,3)} <small class="faint">${c.hhi>0.25?'▲':c.hhi>0.15?'●':'▼'}</small></span></div>
@@ -1753,7 +1789,7 @@ async function doAnalyze(){
 
 /* ---------- Deep dive ---------- */
 function openDeepDive(id){
-  const h=findSecById(id); if(!h) return; const isWatch=!S.holdings.includes(h); const c=computed(); const r=isWatch?null:c.rows.find(x=>x.h.id===id); const ccy=ccyOf(h);
+  const h=findSecById(id); if(!h) return; const isWatch=!S.holdings.includes(h); const c=computed(isWatch?'all':(h.pid||'all')); const r=isWatch?null:c.rows.find(x=>x.h.id===id); const ccy=ccyOf(h);
   const price=isWatch?h.price:r.price, dayPct=isWatch?((h.price!=null&&h.prevClose)?(h.price/h.prevClose-1)*100:null):r.dayPct;
   const a=S.analyses.stocks[h.ticker+'|'+h.exchange];
   const tiles=isWatch?`<div class="stat-mini"><span class="l">${t('watch.since')}</span><span class="v num ${((h.price&&h.addedPrice)?(h.price>=h.addedPrice):true)?'gain':'loss'}">${(h.price&&h.addedPrice)?fmtP((h.price/h.addedPrice-1)*100):'—'}</span></div><div class="stat-mini"><span class="l">${t('th.added')}</span><span class="v num">${new Date(h.addedAt).toLocaleDateString(locale())}${h.addedPrice?' · '+fmtC(h.addedPrice,ccy):''}</span></div>${h.target?`<div class="stat-mini"><span class="l">${t('watch.target')}</span><span class="v num">${fmtC(h.target,ccy)}</span></div>`:''}`
@@ -1928,7 +1964,7 @@ function renderSettings(){
 }
 function loadSample(){
   const now=Date.now();
-  S.holdings=SAMPLE_HOLDINGS.map(x=>{ const u=findSec(x.ticker,x.exchange); return {id:uid(),...x,name:u?u.name_en:x.ticker,name_he:u?u.name_he:x.ticker,sector:u?u.sector:'Other',note:'',sample:true,updatedAt:null,addedAt:now}; });
+  const pid=curView()!=='all'?curView():S.portfolios[0].id; S.holdings=[...S.holdings.filter(h=>h.pid!==pid),...SAMPLE_HOLDINGS.map(x=>{ const u=findSec(x.ticker,x.exchange); return {id:uid(),...x,pid,name:u?u.name_en:x.ticker,name_he:u?u.name_he:x.ticker,sector:u?u.sector:'Other',note:'',sample:true,updatedAt:null,addedAt:now}; })];
   S.settings.usdIls=S.settings.usdIls||3.35; save(); renderAll(); toast(t('sample.loaded'),'ok'); go('portfolio');
 }
 function exportJSON(full){ if(full){ download(`marketmaster-backup-${todayStr()}.json`,JSON.stringify(S,null,2)); } else { const rows=S.holdings.map(({id,sample,...h})=>h); download(`marketmaster-holdings-${todayStr()}.json`,JSON.stringify(rows,null,2)); } toast(t('exported'),'ok'); }
@@ -1937,15 +1973,15 @@ function importFile(file){
     if(file.name.toLowerCase().endsWith('.csv')){ const lines=txt.split(/\r?\n/).filter(l=>l.trim()); const hdr=lines[0].toLowerCase().split(/[,;\t]/).map(x=>x.trim()); const ix=k=>hdr.findIndex(h=>h===k||h.includes(k));
       const iT=ix('ticker')>=0?ix('ticker'):ix('symbol'), iE=ix('exchange'), iQ=ix('qty')>=0?ix('qty'):ix('quantity'), iC=ix('cost')>=0?ix('cost'):ix('avg'), iP=ix('price');
       lines.slice(1).forEach(l=>{ const c=l.split(/[,;\t]/).map(x=>x.trim().replace(/^"|"$/g,'')); const tk=(c[iT]||'').toUpperCase(); if(!tk) return; const u=findSec(tk,c[iE]); const ex=(c[iE]||(u&&u.exchange)||'NASDAQ').toUpperCase(); const q=parseFloat(c[iQ]),ac=parseFloat(c[iC]); if(!(q>0)) return;
-        S.holdings.push({id:uid(),ticker:tk,exchange:ex,qty:q,avgCost:ac||0,price:iP>=0&&c[iP]?parseFloat(c[iP]):null,prevClose:null,sector:u?u.sector:'Other',name:u?u.name_en:tk,name_he:u?u.name_he:tk,note:'',updatedAt:null,addedAt:Date.now()}); n++; }); }
+        S.holdings.push({id:uid(),pid:curView()!=='all'?curView():S.portfolios[0].id,ticker:tk,exchange:ex,qty:q,avgCost:ac||0,price:iP>=0&&c[iP]?parseFloat(c[iP]):null,prevClose:null,sector:u?u.sector:'Other',name:u?u.name_en:tk,name_he:u?u.name_he:tk,note:'',updatedAt:null,addedAt:Date.now()}); n++; }); }
     else { const j=JSON.parse(txt);
-      if(Array.isArray(j)){ j.forEach(h=>{ if(!h.ticker) return; const u=findSec(h.ticker,h.exchange); S.holdings.push({id:uid(),ticker:String(h.ticker).toUpperCase(),exchange:h.exchange||(u&&u.exchange)||'NASDAQ',qty:+h.qty||0,avgCost:+h.avgCost||0,price:h.price!=null?+h.price:null,prevClose:h.prevClose!=null?+h.prevClose:null,sector:h.sector||(u&&u.sector)||'Other',name:h.name||(u&&u.name_en)||h.ticker,name_he:h.name_he||(u&&u.name_he)||h.name||h.ticker,note:h.note||'',updatedAt:h.updatedAt||null,addedAt:Date.now()}); n++; }); }
-      else if(j&&j.holdings){ if(await confirmDlg(t('set.restore')+'?')){ const keepKey=S.settings.apiKey; S={...structuredClone(DEFAULTS),...j,settings:{...DEFAULTS.settings,...(j.settings||{})}}; if(!S.settings.apiKey) S.settings.apiKey=keepKey; n=S.holdings.length; } } }
+      if(Array.isArray(j)){ j.forEach(h=>{ if(!h.ticker) return; const u=findSec(h.ticker,h.exchange); S.holdings.push({id:uid(),pid:(h.pid&&S.portfolios.some(p=>p.id===h.pid))?h.pid:(curView()!=='all'?curView():S.portfolios[0].id),ticker:String(h.ticker).toUpperCase(),exchange:h.exchange||(u&&u.exchange)||'NASDAQ',qty:+h.qty||0,avgCost:+h.avgCost||0,price:h.price!=null?+h.price:null,prevClose:h.prevClose!=null?+h.prevClose:null,sector:h.sector||(u&&u.sector)||'Other',name:h.name||(u&&u.name_en)||h.ticker,name_he:h.name_he||(u&&u.name_he)||h.name||h.ticker,note:h.note||'',updatedAt:h.updatedAt||null,addedAt:Date.now()}); n++; }); }
+      else if(j&&j.holdings){ if(await confirmDlg(t('set.restore')+'?')){ const keepKey=S.settings.apiKey; S={...structuredClone(DEFAULTS),...j,settings:{...DEFAULTS.settings,...(j.settings||{})}}; if(!Array.isArray(S.portfolios)||!S.portfolios.length) S.portfolios=[{id:'main',name:t('pf.main'),createdAt:0}]; S.holdings.forEach(h=>{ if(!h.pid||!S.portfolios.some(p=>p.id===h.pid)) h.pid=S.portfolios[0].id; }); if(!S.settings.apiKey) S.settings.apiKey=keepKey; n=S.holdings.length; } } }
     save(); applyI18n(); applyTheme(); renderAll(); toast(t('imported',{n}),'ok'); }catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); } }; rd.readAsText(file);
 }
 
 /* ---------- Render all & events ---------- */
-function renderAll(){ renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderAlerts(); renderSettings(); }
+function renderAll(){ renderViewSelectors(); renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderAlerts(); renderSettings(); }
 function bind(){
   $$('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
   $$('[data-ccy]').forEach(b=>b.addEventListener('click',()=>{ S.settings.currency=b.dataset.ccy; save(); renderAll(); }));
@@ -1953,7 +1989,8 @@ function bind(){
   $('#btn-theme').onclick=()=>{ const cur=document.documentElement.dataset.theme; S.settings.theme=cur==='dark'?'light':'dark'; save(); applyTheme(); renderAll(); };
   $('#btn-refresh').onclick=doRefresh;
   $$('#hist-range button').forEach(b=>b.onclick=()=>{ histRange=+b.dataset.r; $$('#hist-range button').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderDashboard(); });
-  document.addEventListener('click',e=>{ const dd=e.target.closest('[data-dd]'); const btnIn=e.target.closest('button'); if(dd&&(!btnIn||btnIn===dd)) { openDeepDive(dd.dataset.dd); return; }
+  document.addEventListener('click',e=>{ const vb=e.target.closest('.view-seg [data-view]'); if(vb){ if(vb.dataset.view==='__manage') openPortfolioManager(); else setView(vb.dataset.view); return; }
+    const dd=e.target.closest('[data-dd]'); const btnIn=e.target.closest('button'); if(dd&&(!btnIn||btnIn===dd)) { openDeepDive(dd.dataset.dd); return; }
     const adis=e.target.closest('[data-adis]'); if(adis){ dismissAlert(adis.dataset.adis); return; }
     const ed=e.target.closest('[data-edit]'); if(ed){ e.stopPropagation(); const h=S.holdings.find(x=>x.id===ed.dataset.edit); if(h) openForm(h); return; }
     const w2=e.target.closest('[data-w2pf]'); if(w2){ e.stopPropagation(); const w=S.watchlist.find(x=>x.id===w2.dataset.w2pf); if(w) openForm(null,{ticker:w.ticker,exchange:w.exchange,sector:w.sector,name:w.name,name_he:w.name_he,price:w.price??'',watchId:w.id}); return; }
