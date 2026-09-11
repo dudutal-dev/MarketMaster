@@ -533,6 +533,10 @@ td.num,th.num{text-align:end}
           <div class="tbl-wrap" id="pf-tblwrap"><table id="pf-table" aria-describedby="pf-note"><thead></thead><tbody></tbody></table></div><div id="pf-empty" hidden></div>
           <p class="faint" id="pf-note" style="font-size:.76rem;margin-top:8px" data-i18n="pf.note">שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.</p>
         </div>
+        <div class="card">
+          <div class="card-h"><h2 data-i18n="watch.title">רשימת מעקב</h2><span class="badge chip" id="watch-count">0</span><div style="flex:1"></div><button class="btn sm" id="btn-watch-add"><svg class="ic sm"><use href="#i-eye"/></svg><span data-i18n="watch.add">הוסף למעקב</span></button></div>
+          <div class="tbl-wrap" id="watch-tblwrap"><table id="watch-table"><thead></thead><tbody></tbody></table></div><div id="watch-empty" hidden></div>
+        </div>
         <div class="grid two">
           <div class="card"><div class="card-h"><h3 data-i18n="pf.bysector">משקל לפי סקטור</h3></div><div class="hbar" id="pf-sector-bars"></div></div>
           <div class="card"><div class="card-h"><h3 data-i18n="pf.pnl">רווח/הפסד לפי אחזקה</h3></div><div class="chart" id="chart-pnl"></div></div>
@@ -656,6 +660,7 @@ td.num,th.num{text-align:end}
   <div class="sh"><h2 id="sheet-title"></h2><div id="sheet-actions" style="display:flex;gap:6px"></div><button class="btn ghost icon" id="sheet-close" aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button></div>
   <div class="sb" id="sheet-body"></div>
 </div>
+<datalist id="ticker-list"></datalist>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <div class="dlg" id="dlg" role="alertdialog" aria-modal="true"><div class="box"><p id="dlg-msg"></p><div class="acts"><button class="btn" id="dlg-no"></button><button class="btn primary" id="dlg-yes"></button></div></div></div>
 <script>
@@ -669,7 +674,7 @@ const I18N = {
     tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות',
     'api.notset':'API לא מוגדר','api.set':'API מחובר','fx.label':'USD/ILS', refresh:'עדכן שערים', all:'הכל', local:'חישוב מקומי',
     'dash.history':'שווי התיק לאורך זמן','dash.alloc':'חלוקה לפי סקטור','dash.exch':'חשיפה לפי בורסה','dash.ccy':'חשיפת מטבע','dash.movers':'תנועות היום','dash.quick':'תובנות מהירות',
-    'pf.title':'אחזקות','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
+    'pf.title':'אחזקות','watch.title':'רשימת מעקב','watch.add':'הוסף למעקב','watch.empty':'אין מניות במעקב','watch.empty.d':'הוסף מניות שאתה שוקל לקנות — ידנית או בלחיצה מסורק השוק. השערים מתעדכנים יחד עם התיק.','watch.since':'מאז הוספה','watch.toPf':'העבר לתיק','watch.added':'{t} נוסף למעקב','watch.exists':'{t} כבר במעקב','watch.remove':'הסר ממעקב','watch.inlist':'במעקב','th.added':'נוסף','watch.form':'הוספה למעקב','watch.target':'מחיר יעד (אופציונלי)','chart.title':'גרף היסטורי','chart.load':'טען גרף','chart.loading':'טוען נתונים היסטוריים…','chart.fail':'לא הצלחתי לטעון היסטוריה','chart.range.1M':'חודש','chart.range.3M':'3 חודשים','chart.range.1Y':'שנה','chart.range.5Y':'5 שנים','chart.change':'שינוי בתקופה','chart.hi':'גבוה','chart.lo':'נמוך','chart.src':'מקור: Yahoo Finance · סגירות','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
     export:'ייצוא', import:'ייבוא',
     'scan.title':'סורק שוק חכם','scan.sub':'בחר תחומי פעילות ובורסות — המנוע יאתר מניות חמות, פריצות טכניות ומומנטום, עם רמות כניסה, סטופ ויעד.','scan.sectors':'תחומי פעילות','scan.markets':'בורסות','scan.mode':'סוג סריקה','scan.m.all':'הכל','scan.m.hot':'מניות חמות','scan.m.breakout':'פריצות','scan.m.value':'ערך','scan.focus':'דגש נוסף (אופציונלי)','scan.focus.ph':'לדוגמה: דיבידנד גבוה, שווי שוק קטן, AI…','scan.run':'הפעל סריקה',
     'ins.title':'מנוע תובנות — ניתוח התיק','ins.sub':'ניתוח מעמיק של התיק הנוכחי: ציון איכות, ריכוזיות, חשיפות, אותות פריצה באחזקות, המלצות פעולה ותוכנית איזון.','ins.web':'כלול נתוני שוק עדכניים (Web)','ins.run':'נתח את התיק',
@@ -699,7 +704,7 @@ const I18N = {
     tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings',
     'api.notset':'API not set','api.set':'API connected','fx.label':'USD/ILS', refresh:'Refresh quotes', all:'All', local:'Local calc',
     'dash.history':'Portfolio value over time','dash.alloc':'Allocation by sector','dash.exch':'Exposure by exchange','dash.ccy':'Currency exposure','dash.movers':"Today's movers",'dash.quick':'Quick insights',
-    'pf.title':'Holdings','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
+    'pf.title':'Holdings','watch.title':'Watchlist','watch.add':'Add to watchlist','watch.empty':'Watchlist is empty','watch.empty.d':'Add stocks you are considering — manually or with one tap from the scanner. Prices update together with the portfolio.','watch.since':'Since added','watch.toPf':'Move to portfolio','watch.added':'{t} added to watchlist','watch.exists':'{t} is already on the watchlist','watch.remove':'Remove from watchlist','watch.inlist':'Watching','th.added':'Added','watch.form':'Add to watchlist','watch.target':'Target price (optional)','chart.title':'Price history','chart.load':'Load chart','chart.loading':'Loading price history…','chart.fail':'Could not load history','chart.range.1M':'1M','chart.range.3M':'3M','chart.range.1Y':'1Y','chart.range.5Y':'5Y','chart.change':'Period change','chart.hi':'High','chart.lo':'Low','chart.src':'Source: Yahoo Finance · closes','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
     export:'Export', import:'Import',
     'scan.title':'Smart Market Scanner','scan.sub':'Pick sectors and exchanges — the engine finds hot stocks, technical breakouts and momentum, with entry zone, stop and target.','scan.sectors':'Sectors','scan.markets':'Exchanges','scan.mode':'Scan type','scan.m.all':'All','scan.m.hot':'Hot stocks','scan.m.breakout':'Breakouts','scan.m.value':'Value','scan.focus':'Extra focus (optional)','scan.focus.ph':'e.g. high dividend, small cap, AI…','scan.run':'Run scan',
     'ins.title':'Insights Engine — Portfolio Analysis','ins.sub':'Deep analysis of your current portfolio: quality score, concentration, exposures, breakout signals in holdings, action recommendations and a rebalancing plan.','ins.web':'Include live market data (Web)','ins.run':'Analyze portfolio',
@@ -779,12 +784,12 @@ const SAMPLE_HOLDINGS = [
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
   settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
-  holdings:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}
+  holdings:[], watchlist:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}, hist:{}
 };
 let S = load();
 function load(){
   try{ const raw=localStorage.getItem(LS_KEY); if(!raw) return structuredClone(DEFAULTS);
-    const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}};
+    const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}, watchlist:Array.isArray(p.watchlist)?p.watchlist:[], hist:p.hist&&typeof p.hist==='object'?p.hist:{}};
     if(!(p.settings&&p.settings.perfV2)){ st.settings.perfV2=true; st.settings.dataModel='claude-sonnet-5'; if(st.settings.effort==='high') st.settings.effort='medium'; } // one-time speed migration
     return st;
   }catch(e){ console.warn('load failed',e); return structuredClone(DEFAULTS); }
@@ -821,6 +826,8 @@ function setLoading(btn,on){ btn.classList.toggle('loading',on); btn.disabled=on
 function findSec(ticker,exchange){ ticker=(ticker||'').toUpperCase(); return UNIVERSE.find(u=>u.ticker===ticker&&(!exchange||u.exchange===exchange))||UNIVERSE.find(u=>u.ticker===ticker); }
 function holdName(h){ return lang()==='he'?(h.name_he||h.name||h.ticker):(h.name||h.name_he||h.ticker); }
 function ccyOf(h){ return h.exchange==='TASE'?'ILS':'USD'; }
+function findSecById(id){ return S.holdings.find(x=>x.id===id)||S.watchlist.find(x=>x.id===id); }
+function isWatched(ticker,exchange){ return S.watchlist.some(w=>w.ticker===ticker&&(!exchange||w.exchange===exchange)); }
 function toDisp(v,from){ const to=S.settings.currency; if(v==null) return null; if(from===to) return v; const fx=S.settings.usdIls||3.35; return from==='USD'?v*fx:v/fx; }
 function toIls(v,from){ return from==='ILS'?v:v*(S.settings.usdIls||3.35); }
 
@@ -1025,7 +1032,7 @@ If a security cannot be found, include it with price:null and a short note. chan
 }
 /** Fetch quotes for all holdings in parallel chunks (max 3 tickers per request, 3 requests at a time), applying each chunk as it lands. */
 async function fetchQuotes({signal,onProgress,onText}={}){
-  const list=S.holdings.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
+  const seen=new Set(); const list=[...S.holdings,...S.watchlist].filter(h=>{ const k=h.ticker+'|'+h.exchange; if(seen.has(k)) return false; seen.add(k); return true; }).map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
   if(!list.length) throw new Error(t('q.nohold'));
   const groups={}; list.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
   const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=3) chunks.push(g.slice(i,i+3)); });
@@ -1040,11 +1047,13 @@ async function fetchQuotes({signal,onProgress,onText}={}){
 function applyQuotes(j,opts={}){
   let n=0; const now=Date.now();
   for(const q of j.quotes){ if(q.price==null) continue;
-    const h=S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase()&&(!q.exchange||x.exchange===q.exchange))||S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase());
-    if(!h) continue; let p=+q.price, pc=q.prevClose!=null?+q.prevClose:null;
-    if(h.exchange==='TASE'&&p>=100&&h.avgCost>0&&p/h.avgCost>40&&(p/100)/h.avgCost>0.2&&(p/100)/h.avgCost<5){ p=p/100; if(pc) pc=pc/100; } // agorot guard (e.g. 4410 → 44.10)
-    h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; h.quoteTime=q.quoteTime||j.asOf||null; n++;
-  }
+    const tk=String(q.ticker).toUpperCase(); const all=[...S.holdings,...S.watchlist];
+    const targets=all.filter(x=>x.ticker.toUpperCase()===tk&&(!q.exchange||x.exchange===q.exchange)); if(!targets.length){ const any=all.find(x=>x.ticker.toUpperCase()===tk); if(any) targets.push(any); }
+    if(!targets.length) continue;
+    for(const h of targets){ let p=+q.price, pc=q.prevClose!=null?+q.prevClose:null;
+    if(h.exchange==='TASE'&&p>=100&&h.avgCost>0&&p/h.avgCost>40&&(p/100)/h.avgCost>0.2&&(p/100)/h.avgCost<5){ p=p/100; if(pc) pc=pc/100; } else if(h.exchange==='TASE'&&!h.avgCost&&q.currency==='ILA'){ p=p/100; if(pc) pc=pc/100; } // agorot guard (e.g. 4410 → 44.10)
+    h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; h.quoteTime=q.quoteTime||j.asOf||null; }
+    n++; }
   S.settings.lastQuotes=now;
   if(!opts.noHistory) recordHistory();
   save(); return n;
@@ -1204,6 +1213,27 @@ If the ticker cannot be identified return {"found":false,"reason":"..."}. TASE p
   const out={...j,found:true,ticker,ts:Date.now()}; S.lookups[ticker]=out; save(); return out;
 }
 
+
+/* ============================================================
+   Engine 6 — Price history (Yahoo chart JSON via web_fetch, cached per day)
+   ============================================================ */
+const HIST_RANGES={'1M':['1mo','1d'],'3M':['3mo','1d'],'1Y':['1y','1wk'],'5Y':['5y','1mo']};
+async function fetchHistory(sec,range='3M',{signal}={}){
+  const key=sec.ticker+'|'+sec.exchange+'|'+range; S.hist=S.hist||{}; const c=S.hist[key]; if(c&&c.day===ilToday()&&c.points&&c.points.length>3) return c;
+  const [r,i]=HIST_RANGES[range]||HIST_RANGES['3M']; const url=`https://query1.finance.yahoo.com/v8/finance/chart/${ySym(sec)}?range=${r}&interval=${i}`;
+  const user=`Fetch this Yahoo Finance chart JSON with web_fetch: ${url}
+From the response take chart.result[0].timestamp (unix seconds) and chart.result[0].indicators.quote[0].close. Also read meta.currency.
+Output EVERY data point in order (skip entries whose close is null). Convert each timestamp to a YYYY-MM-DD date (UTC). If meta.currency is "ILA" divide all closes by 100 (agorot → ILS). Round closes to 4 significant decimals.
+Respond with ONLY this JSON (no prose): {"currency":"USD","points":[["YYYY-MM-DD",123.45],["YYYY-MM-DD",124.1]]}
+If the fetch fails, respond {"error":"reason"}.`;
+  const res=await claude({system:SYSTEM_BASE(), user, tools:[webFetchTool(2)], maxTokens:6000, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000)});
+  const j=extractJSON(res.text); if(!j||!Array.isArray(j.points)||j.points.length<3) throw new Error((j&&j.error)||t('chart.fail'));
+  const points=j.points.map(p=>({d:String(p[0]).slice(0,10),v:+p[1]})).filter(p=>p.v>0&&/^\d{4}-\d{2}-\d{2}$/.test(p.d)).sort((a,b)=>a.d<b.d?-1:1);
+  const out={day:ilToday(),ts:Date.now(),currency:j.currency==='ILA'?'ILS':(j.currency||ccyOf(sec)),points}; S.hist[key]=out;
+  const keys=Object.keys(S.hist); if(keys.length>120) keys.slice(0,keys.length-120).forEach(k=>delete S.hist[k]);
+  save(); return out;
+}
+
 async function testConnection(){
   const r=await claude({system:'Reply with exactly: OK', user:'ping', maxTokens:20});
   return /OK/i.test(r.text);
@@ -1272,7 +1302,7 @@ function donut(container,data){ // data: [{label,value,color}]
   $$('span',leg).forEach(s=>{ if(s.querySelector('i')) s.style.cssText='display:flex;gap:8px;align-items:center'; });
   wrap.append(svg,leg); container.append(wrap,tip);
 }
-function lineChart(container,pts,fmt){ // pts [{x:ts,y}]
+function lineChart(container,pts,fmt,axisFmt){ // pts [{x:ts,y}]
   container.innerHTML='';
   if(pts.length<2){ container.innerHTML=emptyHTML('i-history',t('empty.hist'),t('empty.hist.d')); return; }
   const W=640,H=230,pl=8,pr=8,pt=14,pb=26; const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
@@ -1281,16 +1311,16 @@ function lineChart(container,pts,fmt){ // pts [{x:ts,y}]
   const up=ys[ys.length-1]>=ys[0]; const col=up?'var(--gain)':'var(--loss)';
   const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,role:'img'}); const id='g'+uid();
   svg.innerHTML=`<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".28"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>`;
-  for(let i=0;i<=3;i++){ const y=pt+i*(H-pt-pb)/3; svg.appendChild(svgEl('line',{x1:pl,x2:W-pr,y1:y,y2:y,stroke:'var(--grid)','stroke-width':1})); const tx=svgEl('text',{x:W-pr,y:y-4,'text-anchor':'end','font-size':'10',fill:'var(--text-3)'}); tx.textContent=fmtCompact(dispIls(y1-(y1-y0)*i/3)); svg.appendChild(tx); }
+  for(let i=0;i<=3;i++){ const y=pt+i*(H-pt-pb)/3; svg.appendChild(svgEl('line',{x1:pl,x2:W-pr,y1:y,y2:y,stroke:'var(--grid)','stroke-width':1})); const tx=svgEl('text',{x:W-pr,y:y-4,'text-anchor':'end','font-size':'10',fill:'var(--text-3)'}); tx.textContent=(axisFmt||(v=>fmtCompact(dispIls(v))))(y1-(y1-y0)*i/3); svg.appendChild(tx); }
   const d=pts.map((p,i)=>(i?'L':'M')+X(p.x).toFixed(1)+','+Y(p.y).toFixed(1)).join(' ');
   svg.appendChild(svgEl('path',{d:d+` L${X(x1).toFixed(1)},${H-pb} L${X(x0).toFixed(1)},${H-pb} Z`,fill:`url(#${id})`}));
   svg.appendChild(svgEl('path',{d,fill:'none',stroke:col,'stroke-width':2.2,'stroke-linejoin':'round','stroke-linecap':'round'}));
-  const n=Math.min(5,pts.length); for(let i=0;i<n;i++){ const p=pts[Math.round(i*(pts.length-1)/(n-1||1))]; const tx=svgEl('text',{x:X(p.x),y:H-8,'text-anchor':'middle','font-size':'10',fill:'var(--text-3)'}); tx.textContent=new Date(p.x).toLocaleDateString(locale(),{day:'2-digit',month:'2-digit'}); svg.appendChild(tx); }
+  const n=Math.min(5,pts.length); for(let i=0;i<n;i++){ const p=pts[Math.round(i*(pts.length-1)/(n-1||1))]; const tx=svgEl('text',{x:X(p.x),y:H-8,'text-anchor':'middle','font-size':'10',fill:'var(--text-3)'}); tx.textContent=new Date(p.x).toLocaleDateString(locale(),(x1-x0)>400*864e5?{month:'2-digit',year:'2-digit'}:{day:'2-digit',month:'2-digit'}); svg.appendChild(tx); }
   const cross=svgEl('line',{y1:pt,y2:H-pb,stroke:'var(--text-3)','stroke-dasharray':'3 3',opacity:0}); const dot=svgEl('circle',{r:5,fill:col,stroke:'var(--surface)','stroke-width':2,opacity:0}); svg.append(cross,dot);
   const tip=document.createElement('div'); tip.className='tip';
   const move=ev=>{ const b=svg.getBoundingClientRect(); const cx=ev.touches?ev.touches[0].clientX:ev.clientX; const rx=(cx-b.left)/b.width*W; let best=0,bd=1e12; pts.forEach((p,i)=>{ const dd=Math.abs(X(p.x)-rx); if(dd<bd){bd=dd;best=i;} }); const p=pts[best];
     cross.setAttribute('x1',X(p.x)); cross.setAttribute('x2',X(p.x)); cross.setAttribute('opacity',1); dot.setAttribute('cx',X(p.x)); dot.setAttribute('cy',Y(p.y)); dot.setAttribute('opacity',1);
-    tip.innerHTML=`<b>${fmt?fmt(p.y):fmtC(dispIls(p.y))}</b><br><span class="faint">${fmtDate(p.x)}</span>`; tip.classList.add('show'); const cb=container.getBoundingClientRect(); tip.style.left=(X(p.x)/W*b.width)+'px'; tip.style.top=(Y(p.y)/H*b.height+ (b.top-cb.top))+'px'; };
+    tip.innerHTML=`<b>${fmt?fmt(p.y):fmtC(dispIls(p.y))}</b><br><span class="faint">${(x1-x0)>3*864e5?new Date(p.x).toLocaleDateString(locale(),{day:'2-digit',month:'2-digit',year:'numeric'}):fmtDate(p.x)}</span>`; tip.classList.add('show'); const cb=container.getBoundingClientRect(); tip.style.left=(X(p.x)/W*b.width)+'px'; tip.style.top=(Y(p.y)/H*b.height+ (b.top-cb.top))+'px'; };
   svg.addEventListener('mousemove',move); svg.addEventListener('touchstart',move,{passive:true}); svg.addEventListener('touchmove',move,{passive:true});
   svg.addEventListener('mouseleave',()=>{ cross.setAttribute('opacity',0); dot.setAttribute('opacity',0); tip.classList.remove('show'); });
   container.append(svg,tip);
@@ -1373,13 +1403,55 @@ function renderPortfolio(){
   $('#nav-count').textContent=S.holdings.length;
 }
 
+/* ---------- Watchlist ---------- */
+function addToWatch(w,{silent}={}){
+  const tk=String(w.ticker||'').toUpperCase(); if(!tk) return false; const ex=w.exchange||'NASDAQ';
+  if(isWatched(tk,ex)){ if(!silent) toast(t('watch.exists',{t:tk})); return false; }
+  const u=findSec(tk,ex)||(S.lookups&&S.lookups[tk]);
+  S.watchlist.push({id:uid(),ticker:tk,exchange:ex,name:w.name||(u&&u.name_en)||tk,name_he:w.name_he||(u&&u.name_he)||w.name||tk,sector:w.sector||(u&&u.sector)||'Other',price:w.price!=null?+w.price:null,prevClose:w.prevClose!=null?+w.prevClose:null,addedAt:Date.now(),addedPrice:w.price!=null?+w.price:null,target:w.target!=null?+w.target:null,note:w.note||'',origin:w.source||'manual',updatedAt:w.price!=null?Date.now():null});
+  save(); renderAll(); if(!silent) toast(t('watch.added',{t:tk}),'ok'); return true;
+}
+function renderWatchlist(){
+  const tbl=$('#watch-table'), wrap=$('#watch-tblwrap'), empty=$('#watch-empty'); if(!tbl) return; $('#watch-count').textContent=S.watchlist.length;
+  if(!S.watchlist.length){ wrap.hidden=true; empty.hidden=false; empty.innerHTML=emptyHTML('i-eye',t('watch.empty'),t('watch.empty.d')); return; }
+  wrap.hidden=false; empty.hidden=true;
+  tbl.tHead.innerHTML=`<tr><th>${t('th.sym')}</th><th class="num">${t('th.price')}</th><th class="num">${t('th.chg')}</th><th class="num">${t('watch.since')}</th><th class="num">${t('watch.target')}</th><th></th></tr>`;
+  tbl.tBodies[0].innerHTML=S.watchlist.map(w=>{ const ccy=ccyOf(w); const day=(w.price!=null&&w.prevClose)?(w.price/w.prevClose-1)*100:null; const since=(w.price!=null&&w.addedPrice)?(w.price/w.addedPrice-1)*100:null; const tgt=w.target?(w.target/(w.price||w.target)-1)*100:null;
+    return `<tr data-dd="${w.id}"><td><div class="tick">${avatar(w)}<div><div class="n">${esc(w.ticker)}</div><div class="m">${exChip(w.exchange)}<span>${esc(holdName(w))}</span>${w.origin==='scan'?`<span class="chip accent" style="padding:0 6px;font-size:.62rem">scan</span>`:''}</div></div></div></td>
+      <td class="num"><b>${w.price!=null?fmtC(w.price,ccy):'—'}</b><div class="faint" style="font-size:.66rem">${w.quoteTime?esc(String(w.quoteTime).slice(0,16)):(w.updatedAt?fmtDate(w.updatedAt):'')}</div></td>
+      <td class="num">${pct(day)}</td>
+      <td class="num">${pct(since)}<div class="faint" style="font-size:.66rem">${w.addedPrice?fmtC(w.addedPrice,ccy)+' · ':''}${new Date(w.addedAt).toLocaleDateString(locale(),{day:'2-digit',month:'2-digit'})}</div></td>
+      <td class="num">${w.target?`<b>${fmtC(w.target,ccy)}</b><div class="${(tgt||0)>=0?'gain':'loss'}" style="font-size:.7rem">${fmtP(tgt,0)}</div>`:'—'}</td>
+      <td><div style="display:flex;gap:4px"><button class="btn ghost icon sm" data-w2pf="${w.id}" title="${t('watch.toPf')}" aria-label="${t('watch.toPf')}"><svg class="ic sm"><use href="#i-briefcase"/></svg></button><button class="btn ghost icon sm" data-wdel="${w.id}" aria-label="${t('watch.remove')}"><svg class="ic sm"><use href="#i-trash"/></svg></button></div></td></tr>`; }).join('');
+}
+function openWatchForm(){
+  const secOpts=SECTORS.map(x=>`<option value="${x[0]}">${lang()==='he'?x[1]:x[2]}</option>`).join('');
+  openSheet(t('watch.form'),`<form id="wform" style="display:flex;flex-direction:column;gap:14px" novalidate>
+    <div class="field"><label for="w-ticker">${t('f.ticker')} *</label><div class="input-wrap"><input class="input mono" id="w-ticker" list="ticker-list" autocomplete="off" autocapitalize="characters" required placeholder="NVDA / POLI"><button type="button" class="btn sm primary" id="w-detect"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${t('f.detect')}</span></button></div><div class="help" id="w-lookup">${t('f.ticker.help')}</div><div class="err">${t('req')}</div></div>
+    <div class="grid two" style="gap:12px"><div class="field"><label for="w-ex">${t('f.exchange')}</label><select class="input" id="w-ex"><option>NASDAQ</option><option>NYSE</option><option>TASE</option></select></div><div class="field"><label for="w-sector">${t('f.sector')}</label><select class="input" id="w-sector">${secOpts}</select></div></div>
+    <div class="grid two" style="gap:12px"><div class="field"><label for="w-name">${t('f.name')}</label><input class="input" id="w-name"></div><div class="field"><label for="w-target">${t('watch.target')}</label><input class="input num" id="w-target" type="number" inputmode="decimal" step="any" min="0"></div></div>
+    <div class="field"><label for="w-note">${t('f.note')}</label><input class="input" id="w-note"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end"><button type="button" class="btn" id="w-cancel">${t('cancel')}</button><button type="submit" class="btn primary">${t('watch.add')}</button></div></form>`);
+  const tk=$('#w-ticker'), ex=$('#w-ex'); let found=null, busy=false;
+  const status=(m,c)=>{ const el=$('#w-lookup'); el.textContent=m; el.style.color=c==='ok'?'var(--gain)':c==='err'?'var(--loss)':''; };
+  const apply=u=>{ found=u; ex.value=u.exchange; $('#w-sector').value=u.sector; $('#w-name').value=lang()==='he'?u.name_he:u.name_en; };
+  const detect=async(auto)=>{ const sym=tk.value.trim().toUpperCase(); if(!sym||busy) return; const u=findSec(sym); if(u&&auto){ apply(u); status(t('f.detected',{n:lang()==='he'?u.name_he:u.name_en,e:u.exchange,s:sectorLabel(u.sector)}),'ok'); return; }
+    if(!S.settings.apiKey){ if(u) apply(u); status(t('f.nokey'),'err'); return; } busy=true; setLoading($('#w-detect'),true); status(t('f.detecting'));
+    try{ const r=await lookupSecurity(sym,u?u.exchange:null); if(r.found){ apply(r); status(t('f.detected',{n:lang()==='he'?r.name_he:r.name_en,e:r.exchange,s:sectorLabel(r.sector)})+(r.price?' · '+fmtC(r.price,r.currency==='ILS'?'ILS':'USD'):''),'ok'); } else status(t('f.notfound'),'err'); }
+    catch(e){ status(t('err.api')+': '+e.message,'err'); } finally{ busy=false; setLoading($('#w-detect'),false); } };
+  tk.addEventListener('input',()=>{ tk.value=tk.value.toUpperCase(); }); tk.addEventListener('change',()=>detect(true)); tk.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); detect(false); } }); $('#w-detect').onclick=()=>detect(false); $('#w-cancel').onclick=closeSheet;
+  $('#wform').onsubmit=e=>{ e.preventDefault(); const sym=tk.value.trim().toUpperCase(); if(!sym){ tk.closest('.field').classList.add('invalid'); return; }
+    const nm=$('#w-name').value.trim(); const ok=addToWatch({ticker:sym,exchange:ex.value,sector:$('#w-sector').value,name:(found&&found.name_en)||nm,name_he:(found&&found.name_he)||nm,price:found&&found.price!=null?found.price:null,prevClose:found&&found.prevClose!=null?found.prevClose:null,target:$('#w-target').value?parseFloat($('#w-target').value):null,note:$('#w-note').value.trim(),source:'manual'}); if(ok) closeSheet(); };
+  setTimeout(()=>tk.focus(),350);
+}
+
 /* ---------- Add / edit form ---------- */
 function openForm(h,prefill){
   const isEdit=!!h; const d=h||{ticker:'',exchange:'TASE',qty:'',avgCost:'',price:'',sector:'Tech',name:'',name_he:'',note:'',...(prefill||{})};
   const secOpts=SECTORS.map(s=>`<option value="${s[0]}" ${d.sector===s[0]?'selected':''}>${lang()==='he'?s[1]:s[2]}</option>`).join('');
   const body=`<form id="hform" style="display:flex;flex-direction:column;gap:14px" novalidate>
     <div class="grid two" style="gap:12px">
-      <div class="field"><label for="f-ticker">${t('f.ticker')} *</label><div class="input-wrap"><input class="input mono" id="f-ticker" list="ticker-list" value="${esc(d.ticker)}" autocomplete="off" autocapitalize="characters" required placeholder="NVDA / POLI"><button type="button" class="btn sm primary" id="f-detect"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${t('f.detect')}</span></button></div><datalist id="ticker-list">${UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join('')}</datalist><div class="help" id="f-lookup">${t('f.ticker.help')}</div><div class="err">${t('req')}</div></div>
+      <div class="field"><label for="f-ticker">${t('f.ticker')} *</label><div class="input-wrap"><input class="input mono" id="f-ticker" list="ticker-list" value="${esc(d.ticker)}" autocomplete="off" autocapitalize="characters" required placeholder="NVDA / POLI"><button type="button" class="btn sm primary" id="f-detect"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${t('f.detect')}</span></button></div><div class="help" id="f-lookup">${t('f.ticker.help')}</div><div class="err">${t('req')}</div></div>
       <div class="field"><label for="f-ex">${t('f.exchange')}</label><select class="input" id="f-ex"><option ${d.exchange==='TASE'?'selected':''}>TASE</option><option ${d.exchange==='NASDAQ'?'selected':''}>NASDAQ</option><option ${d.exchange==='NYSE'?'selected':''}>NYSE</option></select></div>
     </div>
     <div class="grid two" style="gap:12px">
@@ -1420,6 +1492,7 @@ function openForm(h,prefill){
     const prevL=$('#f-price').dataset.prev?parseFloat($('#f-price').dataset.prev):null; if(v.price!=null&&prevL) v.prevClose=prevL;
     if(isEdit){ Object.assign(h,v,{name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe}); if(v.price!=null){ h.updatedAt=Date.now(); delete h.sample; } }
     else S.holdings.push({id:uid(),prevClose:null,...v,name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe,updatedAt:v.price!=null?Date.now():null,addedAt:Date.now()});
+    if(prefill&&prefill.watchId) S.watchlist=S.watchlist.filter(x=>x.id!==prefill.watchId);
     save(); closeSheet(); renderAll(); toast(t('saved'),'ok'); };
   setTimeout(()=>tk.focus(),350);
 }
@@ -1445,7 +1518,7 @@ function renderScanResults(){
      <div class="why">${esc(p.thesis||'')}</div>
      ${p.catalyst?`<div style="font-size:.82rem"><b>${t('scan.catalyst')}:</b> ${esc(p.catalyst)}</div>`:''}
      <div class="levels"><div><span>${t('scan.entry')}</span><b class="num">${esc(p.entryZone||'—')}</b></div><div><span>${t('scan.stop')}</span><b class="num loss">${p.stop!=null?fmtN(p.stop,p.stop<50?2:1):'—'}</b></div><div><span>${t('scan.target')}</span><b class="num gain">${p.target!=null?fmtN(p.target,p.target<50?2:1):'—'}</b>${p.riskReward?` <small class="faint">R/R ${fmtN(p.riskReward,1)}</small>`:''}</div></div>
-     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.8rem"><span class="faint">${t('scan.conv')}</span><span class="conv">${[1,2,3,4,5].map(i=>`<i class="${i<=(p.conviction||0)?'on':''}"></i>`).join('')}</span>${p.volumeVsAvg?`<span class="chip outline">Vol ×${fmtN(p.volumeVsAvg,1)}</span>`:''}${p.timeframe?`<span class="chip outline">${esc(p.timeframe)}</span>`:''}<span style="flex:1"></span><button class="btn sm" data-addpick='${esc(JSON.stringify({ticker:p.ticker,exchange:p.exchange,sector:p.sector,name:p.name,price:p.price}))}'><svg class="ic sm"><use href="#i-plus"/></svg>${t('scan.add')}</button></div>
+     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.8rem"><span class="faint">${t('scan.conv')}</span><span class="conv">${[1,2,3,4,5].map(i=>`<i class="${i<=(p.conviction||0)?'on':''}"></i>`).join('')}</span>${p.volumeVsAvg?`<span class="chip outline">Vol ×${fmtN(p.volumeVsAvg,1)}</span>`:''}${p.timeframe?`<span class="chip outline">${esc(p.timeframe)}</span>`:''}<span style="flex:1"></span><button class="btn sm ${isWatched(p.ticker,p.exchange)?'ghost':''}" data-watchpick='${esc(JSON.stringify({ticker:p.ticker,exchange:p.exchange,sector:p.sector,name:p.name,price:p.price,target:p.target,note:p.setup||''}))}' ${isWatched(p.ticker,p.exchange)?'disabled':''}><svg class="ic sm"><use href="#i-eye"/></svg>${isWatched(p.ticker,p.exchange)?t('watch.inlist'):t('watch.add')}</button><button class="btn sm" data-addpick='${esc(JSON.stringify({ticker:p.ticker,exchange:p.exchange,sector:p.sector,name:p.name,price:p.price}))}'><svg class="ic sm"><use href="#i-plus"/></svg>${t('scan.add')}</button></div>
      ${p.risk?`<div style="font-size:.78rem;color:var(--text-3)"><b>${t('scan.risk')}:</b> ${esc(p.risk)}</div>`:''}
    </div>`).join('');
   const secs=(r.sectors||[]).map(s=>{ const cls=s.outlook==='bullish'?'gain':s.outlook==='bearish'?'loss':'warn'; return `<div class="row"><div class="body"><div class="t">${sectorLabel(s.sector)} <span class="chip ${cls}">${esc(s.outlook||'')}</span>${s.score!=null?`<span class="chip outline num">${s.score}/100</span>`:''}</div><div class="d">${esc(s.drivers||'')}${s.leaders&&s.leaders.length?` · <b>${esc(s.leaders.join(', '))}</b>`:''}</div></div></div>`; }).join('');
@@ -1459,6 +1532,7 @@ function renderScanResults(){
    ${r.watch&&r.watch.length?`<div class="card"><div class="card-h"><h3>Watchlist</h3></div><ul class="md" style="margin:0;padding-inline-start:18px">${r.watch.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div>`:''}
    ${sourcesHTML(r.sources)}${r.caveats?`<div class="disclaimer">${esc(r.caveats)}</div>`:''}<div class="disclaimer">${t('disclaimer')}</div>`;
   $$('[data-addpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.addpick); const u=findSec(p.ticker,p.exchange); openForm(null,{ticker:p.ticker,exchange:p.exchange||'NASDAQ',sector:p.sector||(u&&u.sector)||'Other',name:p.name||(u&&u.name_en)||'',name_he:(u&&u.name_he)||p.name||'',price:p.price??''}); });
+  $$('[data-watchpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.watchpick); if(addToWatch({...p,source:'scan'})) renderScanResults(); });
 }
 function sourcesHTML(list){ if(!list||!list.length) return ''; return `<div class="card flat"><div class="src"><b style="width:100%;color:var(--text-2)">${t('scan.sources')}</b>${list.slice(0,14).map(s=>{ let host=''; try{host=new URL(s.url).hostname.replace('www.','');}catch(_){ } return `<a href="${esc(s.url)}" target="_blank" rel="noopener"><svg class="ic sm" style="width:12px;height:12px"><use href="#i-ext"/></svg>${esc(s.title&&s.title.length<70?s.title:host)}</a>`; }).join('')}</div></div>`; }
 async function doScan(){
@@ -1504,7 +1578,7 @@ function renderInsights(){
      <div class="card"><div class="card-h"><h3>${t('ins.rebal')}</h3></div>
        ${a.rebalance&&a.rebalance.targetSectorWeightsPct?`<div class="hbar" style="margin-bottom:12px">${Object.entries(a.rebalance.targetSectorWeightsPct).sort((x,y)=>y[1]-x[1]).map(([k,v])=>`<div class="r"><span>${sectorLabel(k)}</span><div class="bar"><i style="width:${clamp(v,0,100)}%;background:${SECTOR_COLOR[k]||'var(--primary)'}"></i></div><span class="v num">${fmtN(v,0)}%</span></div>`).join('')}</div>`:''}
        ${a.rebalance&&a.rebalance.targetUsdSharePct!=null?`<p style="font-size:.88rem"><b>${t('ins.fxexp')} → ${fmtN(a.rebalance.targetUsdSharePct,0)}%</b></p>`:''}
-       ${a.rebalance&&a.rebalance.suggestedAdds&&a.rebalance.suggestedAdds.length?`<div class="list" style="margin-top:10px">${a.rebalance.suggestedAdds.map(s=>`<div class="row"><div class="body"><div class="t">${esc(s.ticker)} <span class="chip" style="font-size:.66rem">${esc(s.exchange||'')}</span> <span class="faint" style="font-weight:500;font-size:.8rem">${sectorLabel(s.sector)}</span></div><div class="d">${esc(s.why||'')}</div></div><button class="btn sm" data-addpick='${esc(JSON.stringify({ticker:s.ticker,exchange:s.exchange,sector:s.sector}))}'><svg class="ic sm"><use href="#i-plus"/></svg></button></div>`).join('')}</div>`:''}
+       ${a.rebalance&&a.rebalance.suggestedAdds&&a.rebalance.suggestedAdds.length?`<div class="list" style="margin-top:10px">${a.rebalance.suggestedAdds.map(s=>`<div class="row"><div class="body"><div class="t">${esc(s.ticker)} <span class="chip" style="font-size:.66rem">${esc(s.exchange||'')}</span> <span class="faint" style="font-weight:500;font-size:.8rem">${sectorLabel(s.sector)}</span></div><div class="d">${esc(s.why||'')}</div></div><button class="btn ghost icon sm" data-watchpick='${esc(JSON.stringify({ticker:s.ticker,exchange:s.exchange,sector:s.sector,note:s.why||''}))}' aria-label="${t('watch.add')}"><svg class="ic sm"><use href="#i-eye"/></svg></button><button class="btn sm" data-addpick='${esc(JSON.stringify({ticker:s.ticker,exchange:s.exchange,sector:s.sector}))}'><svg class="ic sm"><use href="#i-plus"/></svg></button></div>`).join('')}</div>`:''}
        ${a.rebalance&&a.rebalance.cashGuidance?`<p class="muted" style="font-size:.86rem;margin-top:10px">${esc(a.rebalance.cashGuidance)}</p>`:''}</div>
      <div style="display:flex;flex-direction:column;gap:14px">
        <div class="card"><div class="card-h"><h3>${t('ins.hedge')}</h3>${a.fxHedge?`<span class="chip ${a.fxHedge.needed?'warn':'gain'}">${a.fxHedge.needed?'⚑':'✓'}</span>`:''}</div><p style="font-size:.9rem;line-height:1.6">${esc(a.fxHedge&&a.fxHedge.detail||'—')}</p></div>
@@ -1513,6 +1587,7 @@ function renderInsights(){
    </div>
    ${sourcesHTML(a.sources)}<div class="disclaimer">${t('disclaimer')}</div>`;
   $$('[data-addpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.addpick); const u=findSec(p.ticker,p.exchange); openForm(null,{ticker:p.ticker,exchange:p.exchange||(u&&u.exchange)||'NASDAQ',sector:p.sector||(u&&u.sector)||'Other',name:(u&&u.name_en)||'',name_he:(u&&u.name_he)||''}); });
+  $$('[data-watchpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.watchpick); const u=findSec(p.ticker,p.exchange); addToWatch({...p,exchange:p.exchange||(u&&u.exchange)||'NASDAQ',source:'scan'}); });
 }
 async function doAnalyze(){
   const btn=$('#btn-analyze'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; } if(!S.holdings.length){ toast(t('q.nohold'),'err'); return; }
@@ -1524,18 +1599,33 @@ async function doAnalyze(){
 
 /* ---------- Deep dive ---------- */
 function openDeepDive(id){
-  const h=S.holdings.find(x=>x.id===id); if(!h) return; const c=computed(); const r=c.rows.find(x=>x.h.id===id); const a=S.analyses.stocks[h.ticker+'|'+h.exchange];
-  const head=`<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="tick">${avatar(h).replace('class="av"','class="av" style="width:48px;height:48px;font-size:.85rem;')}<div><div style="font-size:1.2rem;font-weight:800">${esc(h.ticker)} <span class="chip" style="font-size:.66rem">${h.exchange}</span></div><div class="muted" style="font-size:.86rem">${esc(holdName(h))} · ${sectorLabel(h.sector)}</div></div></div>
-    <div style="margin-inline-start:auto;text-align:end"><div style="font-size:1.35rem;font-weight:800" class="num">${r.price!=null?fmtC(r.price,r.ccy):'—'}</div><div class="${(r.dayPct||0)>=0?'gain':'loss'} num" style="font-size:.84rem;font-weight:600">${fmtP(r.dayPct)}</div><div class="faint" style="font-size:.7rem">${h.updatedAt?(h.source?esc(h.source)+' · ':'')+(h.quoteTime?esc(h.quoteTime):fmtDate(h.updatedAt)):t('never')}</div></div></div>
-    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px">
-      <div class="stat-mini"><span class="l">${t('th.qty')}</span><span class="v num">${fmtN(h.qty,0)}</span></div><div class="stat-mini"><span class="l">${t('th.cost')}</span><span class="v num">${fmtC(h.avgCost,r.ccy)}</span></div><div class="stat-mini"><span class="l">${t('th.value')}</span><span class="v num">${fmtC(dispIls(r.valIls||0))}</span></div><div class="stat-mini"><span class="l">${t('th.pnl')}</span><span class="v num ${(r.pnlIls||0)>=0?'gain':'loss'}">${r.pnlIls!=null?fmtC(dispIls(r.pnlIls)):'—'} (${fmtP(r.pnlPct)})</span></div><div class="stat-mini"><span class="l">${t('th.weight')}</span><span class="v num">${fmtN(r.weightEq,1)}%</span></div></div>`;
-  const body=`<div>${head}</div><div id="dd-body">${a?ddHTML(a,h):`<div class="card flat">${emptyHTML('i-sparkles',t('dd.title'),t('dd.empty'))}</div>`}</div><div id="dd-progress" hidden></div><div class="disclaimer">${t('disclaimer')}</div>`;
-  openSheet(t('dd.title'),body,`<button class="btn ghost icon" id="dd-refresh" aria-label="${t('refresh')}"><span class="spin" style="display:none"></span><svg class="ic"><use href="#i-refresh"/></svg></button><button class="btn ghost icon" id="dd-edit" aria-label="${t('edit.title')}"><svg class="ic"><use href="#i-edit"/></svg></button><button class="btn primary sm" id="dd-run"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${a?t('dd.rerun'):t('dd.run')}</span></button>`);
-  $('#dd-edit').onclick=()=>openForm(h);
+  const h=findSecById(id); if(!h) return; const isWatch=!S.holdings.includes(h); const c=computed(); const r=isWatch?null:c.rows.find(x=>x.h.id===id); const ccy=ccyOf(h);
+  const price=isWatch?h.price:r.price, dayPct=isWatch?((h.price!=null&&h.prevClose)?(h.price/h.prevClose-1)*100:null):r.dayPct;
+  const a=S.analyses.stocks[h.ticker+'|'+h.exchange];
+  const tiles=isWatch?`<div class="stat-mini"><span class="l">${t('watch.since')}</span><span class="v num ${((h.price&&h.addedPrice)?(h.price>=h.addedPrice):true)?'gain':'loss'}">${(h.price&&h.addedPrice)?fmtP((h.price/h.addedPrice-1)*100):'—'}</span></div><div class="stat-mini"><span class="l">${t('th.added')}</span><span class="v num">${new Date(h.addedAt).toLocaleDateString(locale())}${h.addedPrice?' · '+fmtC(h.addedPrice,ccy):''}</span></div>${h.target?`<div class="stat-mini"><span class="l">${t('watch.target')}</span><span class="v num">${fmtC(h.target,ccy)}</span></div>`:''}`
+    :`<div class="stat-mini"><span class="l">${t('th.qty')}</span><span class="v num">${fmtN(h.qty,0)}</span></div><div class="stat-mini"><span class="l">${t('th.cost')}</span><span class="v num">${fmtC(h.avgCost,ccy)}</span></div><div class="stat-mini"><span class="l">${t('th.value')}</span><span class="v num">${fmtC(dispIls(r.valIls||0))}</span></div><div class="stat-mini"><span class="l">${t('th.pnl')}</span><span class="v num ${(r.pnlIls||0)>=0?'gain':'loss'}">${r.pnlIls!=null?fmtC(dispIls(r.pnlIls)):'—'} (${fmtP(r.pnlPct)})</span></div><div class="stat-mini"><span class="l">${t('th.weight')}</span><span class="v num">${fmtN(r.weightEq,1)}%</span></div>`;
+  const head=`<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="tick">${avatar(h).replace('class="av"','class="av" style="width:48px;height:48px;font-size:.85rem;')}<div><div style="font-size:1.2rem;font-weight:800">${esc(h.ticker)} <span class="chip" style="font-size:.66rem">${h.exchange}</span>${isWatch?` <span class="chip accent" style="font-size:.66rem">${t('watch.inlist')}</span>`:''}</div><div class="muted" style="font-size:.86rem">${esc(holdName(h))} · ${sectorLabel(h.sector)}</div></div></div>
+    <div style="margin-inline-start:auto;text-align:end"><div style="font-size:1.35rem;font-weight:800" class="num">${price!=null?fmtC(price,ccy):'—'}</div><div class="${(dayPct||0)>=0?'gain':'loss'} num" style="font-size:.84rem;font-weight:600">${fmtP(dayPct)}</div><div class="faint" style="font-size:.7rem">${h.updatedAt?(h.source?esc(h.source)+' · ':'')+(h.quoteTime?esc(h.quoteTime):fmtDate(h.updatedAt)):t('never')}</div></div></div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px">${tiles}</div>`;
+  const chartCard=`<div class="card flat" id="dd-chart-card"><div class="card-h"><h3>${t('chart.title')}</h3><div class="seg sm" id="dd-range">${Object.keys(HIST_RANGES).map(k=>`<button aria-pressed="${k===(S.settings.histRange||'3M')}" data-r="${k}">${t('chart.range.'+k)}</button>`).join('')}</div></div><div id="dd-chart-stats" class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px"></div><div class="chart" id="dd-chart" style="min-height:120px"></div><div class="faint" style="font-size:.7rem;margin-top:6px" id="dd-chart-src"></div></div>`;
+  const body=`<div>${head}</div>${chartCard}<div id="dd-body">${a?ddHTML(a,h):`<div class="card flat">${emptyHTML('i-sparkles',t('dd.title'),t('dd.empty'))}</div>`}</div><div id="dd-progress" hidden></div><div class="disclaimer">${t('disclaimer')}</div>`;
+  const acts=`<button class="btn ghost icon" id="dd-refresh" aria-label="${t('refresh')}"><span class="spin" style="display:none"></span><svg class="ic"><use href="#i-refresh"/></svg></button>${isWatch?`<button class="btn ghost icon" id="dd-w2pf" aria-label="${t('watch.toPf')}" title="${t('watch.toPf')}"><svg class="ic"><use href="#i-briefcase"/></svg></button>`:`<button class="btn ghost icon" id="dd-edit" aria-label="${t('edit.title')}"><svg class="ic"><use href="#i-edit"/></svg></button>`}<button class="btn primary sm" id="dd-run"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${a?t('dd.rerun'):t('dd.run')}</span></button>`;
+  openSheet(t('dd.title'),body,acts);
+  if(isWatch) $('#dd-w2pf').onclick=()=>openForm(null,{ticker:h.ticker,exchange:h.exchange,sector:h.sector,name:h.name,name_he:h.name_he,price:h.price??'',watchId:h.id});
+  else $('#dd-edit').onclick=()=>openForm(h);
   $('#dd-refresh').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } const b=$('#dd-refresh'); b.disabled=true; b.querySelector('svg').style.display='none'; b.querySelector('.spin').style.display='inline-block'; toast(t('q.updating'));
-    try{ const j=await fetchQuotesChunk([{ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}],{signal:withTimeout(null,90000)}); const n=applyQuotes(j); renderAll(); if(n){ toast(t('q.done'),'ok'); openDeepDive(h.id); } else toast(t('q.none')+(j.quotes[0]&&j.quotes[0].note?' · '+j.quotes[0].note:''),'err'); }
+    try{ const j=await fetchQuotesChunk([{ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}],{signal:withTimeout(null,90000)}); const n=applyQuotes(j,{noHistory:isWatch}); renderAll(); if(n){ toast(t('q.done'),'ok'); openDeepDive(h.id); } else toast(t('q.none')+(j.quotes[0]&&j.quotes[0].note?' · '+j.quotes[0].note:''),'err'); }
     catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); }
     finally{ b.disabled=false; } };
+  // history chart
+  const loadChart=async(range)=>{ S.settings.histRange=range; save(); $$('#dd-range button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.r===range)); const box=$('#dd-chart'), st=$('#dd-chart-stats'), src=$('#dd-chart-src'); if(!box) return;
+    const key=h.ticker+'|'+h.exchange+'|'+range; const cached=S.hist&&S.hist[key];
+    if(!cached){ if(!S.settings.apiKey){ box.innerHTML=`<p class="faint" style="font-size:.84rem">${t('f.nokey')}</p>`; return; } box.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:30px 0;justify-content:center"><span class="spin"></span><span class="faint">${t('chart.loading')}</span></div>`; st.innerHTML=''; src.textContent=''; }
+    try{ const hst=await fetchHistory(h,range); if(!$('#dd-chart')) return; const pts=hst.points.map(p=>({x:new Date(p.d+'T12:00:00Z').getTime(),y:p.v})); if(price!=null&&pts.length&&new Date(pts[pts.length-1].x).toDateString()!==new Date().toDateString()) pts.push({x:Date.now(),y:price});
+      const cc=hst.currency||ccy; lineChart(box,pts,v=>fmtC(v,cc),v=>fmtN(v,v<50?2:v<1000?1:0)); const first=pts[0].y,last=pts[pts.length-1].y,hi=Math.max(...pts.map(p=>p.y)),lo=Math.min(...pts.map(p=>p.y)); const chg=(last/first-1)*100;
+      st.innerHTML=`<div class="stat-mini"><span class="l">${t('chart.change')}</span><span class="v num ${chg>=0?'gain':'loss'}">${fmtP(chg)}</span></div><div class="stat-mini"><span class="l">${t('chart.hi')}</span><span class="v num">${fmtC(hi,cc)}</span></div><div class="stat-mini"><span class="l">${t('chart.lo')}</span><span class="v num">${fmtC(lo,cc)}</span></div>`; src.textContent=t('chart.src')+' · '+fmtDate(hst.ts); }
+    catch(e){ console.warn(e); if($('#dd-chart')){ box.innerHTML=`<div class="empty" style="padding:18px"><p class="faint" style="font-size:.84rem">${esc(t('chart.fail'))}${e.message?' · '+esc(e.message):''}</p><button class="btn sm" id="dd-chart-retry">${t('chart.load')}</button></div>`; $('#dd-chart-retry').onclick=()=>loadChart(range); } } };
+  $$('#dd-range button').forEach(b=>b.onclick=()=>loadChart(b.dataset.r)); loadChart(S.settings.histRange||'3M');
   $('#dd-run').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); closeSheet(); go('settings'); return; } const btn=$('#dd-run'); setLoading(btn,true); const pb=progressBox($('#dd-progress'),t('dd.run')); $('#dd-progress').scrollIntoView({block:'nearest',behavior:'smooth'});
     try{ const res=await deepDive(h,{onStatus:(s,q)=>pb.set(s,q),onText:x=>pb.live(x)}); pb.set('parse'); S.analyses.stocks[h.ticker+'|'+h.exchange]=res;
       if(res.snapshot&&res.snapshot.price&&(h.price==null||confirmPriceUpdate(h,res))){ let p=+res.snapshot.price; if(h.exchange==='TASE'&&h.avgCost>0&&p/h.avgCost>40) p/=100; if(h.price!=null&&res.snapshot.changePct1d!=null) h.prevClose=p/(1+res.snapshot.changePct1d/100); h.price=p; h.updatedAt=Date.now(); delete h.sample; }
@@ -1594,9 +1684,9 @@ function jobEnd(){ if(!currentJob) return; clearInterval(currentJob.tick); curre
 
 /* ---------- Quotes refresh ---------- */
 async function doRefresh(){
-  const btn=$('#btn-refresh'); if(currentJob) return; if(S.holdings.length&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
+  const btn=$('#btn-refresh'); if(currentJob) return; const anySec=S.holdings.length||S.watchlist.length; if(anySec&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   setLoading(btn,true);
-  if(!S.holdings.length){ // no holdings: refresh the FX rate only
+  if(!anySec){ // no holdings: refresh the FX rate only
     const job=jobStart(t('q.fxonly'));
     try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+fxLabel(fx.source)+(fx.repDate?' '+fx.repDate:'')+(fx.source?' · '+fx.source:''),'ok'); } }
     catch(e){ console.error(e); if(!e.cancelled) toast(t('err.api')+': '+e.message,'err'); }
@@ -1647,20 +1737,22 @@ function importFile(file){
 }
 
 /* ---------- Render all & events ---------- */
-function renderAll(){ renderDashboard(); renderPortfolio(); renderScannerControls(); renderScanResults(); renderInsights(); renderSettings(); }
+function renderAll(){ renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderSettings(); }
 function bind(){
   $$('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
   $$('[data-ccy]').forEach(b=>b.addEventListener('click',()=>{ S.settings.currency=b.dataset.ccy; save(); renderAll(); }));
-  $('#btn-lang').onclick=()=>{ S.settings.lang=lang()==='he'?'en':'he'; save(); applyI18n(); renderAll(); };
+  $('#btn-lang').onclick=()=>{ S.settings.lang=lang()==='he'?'en':'he'; save(); applyI18n(); fillDatalist(); renderAll(); };
   $('#btn-theme').onclick=()=>{ const cur=document.documentElement.dataset.theme; S.settings.theme=cur==='dark'?'light':'dark'; save(); applyTheme(); renderAll(); };
   $('#btn-refresh').onclick=doRefresh;
   $$('#hist-range button').forEach(b=>b.onclick=()=>{ histRange=+b.dataset.r; $$('#hist-range button').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderDashboard(); });
   document.addEventListener('click',e=>{ const dd=e.target.closest('[data-dd]'); if(dd&&!e.target.closest('button')) { openDeepDive(dd.dataset.dd); return; }
     const ed=e.target.closest('[data-edit]'); if(ed){ e.stopPropagation(); const h=S.holdings.find(x=>x.id===ed.dataset.edit); if(h) openForm(h); return; }
+    const w2=e.target.closest('[data-w2pf]'); if(w2){ e.stopPropagation(); const w=S.watchlist.find(x=>x.id===w2.dataset.w2pf); if(w) openForm(null,{ticker:w.ticker,exchange:w.exchange,sector:w.sector,name:w.name,name_he:w.name_he,price:w.price??'',watchId:w.id}); return; }
+    const wd=e.target.closest('[data-wdel]'); if(wd){ e.stopPropagation(); S.watchlist=S.watchlist.filter(x=>x.id!==wd.dataset.wdel); save(); renderAll(); return; }
     const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true}).then(ok=>{ if(ok){ S.holdings=S.holdings.filter(x=>x.id!==dl.dataset.del); save(); renderAll(); } }); return; } });
   $('#pf-table').tHead.addEventListener('click',e=>{ const th=e.target.closest('th'); if(!th||th.dataset.k==='act') return; if(sortKey===th.dataset.k) sortDir*=-1; else { sortKey=th.dataset.k; sortDir=th.dataset.k==='sym'?1:-1; } renderPortfolio(); });
   $('#pf-search').addEventListener('input',e=>{ pfFilter=e.target.value.trim().toLowerCase(); renderPortfolio(); });
-  $('#btn-add').onclick=()=>openForm(); $('#btn-export').onclick=()=>exportJSON(false); $('#btn-export2').onclick=()=>exportJSON(true);
+  $('#btn-add').onclick=()=>openForm(); $('#btn-watch-add').onclick=openWatchForm; $('#btn-export').onclick=()=>exportJSON(false); $('#btn-export2').onclick=()=>exportJSON(true);
   $('#btn-import').onclick=$('#btn-import2').onclick=()=>$('#file-import').click(); $('#file-import').addEventListener('change',e=>{ if(e.target.files[0]) importFile(e.target.files[0]); e.target.value=''; });
   $('#scan-sectors').addEventListener('click',e=>{ const b=e.target.closest('[data-s]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.sectors.add(b.dataset.s):scanSel.sectors.delete(b.dataset.s); });
   $('#scan-markets').addEventListener('click',e=>{ const b=e.target.closest('[data-m]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.markets.add(b.dataset.m):scanSel.markets.delete(b.dataset.m); });
@@ -1690,8 +1782,9 @@ function bind(){
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ if(S.settings.theme==='auto'){ applyTheme(); renderAll(); } });
   window.addEventListener('resize',()=>{ clearTimeout(window.__rz); window.__rz=setTimeout(renderDashboard,150); });
 }
+function fillDatalist(){ const d=$('#ticker-list'); if(d) d.innerHTML=UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join(''); }
 function init(){
-  applyTheme(); applyI18n(); bind(); renderAll();
+  applyTheme(); applyI18n(); fillDatalist(); bind(); renderAll();
   const h=(location.hash||'').slice(1); go(['dashboard','portfolio','scanner','insights','settings'].includes(h)?h:'dashboard');
   document.documentElement.style.setProperty('--dirx',lang()==='he'?'-1':'1');
 }
