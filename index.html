@@ -589,7 +589,7 @@ td.num,th.num{text-align:end}
               <div class="field"><label data-i18n="set.theme">ערכת עיצוב</label><div class="seg" id="set-theme"><button aria-pressed="false" data-t="light" data-i18n="theme.light">בהיר</button><button aria-pressed="true" data-t="dark" data-i18n="theme.dark">כהה</button><button aria-pressed="false" data-t="auto" data-i18n="theme.auto">אוטומטי</button></div></div>
               <div class="field"><label for="set-fx" data-i18n="set.fx">שער דולר/שקל</label>
                 <div class="input-wrap"><input class="input num" id="set-fx" type="number" step="0.001" min="1" inputmode="decimal"><button class="btn sm" id="btn-fx" data-i18n="set.fx.fetch">עדכן מהרשת</button></div>
-                <div class="help" data-i18n="set.fx.help">מתעדכן אוטומטית עם עדכון שערים. ניתן להזין ידנית.</div></div>
+                <div class="help" data-i18n="set.fx.help">מתעדכן אוטומטית עם עדכון שערים. ניתן להזין ידנית.</div><div class="help" id="fx-meta" style="color:var(--text-2)"></div></div>
               <div class="field"><label for="set-cash-ils" data-i18n="set.cash">מזומן בתיק</label>
                 <div class="grid two" style="gap:10px"><input class="input num" id="set-cash-ils" type="number" step="1" min="0" inputmode="decimal" placeholder="₪ 0"><input class="input num" id="set-cash-usd" type="number" step="1" min="0" inputmode="decimal" placeholder="$ 0"></div></div>
             </div>
@@ -663,7 +663,7 @@ const I18N = {
     'th.sym':'נייר','th.qty':'כמות','th.cost':'עלות ממוצעת','th.price':'שער','th.chg':'שינוי יומי','th.value':'שווי','th.pnl':'רווח/הפסד','th.weight':'משקל','th.act':'',
     'empty.pf':'התיק ריק','empty.pf.d':'הוסף מניות ידנית, ייבא קובץ, או טען תיק לדוגמה כדי להתחיל.','empty.hist':'אין עדיין היסטוריה','empty.hist.d':'כל עדכון שערים שומר נקודת נתונים. לאחר כמה עדכונים יופיע כאן גרף.','empty.scan':'טרם בוצעה סריקה','empty.scan.d':'בחר תחומים ובורסות ולחץ על "הפעל סריקה".','empty.ins':'אין ניתוח עדיין','empty.ins.d':'לחץ על "נתח את התיק" כדי לקבל ציון, סיכונים והמלצות.',
     'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'הקלד סימול ולחץ "זהה" — האפליקציה תמלא לבד בורסה, שם, סקטור ושער','f.detect':'זהה','f.detecting':'מזהה את הנייר ברשת…','f.detected':'זוהה: {n} · {e} · {s}','f.notfound':'לא זוהה נייר עם הסימול הזה — מלא ידנית','f.nokey':'להזנת פרטים אוטומטית הגדר מפתח API בהגדרות','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
-    'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…',
+    'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…','fx.bigchange':'שער הדולר שהתקבל ({n}, מקור: {s}) שונה ב-{p}% מהשער הקודם ({o}). לעדכן בכל זאת?','fx.manual':'הוזן ידנית','fx.rep':'יציג',
     'conn.ok':'החיבור תקין ✓','conn.fail':'החיבור נכשל','saved':'נשמר','exported':'הקובץ יוצא','imported':'יובאו {n} אחזקות','sample.loaded':'תיק לדוגמה נטען — לחץ "עדכן שערים" לשערים עדכניים','wiped':'הנתונים נמחקו',
     'st.search':'מחפש ברשת','st.think':'מנתח','st.write':'מגבש תובנות','st.parse':'מעבד תוצאות',
     'scan.pulse':'דופק השוק','scan.picks':'מניות שאותרו','scan.sectorview':'תמונת סקטורים','scan.asof':'נכון ל','scan.entry':'אזור כניסה','scan.stop':'סטופ','scan.target':'יעד','scan.risk':'סיכון עיקרי','scan.add':'הוסף לתיק','scan.conv':'ביטחון','scan.catalyst':'קטליזטור','scan.sources':'מקורות','scan.type.hot':'חמה','scan.type.breakout':'פריצה','scan.type.momentum':'מומנטום','scan.type.value':'ערך',
@@ -692,7 +692,7 @@ const I18N = {
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
     'empty.pf':'Portfolio is empty','empty.pf.d':'Add stocks manually, import a file, or load the sample portfolio to get started.','empty.hist':'No history yet','empty.hist.d':'Every quote refresh stores a data point. A chart will appear after a few refreshes.','empty.scan':'No scan yet','empty.scan.d':'Choose sectors and exchanges, then click "Run scan".','empty.ins':'No analysis yet','empty.ins.d':'Click "Analyze portfolio" to get a score, risks and recommendations.',
     'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Type a ticker and press "Detect" — exchange, name, sector and price are filled automatically','f.detect':'Detect','f.detecting':'Identifying the security online…','f.detected':'Found: {n} · {e} · {s}','f.notfound':'No security found for this ticker — fill in manually','f.nokey':'Set an API key in Settings to auto-fill details','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
-    'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…',
+    'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…','fx.bigchange':'The fetched USD/ILS rate ({n}, source: {s}) differs by {p}% from the previous rate ({o}). Update anyway?','fx.manual':'Manual','fx.rep':'BoI rep.',
     'conn.ok':'Connection OK ✓','conn.fail':'Connection failed','saved':'Saved','exported':'File exported','imported':'Imported {n} holdings','sample.loaded':'Sample loaded — click "Refresh quotes" for live prices','wiped':'Data deleted',
     'st.search':'Searching the web','st.think':'Analyzing','st.write':'Composing insights','st.parse':'Processing results',
     'scan.pulse':'Market pulse','scan.picks':'Stocks found','scan.sectorview':'Sector view','scan.asof':'As of','scan.entry':'Entry zone','scan.stop':'Stop','scan.target':'Target','scan.risk':'Key risk','scan.add':'Add to portfolio','scan.conv':'Conviction','scan.catalyst':'Catalyst','scan.sources':'Sources','scan.type.hot':'Hot','scan.type.breakout':'Breakout','scan.type.momentum':'Momentum','scan.type.value':'Value',
@@ -954,12 +954,12 @@ function progressBox(container, title){
 async function fetchQuotes(onStatus){
   const list=S.holdings.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
   if(!list.length) throw new Error(t('q.nohold'));
-  const user=`Fetch the latest available market quotes for these securities (last trade or close, and previous close) plus the current USD/ILS exchange rate. Use web search efficiently: batch tickers per search when possible (e.g. search several TASE tickers together on tase.co.il / bizportal / globes / investing.com, and US tickers on Yahoo Finance / Google Finance / CNBC).
+  const user=`Fetch the latest available market quotes for these securities (last trade or close, and previous close). Use web search efficiently: batch tickers per search when possible (e.g. search several TASE tickers together on tase.co.il / bizportal / globes / investing.com, and US tickers on Yahoo Finance / Google Finance / CNBC).
 Securities:
 ${list.map(x=>`- ${x.ticker} (${x.exchange})${x.name?' — '+x.name:''}`).join('\n')}
 
 Return JSON exactly in this shape:
-{"asOf":"YYYY-MM-DD HH:MM (timezone)","usdIls":3.xx,"quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}],"warnings":["..."]}
+{"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}],"warnings":["..."]}
 Rules: TASE price and prevClose in ILS (shekels, NOT agorot). US in USD. If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
   const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(14,4+Math.ceil(list.length/2)))], maxTokens:6000, effort:'medium', onStatus});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)) { const e=new Error(t('q.none')); e.raw=r.text; throw e; }
@@ -973,16 +973,24 @@ function applyQuotes(j){
     if(h.exchange==='TASE'&&p>0&&h.avgCost>0&&p/h.avgCost>40){ p=p/100; if(pc) pc=pc/100; } // agorot guard
     h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; n++;
   }
-  if(j.usdIls&&+j.usdIls>2&&+j.usdIls<6){ S.settings.usdIls=+(+j.usdIls).toFixed(4); S.settings.fxUpdated=now; }
   S.settings.lastQuotes=now;
   const c=computed(); if(c.totalIls>0){ S.history.push({ts:now,ils:+c.totalIls.toFixed(2),usd:+(c.totalIls/c.fx).toFixed(2),nav:+c.nav.toFixed(2)}); if(S.history.length>2000) S.history=S.history.slice(-2000); }
   save(); return n;
 }
 async function fetchFx(){
-  const r=await claude({system:SYSTEM_BASE(), user:'Find the current USD/ILS (dollar-shekel) exchange rate — the Bank of Israel representative rate or the latest market rate. Return JSON: {"usdIls":3.xx,"asOf":"...","source":"..."}', tools:[webSearchTool(2)], maxTokens:600, effort:'medium'});
-  const j=extractJSON(r.text); if(!j||!j.usdIls) throw new Error(t('q.none')); return +j.usdIls;
+  const user=`Find the CURRENT USD/ILS (US dollar to Israeli shekel) exchange rate. You MUST use web search — never answer from memory. Search e.g. "USD ILS" on Google Finance, xe.com, investing.com, or the Bank of Israel site (boi.org.il, שער יציג). Return the latest market (spot) rate and, if available, the latest Bank of Israel representative rate (שער יציג) with its date.
+Return JSON exactly: {"spot":3.1234,"boiRepresentative":3.1200,"asOf":"YYYY-MM-DD HH:MM (timezone)","source":"site name","note":null}
+Sanity: the rate is ILS per 1 USD and in 2025–2026 it lies roughly between 2.8 and 4.2. If a source shows ILS→USD (≈0.3), invert it.`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(3)], maxTokens:800, effort:'medium'});
+  const j=extractJSON(r.text); const rate=+(j&&(j.spot||j.boiRepresentative)); if(!j||!(rate>2.5&&rate<4.5)) throw new Error(t('q.none'));
+  return {rate:+rate.toFixed(4), rep:j.boiRepresentative?+(+j.boiRepresentative).toFixed(4):null, asOf:j.asOf||null, source:j.source||(r.sources[0]&&r.sources[0].title)||null};
 }
-
+/** Apply a fetched FX result. Asks for confirmation when the jump vs. the previous fetched rate is > 3%. */
+function applyFx(fx){
+  const prev=S.settings.usdIls, hadFetched=!!S.settings.fxUpdated;
+  if(hadFetched&&prev&&Math.abs(fx.rate/prev-1)>0.03){ if(!confirm(t('fx.bigchange',{o:fmtN(prev,4),n:fmtN(fx.rate,4),p:fmtN((fx.rate/prev-1)*100,1),s:fx.source||'?'}))) return false; }
+  S.settings.usdIls=fx.rate; S.settings.fxUpdated=Date.now(); S.settings.fxSource=fx.source; S.settings.fxAsOf=fx.asOf; S.settings.fxRep=fx.rep; save(); return true;
+}
 /* ============================================================
    Engine 2 — Market scanner
    ============================================================ */
@@ -1468,12 +1476,12 @@ async function doRefresh(){
   const btn=$('#btn-refresh'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   if(!S.holdings.length){ // no holdings: refresh the FX rate only
     setLoading(btn,true); toast(t('q.fxonly'));
-    try{ const v=await fetchFx(); S.settings.usdIls=+v.toFixed(4); S.settings.fxUpdated=Date.now(); save(); renderAll(); toast('USD/ILS '+fmtN(v,4)+' ✓','ok'); }
+    try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+(fx.source||''),'ok'); } }
     catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); }
     finally{ setLoading(btn,false); }
     return; }
   setLoading(btn,true); toast(t('q.updating'));
-  try{ const j=await fetchQuotes(()=>{}); const n=applyQuotes(j); S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<6e4) delete h.sample; }); save(); renderAll(); toast(n===S.holdings.length?t('q.done'):t('q.partial',{n,t:S.holdings.length}),n?'ok':'err'); if(j.warnings&&j.warnings.length) console.info('quote warnings',j.warnings); }
+  try{ const [j,fxr]=await Promise.all([fetchQuotes(()=>{}), fetchFx().catch(e=>{ console.warn('fx failed',e); return null; })]); if(fxr) applyFx(fxr); const n=applyQuotes(j); S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<6e4) delete h.sample; }); save(); renderAll(); toast(n===S.holdings.length?t('q.done'):t('q.partial',{n,t:S.holdings.length}),n?'ok':'err'); if(j.warnings&&j.warnings.length) console.info('quote warnings',j.warnings); }
   catch(e){ console.error(e); toast((e.refusal?'':t('err.api')+': ')+e.message,'err'); }
   finally{ setLoading(btn,false); }
 }
@@ -1486,7 +1494,7 @@ function renderSettings(){
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
   $$('#ins-profile button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===insProfile));
   $$('[data-ccy]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ccy===s.currency));
-  const ok=!!s.apiKey; $('#api-dot').classList.toggle('ok',ok); $('#api-status').textContent=ok?t('api.set'):t('api.notset'); $('#side-fx').textContent=fmtN(s.usdIls,3); $('#side-updated').textContent=s.lastQuotes?t('dd.updated')+' '+fmtDate(s.lastQuotes):t('never');
+  const ok=!!s.apiKey; $('#api-dot').classList.toggle('ok',ok); $('#api-status').textContent=ok?t('api.set'):t('api.notset'); $('#side-fx').textContent=fmtN(s.usdIls,3); const fxm=$('#fx-meta'); if(fxm){ fxm.textContent=s.fxUpdated?`${s.fxSource?s.fxSource+' · ':''}${s.fxAsOf?s.fxAsOf+' · ':''}${t('dd.updated')} ${fmtDate(s.fxUpdated)}${s.fxRep?' · '+t('fx.rep')+' '+fmtN(s.fxRep,4):''}`:t('never'); } $('#side-updated').textContent=s.lastQuotes?t('dd.updated')+' '+fmtDate(s.lastQuotes):t('never');
 }
 function loadSample(){
   const now=Date.now();
@@ -1537,10 +1545,10 @@ function bind(){
   $$('#set-effort button').forEach(b=>b.onclick=()=>{ S.settings.effort=b.dataset.e; save(); renderSettings(); });
   $$('#set-lang button').forEach(b=>b.onclick=()=>{ S.settings.lang=b.dataset.l; save(); applyI18n(); renderAll(); });
   $$('#set-theme button').forEach(b=>b.onclick=()=>{ S.settings.theme=b.dataset.t; save(); applyTheme(); renderAll(); });
-  $('#set-fx').addEventListener('change',e=>{ const v=parseFloat(e.target.value); if(v>1&&v<10){ S.settings.usdIls=v; S.settings.fxUpdated=Date.now(); save(); renderAll(); } });
+  $('#set-fx').addEventListener('change',e=>{ const v=parseFloat(e.target.value); if(v>1&&v<10){ S.settings.usdIls=v; S.settings.fxUpdated=Date.now(); S.settings.fxSource=t('fx.manual'); S.settings.fxAsOf=null; S.settings.fxRep=null; save(); renderAll(); } });
   $('#set-cash-ils').addEventListener('change',e=>{ S.settings.cashIls=parseFloat(e.target.value)||0; save(); renderAll(); });
   $('#set-cash-usd').addEventListener('change',e=>{ S.settings.cashUsd=parseFloat(e.target.value)||0; save(); renderAll(); });
-  $('#btn-fx').onclick=async()=>{ const b=$('#btn-fx'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } b.disabled=true; try{ const v=await fetchFx(); S.settings.usdIls=+v.toFixed(4); S.settings.fxUpdated=Date.now(); save(); renderAll(); toast('USD/ILS '+fmtN(v,4),'ok'); }catch(e){ toast(t('err.api')+': '+e.message,'err'); } finally{ b.disabled=false; } };
+  $('#btn-fx').onclick=async()=>{ const b=$('#btn-fx'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } b.disabled=true; try{ const fx=await fetchFx(); if(applyFx(fx)){ renderAll(); toast('USD/ILS '+fmtN(fx.rate,4)+' ✓ '+(fx.source||''),'ok'); } }catch(e){ toast(t('err.api')+': '+e.message,'err'); } finally{ b.disabled=false; } };
   $('#btn-test').onclick=async()=>{ const b=$('#btn-test'); S.settings.apiKey=$('#set-key').value.trim(); save(); renderSettings(); setLoading(b,true); try{ const ok=await testConnection(); toast(ok?t('conn.ok'):t('conn.fail'),ok?'ok':'err'); }catch(e){ toast(t('conn.fail')+': '+e.message,'err'); } finally{ setLoading(b,false); } };
   $('#btn-clearkey').onclick=()=>{ S.settings.apiKey=''; save(); renderSettings(); };
   $('#btn-sample').onclick=loadSample;
