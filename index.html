@@ -433,6 +433,13 @@ td.num,th.num{text-align:end}
   .topbar .btn.icon{width:36px;min-height:36px}
   #btn-refresh{min-width:38px;padding:0 8px}
   .card-h .input-wrap{flex-basis:100%;order:9}
+  .card-h h1,.card-h h2,.card-h h3{flex:1 1 auto;min-width:min(150px,100%);overflow:visible;white-space:normal}
+  .card-h > .seg,.card-h > .btn{flex:0 0 auto}
+  .card-h:has(> button.btn:nth-of-type(3)) > h2,.card-h:has(> button.btn:nth-of-type(3)) > h3{flex-basis:100%}
+  .sheet .sh{flex-wrap:wrap;row-gap:8px}
+  .sheet .sh h2{flex:1 1 auto;min-width:120px;font-size:1rem}
+  #sheet-actions{order:5;flex:1 1 100%;justify-content:flex-end}
+  #sheet-actions:empty{display:none}
 }
 @media (max-width:520px){
   .grid.kpis{grid-template-columns:1fr 1fr}
@@ -719,7 +726,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2203';
+const APP_VERSION='2026.09.11-2216';
 
 const I18N = {
   he: {
