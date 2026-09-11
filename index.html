@@ -930,6 +930,7 @@ async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=nul
     if(type==='content_block_start'){
       const cb=ev.content_block; blocks[ev.index]=cb.type;
       if(cb.type==='server_tool_use') onStatus('search', cb.input&&cb.input.query);
+      if(cb.type==='web_fetch_tool_result'){ onStatus('think'); }
       if(cb.type==='web_search_tool_result'){ const c=cb.content; if(Array.isArray(c)) c.forEach(r=>{ if(r.url) sources.push({url:r.url,title:r.title||r.url}); }); onStatus('think'); }
       if(cb.type==='text'){ onStatus('write'); if(cb.text){ text+=cb.text; onText(text); } }
       if(cb.type==='thinking') onStatus('think');
@@ -972,6 +973,9 @@ function extractJSON(text){
   return null;
 }
 const webSearchTool=(max=6)=>({type:'web_search_20260209',name:'web_search',max_uses:max});
+const webFetchTool=(max=6)=>({type:'web_fetch_20260209',name:'web_fetch',max_uses:max});
+const ySym=x=>x.exchange==='TASE'?x.ticker.replace(/\./g,'-')+'.TA':x.ticker.replace(/\./g,'-');
+const gSym=x=>x.ticker+':'+(x.exchange==='TASE'?'TLV':x.exchange);
 const todayStr=()=>new Date().toISOString().slice(0,10);
 const outLang=()=>lang()==='he'?'Hebrew (עברית) — all free-text fields in natural, professional Hebrew; tickers, numbers and URLs stay Latin':'English';
 
@@ -1005,16 +1009,17 @@ function progressBox(container, title){
 /** Combine a user cancel signal with a hard timeout. */
 function withTimeout(signal,ms){ const c=new AbortController(); const id=setTimeout(()=>c.abort('timeout'),ms); if(signal){ if(signal.aborted) c.abort(signal.reason); else signal.addEventListener('abort',()=>c.abort(signal.reason),{once:true}); } c.signal.addEventListener('abort',()=>clearTimeout(id),{once:true}); return c.signal; }
 async function fetchQuotesChunk(list,{signal,onStatus,onText}={}){
-  const tase=list.filter(x=>x.exchange==='TASE'), us=list.filter(x=>x.exchange!=='TASE');
-  const user=`Fetch the latest available market quotes for these ${list.length} securities (last trade or close, and previous close). Be FAST: ${list.length===1?'one search is enough':'batch the tickers into as few searches as possible (one search per exchange)'}.
-${tase.length?'TASE tickers: use tase.co.il, bizportal.co.il or globes.co.il; prices in ILS (shekels, NOT agorot). ':''}${us.length?'US tickers: use Yahoo Finance / Google Finance / CNBC; prices in USD. ':''}
-Securities:
-${list.map(x=>`- ${x.ticker} (${x.exchange})${x.name?' — '+x.name:''}`).join('\n')}
+  const urls=list.map(x=>`- ${x.ticker} (${x.exchange}): primary JSON https://query1.finance.yahoo.com/v8/finance/chart/${ySym(x)}?range=5d&interval=1d  |  fallback page https://www.google.com/finance/quote/${gSym(x)}`).join('\n');
+  const user=`Get the CURRENT quote (last price and previous close) for these ${list.length} securities. Do NOT rely on search snippets or news articles — they are often stale.
+Method, per security: use web_fetch on the primary Yahoo Finance chart JSON URL below and read meta.regularMarketPrice (current price), meta.chartPreviousClose or meta.previousClose (previous close), meta.currency and meta.regularMarketTime (unix seconds). If that fetch fails or is blocked, fetch the Google Finance page and read the price, previous close and the quote timestamp shown there. Only if both fail, use web_search for "<TICKER> stock price" and take the most recent quote you can find.
+Currency rules: if meta.currency is "ILA" (agorot) divide price and previous close by 100 to get ILS. TASE prices must be in ILS (shekels), US prices in USD.
+Securities and URLs:
+${urls}
 
-Return JSON exactly in this shape:
-{"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"POLI","exchange":"TASE","price":44.10,"prevClose":43.60,"changePct":1.15,"currency":"ILS","source":"short source name","note":null}]}
+Respond with ONLY this JSON object (no prose):
+{"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(4,list.length+1))], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+1),webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1038,7 +1043,7 @@ function applyQuotes(j,opts={}){
     const h=S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase()&&(!q.exchange||x.exchange===q.exchange))||S.holdings.find(x=>x.ticker.toUpperCase()===String(q.ticker).toUpperCase());
     if(!h) continue; let p=+q.price, pc=q.prevClose!=null?+q.prevClose:null;
     if(h.exchange==='TASE'&&p>=100&&h.avgCost>0&&p/h.avgCost>40&&(p/100)/h.avgCost>0.2&&(p/100)/h.avgCost<5){ p=p/100; if(pc) pc=pc/100; } // agorot guard (e.g. 4410 → 44.10)
-    h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; n++;
+    h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||null; h.quoteTime=q.quoteTime||j.asOf||null; n++;
   }
   S.settings.lastQuotes=now;
   if(!opts.noHistory) recordHistory();
@@ -1521,12 +1526,16 @@ async function doAnalyze(){
 function openDeepDive(id){
   const h=S.holdings.find(x=>x.id===id); if(!h) return; const c=computed(); const r=c.rows.find(x=>x.h.id===id); const a=S.analyses.stocks[h.ticker+'|'+h.exchange];
   const head=`<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div class="tick">${avatar(h).replace('class="av"','class="av" style="width:48px;height:48px;font-size:.85rem;')}<div><div style="font-size:1.2rem;font-weight:800">${esc(h.ticker)} <span class="chip" style="font-size:.66rem">${h.exchange}</span></div><div class="muted" style="font-size:.86rem">${esc(holdName(h))} · ${sectorLabel(h.sector)}</div></div></div>
-    <div style="margin-inline-start:auto;text-align:end"><div style="font-size:1.35rem;font-weight:800" class="num">${r.price!=null?fmtC(r.price,r.ccy):'—'}</div><div class="${(r.dayPct||0)>=0?'gain':'loss'} num" style="font-size:.84rem;font-weight:600">${fmtP(r.dayPct)}</div></div></div>
+    <div style="margin-inline-start:auto;text-align:end"><div style="font-size:1.35rem;font-weight:800" class="num">${r.price!=null?fmtC(r.price,r.ccy):'—'}</div><div class="${(r.dayPct||0)>=0?'gain':'loss'} num" style="font-size:.84rem;font-weight:600">${fmtP(r.dayPct)}</div><div class="faint" style="font-size:.7rem">${h.updatedAt?(h.source?esc(h.source)+' · ':'')+(h.quoteTime?esc(h.quoteTime):fmtDate(h.updatedAt)):t('never')}</div></div></div>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px">
       <div class="stat-mini"><span class="l">${t('th.qty')}</span><span class="v num">${fmtN(h.qty,0)}</span></div><div class="stat-mini"><span class="l">${t('th.cost')}</span><span class="v num">${fmtC(h.avgCost,r.ccy)}</span></div><div class="stat-mini"><span class="l">${t('th.value')}</span><span class="v num">${fmtC(dispIls(r.valIls||0))}</span></div><div class="stat-mini"><span class="l">${t('th.pnl')}</span><span class="v num ${(r.pnlIls||0)>=0?'gain':'loss'}">${r.pnlIls!=null?fmtC(dispIls(r.pnlIls)):'—'} (${fmtP(r.pnlPct)})</span></div><div class="stat-mini"><span class="l">${t('th.weight')}</span><span class="v num">${fmtN(r.weightEq,1)}%</span></div></div>`;
   const body=`<div>${head}</div><div id="dd-body">${a?ddHTML(a,h):`<div class="card flat">${emptyHTML('i-sparkles',t('dd.title'),t('dd.empty'))}</div>`}</div><div id="dd-progress" hidden></div><div class="disclaimer">${t('disclaimer')}</div>`;
-  openSheet(t('dd.title'),body,`<button class="btn ghost icon" id="dd-edit" aria-label="${t('edit.title')}"><svg class="ic"><use href="#i-edit"/></svg></button><button class="btn primary sm" id="dd-run"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${a?t('dd.rerun'):t('dd.run')}</span></button>`);
+  openSheet(t('dd.title'),body,`<button class="btn ghost icon" id="dd-refresh" aria-label="${t('refresh')}"><span class="spin" style="display:none"></span><svg class="ic"><use href="#i-refresh"/></svg></button><button class="btn ghost icon" id="dd-edit" aria-label="${t('edit.title')}"><svg class="ic"><use href="#i-edit"/></svg></button><button class="btn primary sm" id="dd-run"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${a?t('dd.rerun'):t('dd.run')}</span></button>`);
   $('#dd-edit').onclick=()=>openForm(h);
+  $('#dd-refresh').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } const b=$('#dd-refresh'); b.disabled=true; b.querySelector('svg').style.display='none'; b.querySelector('.spin').style.display='inline-block'; toast(t('q.updating'));
+    try{ const j=await fetchQuotesChunk([{ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}],{signal:withTimeout(null,90000)}); const n=applyQuotes(j); renderAll(); if(n){ toast(t('q.done'),'ok'); openDeepDive(h.id); } else toast(t('q.none')+(j.quotes[0]&&j.quotes[0].note?' · '+j.quotes[0].note:''),'err'); }
+    catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); }
+    finally{ b.disabled=false; } };
   $('#dd-run').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); closeSheet(); go('settings'); return; } const btn=$('#dd-run'); setLoading(btn,true); const pb=progressBox($('#dd-progress'),t('dd.run')); $('#dd-progress').scrollIntoView({block:'nearest',behavior:'smooth'});
     try{ const res=await deepDive(h,{onStatus:(s,q)=>pb.set(s,q),onText:x=>pb.live(x)}); pb.set('parse'); S.analyses.stocks[h.ticker+'|'+h.exchange]=res;
       if(res.snapshot&&res.snapshot.price&&(h.price==null||confirmPriceUpdate(h,res))){ let p=+res.snapshot.price; if(h.exchange==='TASE'&&h.avgCost>0&&p/h.avgCost>40) p/=100; if(h.price!=null&&res.snapshot.changePct1d!=null) h.prevClose=p/(1+res.snapshot.changePct1d/100); h.price=p; h.updatedAt=Date.now(); delete h.sample; }
