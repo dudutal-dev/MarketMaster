@@ -363,6 +363,17 @@ td.num,th.num{text-align:end}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.88rem}
 .kv dt{color:var(--text-3)}.kv dd{margin:0;font-weight:600}
 
+.bell{position:relative}
+.bell .cnt{position:absolute;top:2px;inset-inline-end:2px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--loss);color:#fff;font-size:.66rem;font-weight:800;display:grid;place-items:center;border:2px solid var(--bg)}
+.bell.scanning svg{animation:bellswing 1.2s ease-in-out infinite}
+@keyframes bellswing{0%,100%{transform:rotate(0)}25%{transform:rotate(14deg)}75%{transform:rotate(-14deg)}}
+.alert{display:flex;gap:12px;padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);position:relative;overflow:hidden}
+.alert::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--text-3)}
+.alert.positive::before{background:var(--gain)}.alert.negative::before{background:var(--loss)}.alert.neutral::before{background:var(--primary)}
+.alert.unread{box-shadow:0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent)}
+.alert .body{flex:1;min-width:0}.alert .t{font-weight:700;line-height:1.35}.alert .d{font-size:.88rem;color:var(--text-2);margin-top:3px;line-height:1.5}
+.alert .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:.74rem;color:var(--text-3)}
+.sev-high{background:var(--loss-soft);color:var(--loss)}.sev-medium{background:var(--warn-soft);color:var(--warn)}.sev-low{background:var(--surface-3);color:var(--text-2)}
 .jobbar{position:sticky;top:calc(var(--topbar-h) + var(--sat));z-index:25;margin:-6px 0 4px;padding:10px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-2);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .jobbar .t{font-weight:700;font-size:.9rem}
 .jobbar .m{font-size:.78rem;color:var(--text-3);font-variant-numeric:tabular-nums}
@@ -454,6 +465,7 @@ td.num,th.num{text-align:end}
   <symbol id="i-pie" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9v9z"/><path d="M21 8a9 9 0 0 0-6-5v6h6z"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1"/></symbol>
   <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
   <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></symbol>
  </defs>
 </svg>
@@ -469,6 +481,7 @@ td.num,th.num{text-align:end}
     <button class="nav-btn" data-nav="portfolio"><svg class="ic"><use href="#i-briefcase"/></svg><span data-i18n="nav.portfolio">התיק שלי</span><span class="badge" id="nav-count">0</span></button>
     <button class="nav-btn" data-nav="scanner"><svg class="ic"><use href="#i-radar"/></svg><span data-i18n="nav.scanner">סורק שוק</span></button>
     <button class="nav-btn" data-nav="insights"><svg class="ic"><use href="#i-sparkles"/></svg><span data-i18n="nav.insights">מנוע תובנות</span></button>
+    <button class="nav-btn" data-nav="alerts"><svg class="ic"><use href="#i-bell"/></svg><span data-i18n="nav.alerts">התראות</span><span class="badge" id="nav-alerts" hidden>0</span></button>
     <button class="nav-btn" data-nav="settings"><svg class="ic"><use href="#i-settings"/></svg><span data-i18n="nav.settings">הגדרות</span></button>
     <div class="spacer"></div>
     <div class="side-card">
@@ -487,6 +500,7 @@ td.num,th.num{text-align:end}
         <button id="ccy-ils" aria-pressed="true" data-ccy="ILS">₪</button>
         <button id="ccy-usd" aria-pressed="false" data-ccy="USD">$</button>
       </div>
+      <button class="btn ghost icon bell" id="btn-bell" data-nav="alerts" aria-label="Alerts"><svg class="ic"><use href="#i-bell"/></svg><span class="cnt" id="bell-cnt" hidden>0</span></button>
       <button class="btn ghost icon" id="btn-lang" title="עברית / English" aria-label="Language"><svg class="ic"><use href="#i-globe"/></svg></button>
       <button class="btn ghost icon" id="btn-theme" aria-label="Theme"><svg class="ic" id="theme-ic"><use href="#i-sun"/></svg></button>
       <button class="btn primary sm" id="btn-refresh"><span class="spin"></span><svg class="ic sm"><use href="#i-refresh"/></svg><span class="lbl" data-i18n="refresh">עדכן שערים</span></button>
@@ -577,6 +591,21 @@ td.num,th.num{text-align:end}
         </div>
         <div id="ins-progress" hidden></div>
         <div id="ins-results"></div>
+      </section>
+
+      <!-- ======== Alerts ======== -->
+      <section class="page" id="page-alerts">
+        <div class="card">
+          <div class="card-h"><h2 data-i18n="al.title">התראות על התיק</h2><span class="chip accent"><svg class="ic sm"><use href="#i-bolt"/></svg><span data-i18n="al.quick">סריקה מהירה</span></span>
+            <div class="sub" data-i18n="al.sub">בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות.</div></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <span class="faint" style="font-size:.82rem" id="al-last"></span>
+            <label class="chip outline" style="cursor:pointer"><input type="checkbox" id="al-auto" checked style="accent-color:var(--primary)"> <span data-i18n="al.auto">סריקה אוטומטית בפתיחה</span></label>
+            <div style="flex:1"></div>
+            <button class="btn primary sm" id="btn-alerts"><span class="spin"></span><svg class="ic sm"><use href="#i-bell"/></svg><span class="lbl" data-i18n="al.run">סרוק עכשיו</span></button>
+          </div>
+        </div>
+        <div id="al-results"></div>
       </section>
 
       <!-- ======== Settings ======== -->
@@ -671,7 +700,7 @@ td.num,th.num{text-align:end}
 
 const I18N = {
   he: {
-    tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות',
+    tagline:'ת"א · ניו יורק · תובנות AI', 'nav.dashboard':'דשבורד','nav.portfolio':'התיק שלי','nav.scanner':'סורק שוק','nav.insights':'מנוע תובנות','nav.settings':'הגדרות','nav.alerts':'התראות','al.title':'התראות על התיק','al.quick':'סריקה מהירה','al.sub':'בכל פתיחה של האפליקציה נסרקות המניות שבתיק לאירועים חריגים מ-48 השעות האחרונות — לטובה ולרעה: תנועות חדות, דוחות, שינויי המלצות, עסקאות, רגולציה, שיאים ושפלים.','al.auto':'סריקה אוטומטית בפתיחה','al.run':'סרוק עכשיו','al.last':'סריקה אחרונה: {t}','al.never':'טרם נסרק','al.scanning':'סורק התראות…','al.found':'נמצאו {n} התראות חדשות','al.none':'אין אירועים חריגים במניות התיק','al.none.d':'הסריקה האחרונה לא מצאה חדשות מהותיות או תנועות חדות ב-48 השעות האחרונות.','al.empty':'אין עדיין סריקה','al.empty.d':'לחץ על סרוק עכשיו, או הפעל סריקה אוטומטית בפתיחה.','al.nohold':'אין מניות בתיק לסריקה','al.local':'התראות מקומיות','al.ai':'אירועים מהרשת','al.quiet':'ללא אירועים','al.open':'פתח ניתוח','al.markread':'סמן הכל כנקרא','al.new':'חדש','al.dayjump':'תנועה יומית חדה: {p}','al.dayjump.d':'{t} זז {p} היום. בדוק חדשות לפני פעולה.','al.target':'מחיר יעד הושג','al.target.d':'{t} נסחר ב-{p}, מעל היעד שהגדרת ({g}).','al.stale':'שערים לא עדכניים','al.stale.d':'העדכון האחרון לפני {h} שעות.','al.sev.high':'דחוף','al.sev.medium':'חשוב','al.sev.low':'לידיעה','al.types.earnings':'דוחות','al.types.analyst':'אנליסטים','al.types.news':'חדשות','al.types.price':'מחיר','al.types.ma':'עסקה','al.types.regulatory':'רגולציה','al.types.insider':'בעלי עניין','al.types.dividend':'דיבידנד','al.types.technical':'טכני','al.types.macro':'מאקרו','al.types.other':'אחר',
     'api.notset':'API לא מוגדר','api.set':'API מחובר','fx.label':'USD/ILS', refresh:'עדכן שערים', all:'הכל', local:'חישוב מקומי',
     'dash.history':'שווי התיק לאורך זמן','dash.alloc':'חלוקה לפי סקטור','dash.exch':'חשיפה לפי בורסה','dash.ccy':'חשיפת מטבע','dash.movers':'תנועות היום','dash.quick':'תובנות מהירות',
     'pf.title':'אחזקות','watch.title':'רשימת מעקב','watch.add':'הוסף למעקב','watch.empty':'אין מניות במעקב','watch.empty.d':'הוסף מניות שאתה שוקל לקנות — ידנית או בלחיצה מסורק השוק. השערים מתעדכנים יחד עם התיק.','watch.since':'מאז הוספה','watch.toPf':'העבר לתיק','watch.added':'{t} נוסף למעקב','watch.exists':'{t} כבר במעקב','watch.remove':'הסר ממעקב','watch.inlist':'במעקב','th.added':'נוסף','watch.form':'הוספה למעקב','watch.target':'מחיר יעד (אופציונלי)','chart.title':'גרף היסטורי','chart.load':'טען גרף','chart.loading':'טוען נתונים היסטוריים…','chart.fail':'לא הצלחתי לטעון היסטוריה','chart.range.1M':'חודש','chart.range.3M':'3 חודשים','chart.range.1Y':'שנה','chart.range.5Y':'5 שנים','chart.change':'שינוי בתקופה','chart.hi':'גבוה','chart.lo':'נמוך','chart.src':'מקור: Yahoo Finance · סגירות','pf.search':'חיפוש בתיק…','pf.add':'הוסף מניה','pf.note':'שערי ת"א מוצגים בש"ח (לא באגורות). לחיצה על שורה פותחת ניתוח עומק של המניה.','pf.bysector':'משקל לפי סקטור','pf.pnl':'רווח/הפסד לפי אחזקה',
@@ -701,7 +730,7 @@ const I18N = {
     'sample':'דוגמה','hours':'שעות','ago':'לפני','never':'טרם עודכן','shares':'יח׳','of':'מתוך','more':'עוד','less':'פחות','raw':'תשובה גולמית','copy':'העתק','copied':'הועתק',
   },
   en: {
-    tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings',
+    tagline:'TASE · NYSE · AI Insights','nav.dashboard':'Dashboard','nav.portfolio':'Portfolio','nav.scanner':'Scanner','nav.insights':'Insights','nav.settings':'Settings','nav.alerts':'Alerts','al.title':'Portfolio alerts','al.quick':'Quick scan','al.sub':'On every app open, your holdings are scanned for unusual events from the last 48 hours — good and bad: sharp moves, earnings, rating changes, deals, regulation, highs and lows.','al.auto':'Auto-scan on open','al.run':'Scan now','al.last':'Last scan: {t}','al.never':'Not scanned yet','al.scanning':'Scanning alerts…','al.found':'{n} new alerts found','al.none':'No unusual events in your holdings','al.none.d':'The last scan found no material news or sharp moves in the last 48 hours.','al.empty':'No scan yet','al.empty.d':'Tap Scan now, or enable auto-scan on open.','al.nohold':'No holdings to scan','al.local':'Local alerts','al.ai':'Events from the web','al.quiet':'No events','al.open':'Open analysis','al.markread':'Mark all read','al.new':'New','al.dayjump':'Sharp daily move: {p}','al.dayjump.d':'{t} moved {p} today. Check the news before acting.','al.target':'Target price reached','al.target.d':'{t} trades at {p}, above your target ({g}).','al.stale':'Stale quotes','al.stale.d':'Last update {h} hours ago.','al.sev.high':'Urgent','al.sev.medium':'Important','al.sev.low':'FYI','al.types.earnings':'Earnings','al.types.analyst':'Analysts','al.types.news':'News','al.types.price':'Price','al.types.ma':'Deal','al.types.regulatory':'Regulatory','al.types.insider':'Insiders','al.types.dividend':'Dividend','al.types.technical':'Technical','al.types.macro':'Macro','al.types.other':'Other',
     'api.notset':'API not set','api.set':'API connected','fx.label':'USD/ILS', refresh:'Refresh quotes', all:'All', local:'Local calc',
     'dash.history':'Portfolio value over time','dash.alloc':'Allocation by sector','dash.exch':'Exposure by exchange','dash.ccy':'Currency exposure','dash.movers':"Today's movers",'dash.quick':'Quick insights',
     'pf.title':'Holdings','watch.title':'Watchlist','watch.add':'Add to watchlist','watch.empty':'Watchlist is empty','watch.empty.d':'Add stocks you are considering — manually or with one tap from the scanner. Prices update together with the portfolio.','watch.since':'Since added','watch.toPf':'Move to portfolio','watch.added':'{t} added to watchlist','watch.exists':'{t} is already on the watchlist','watch.remove':'Remove from watchlist','watch.inlist':'Watching','th.added':'Added','watch.form':'Add to watchlist','watch.target':'Target price (optional)','chart.title':'Price history','chart.load':'Load chart','chart.loading':'Loading price history…','chart.fail':'Could not load history','chart.range.1M':'1M','chart.range.3M':'3M','chart.range.1Y':'1Y','chart.range.5Y':'5Y','chart.change':'Period change','chart.hi':'High','chart.lo':'Low','chart.src':'Source: Yahoo Finance · closes','pf.search':'Search portfolio…','pf.add':'Add stock','pf.note':'TASE prices are shown in ILS (not agorot). Click a row for a deep-dive analysis.','pf.bysector':'Weight by sector','pf.pnl':'P&L by holding',
@@ -783,13 +812,13 @@ const SAMPLE_HOLDINGS = [
 /* ---------- State ---------- */
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
-  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
-  holdings:[], watchlist:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}, hist:{}
+  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
+  holdings:[], watchlist:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{}}
 };
 let S = load();
 function load(){
   try{ const raw=localStorage.getItem(LS_KEY); if(!raw) return structuredClone(DEFAULTS);
-    const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}, watchlist:Array.isArray(p.watchlist)?p.watchlist:[], hist:p.hist&&typeof p.hist==='object'?p.hist:{}};
+    const p=JSON.parse(raw); const st={...structuredClone(DEFAULTS),...p, settings:{...DEFAULTS.settings,...(p.settings||{})}, analyses:{portfolio:null,stocks:{},...(p.analyses||{})}, watchlist:Array.isArray(p.watchlist)?p.watchlist:[], hist:p.hist&&typeof p.hist==='object'?p.hist:{}, alerts:{ts:null,items:[],seen:{},...(p.alerts||{})}};
     if(!(p.settings&&p.settings.perfV2)){ st.settings.perfV2=true; st.settings.dataModel='claude-sonnet-5'; if(st.settings.effort==='high') st.settings.effort='medium'; } // one-time speed migration
     return st;
   }catch(e){ console.warn('load failed',e); return structuredClone(DEFAULTS); }
@@ -1234,6 +1263,40 @@ If the fetch fails, respond {"error":"reason"}.`;
   save(); return out;
 }
 
+
+/* ============================================================
+   Engine 7 — Quick alerts scan (holdings only, last 48h, fast model)
+   ============================================================ */
+async function scanAlerts({signal}={}){
+  const c=computed(); const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he||'',price:r.price,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,weightPct:+r.weightEq.toFixed(1)}));
+  if(!rows.length) throw new Error(t('al.nohold'));
+  const user=`QUICK ALERT SCAN for a portfolio. Today is ${todayStr()} (Israel time ${new Date().toLocaleTimeString('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit'})}). Only report UNUSUAL, MATERIAL events from the last 48 hours — good or bad. Nothing routine.
+Holdings (JSON): ${JSON.stringify(rows)}
+Use web search efficiently: batch several tickers per query (e.g. "TICKER1 TICKER2 TICKER3 stock news today"), at most ${Math.min(8,2+Math.ceil(rows.length/2))} searches total. For TASE tickers prefer globes/bizportal/calcalist/themarker/tase.co.il; for US prefer Reuters/CNBC/Bloomberg/MarketWatch/Yahoo Finance.
+Event types to flag: earnings/results and guidance, analyst rating or target changes, M&A / big contracts, regulatory or legal actions, insider/major-holder trades, dividends/buybacks, index inclusion, 52-week high/low or breakout/breakdown, sharp price moves (>3% in a day), sector or macro shocks that directly hit a holding.
+Respond with ONLY this JSON:
+{"alerts":[{"ticker":"NVDA","type":"earnings|analyst|news|price|ma|regulatory|insider|dividend|technical|macro|other","sentiment":"positive|negative|neutral","severity":"high|medium|low","title":"short headline (max 12 words)","detail":"1–2 sentences: what happened, numbers, why it matters","date":"YYYY-MM-DD","url":"https://... or null","action":"one short suggested action or null"}],
+ "quiet":["TICKERS with nothing unusual"],"asOf":"YYYY-MM-DD HH:MM"}
+Rules: max 3 alerts per ticker, most important first; include the source URL when you have it; if nothing unusual anywhere return an empty alerts array — do NOT invent events.`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(rows.length/2)))], maxTokens:3500, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,120000)});
+  const j=extractJSON(r.text); if(!j||!Array.isArray(j.alerts)){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
+  const items=j.alerts.filter(a=>a&&a.ticker).map(a=>({...a,ticker:String(a.ticker).toUpperCase(),id:'ai:'+String(a.ticker).toUpperCase()+':'+(a.type||'other')+':'+(a.date||'')+':'+String(a.title||'').toLowerCase().replace(/[^a-z0-9֐-׿]+/g,'').slice(0,40),src:'ai',ts:Date.now()}));
+  return {items, quiet:Array.isArray(j.quiet)?j.quiet:[], asOf:j.asOf||null, sources:r.sources};
+}
+/** Local alerts computed without AI. */
+function localAlerts(){
+  const c=computed(); const out=[]; const today=ilToday();
+  c.rows.forEach(r=>{ if(r.dayPct!=null&&Math.abs(r.dayPct)>=3) out.push({id:'loc:day:'+r.h.ticker+':'+today,ticker:r.h.ticker,type:'price',sentiment:r.dayPct>0?'positive':'negative',severity:Math.abs(r.dayPct)>=7?'high':'medium',title:t('al.dayjump',{p:fmtP(r.dayPct)}),detail:t('al.dayjump.d',{t:r.h.ticker,p:fmtP(r.dayPct)}),date:today,src:'local',ts:Date.now()}); });
+  S.watchlist.forEach(w=>{ if(w.target&&w.price!=null&&w.price>=w.target) out.push({id:'loc:target:'+w.ticker+':'+today,ticker:w.ticker,type:'price',sentiment:'positive',severity:'medium',title:t('al.target'),detail:t('al.target.d',{t:w.ticker,p:fmtC(w.price,ccyOf(w)),g:fmtC(w.target,ccyOf(w))}),date:today,src:'local',ts:Date.now()}); });
+  const hs=hoursSince(S.settings.lastQuotes); if(S.holdings.length&&isFinite(hs)&&hs>30) out.push({id:'loc:stale:'+today,ticker:'',type:'other',sentiment:'neutral',severity:'low',title:t('al.stale'),detail:t('al.stale.d',{h:Math.round(hs)}),date:today,src:'local',ts:Date.now()});
+  return out;
+}
+function mergeAlerts(newItems){
+  const A=S.alerts; const byId=new Map(A.items.map(x=>[x.id,x])); newItems.forEach(x=>{ if(!byId.has(x.id)) byId.set(x.id,x); else byId.set(x.id,{...byId.get(x.id),...x,ts:byId.get(x.id).ts}); });
+  const cutoff=Date.now()-7*864e5; A.items=[...byId.values()].filter(x=>x.ts>=cutoff).sort((a,b)=>b.ts-a.ts); Object.keys(A.seen).forEach(k=>{ if(!byId.has(k)) delete A.seen[k]; });
+}
+const unreadAlerts=()=>S.alerts.items.filter(x=>!S.alerts.seen[x.id]).length;
+
 async function testConnection(){
   const r=await claude({system:'Reply with exactly: OK', user:'ping', maxTokens:20});
   return /OK/i.test(r.text);
@@ -1270,6 +1333,7 @@ function go(page){
   $$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
   $$('[data-nav]').forEach(b=>{ if(b.dataset.nav===page) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   $('#page-title').textContent=t('nav.'+page);
+  if(page==='alerts'){ renderAlerts(); setTimeout(markAlertsSeen,1500); }
   window.scrollTo({top:0,behavior:'instant'});
   try{ history.replaceState(null,'','#'+page); }catch(_){}
 }
@@ -1670,6 +1734,38 @@ function ddHTML(a,h){
 }
 
 function fxLabel(src){ return /bank of israel/i.test(src||'')?t('fx.reponly'):t('fx.daily'); }
+/* ---------- Alerts (scan on app open + manual button only) ---------- */
+let alertsRunning=false;
+function updateBell(){ const n=unreadAlerts(); const c=$('#bell-cnt'), nb=$('#nav-alerts'); if(c){ c.textContent=n>99?'99+':n; c.hidden=!n; } if(nb){ nb.textContent=n; nb.hidden=!n; } }
+function renderAlerts(){
+  const box=$('#al-results'); if(!box) return; const A=S.alerts; $('#al-auto').checked=!!S.settings.autoAlerts;
+  $('#al-last').textContent=A.ts?t('al.last',{t:fmtDate(A.ts)}):t('al.never');
+  mergeAlerts(localAlerts()); updateBell();
+  if(!A.ts&&!A.items.length){ box.innerHTML=`<div class="card">${emptyHTML('i-bell',S.holdings.length?t('al.empty'):t('al.nohold'),S.holdings.length?t('al.empty.d'):t('empty.pf.d'))}</div>`; return; }
+  const sevRank={high:0,medium:1,low:2}; const items=[...A.items].sort((a,b)=>sevRank[a.severity]-sevRank[b.severity]||b.ts-a.ts);
+  const card=x=>{ const h=S.holdings.find(y=>y.ticker===x.ticker)||S.watchlist.find(y=>y.ticker===x.ticker); const unread=!A.seen[x.id];
+    return `<div class="alert ${esc(x.sentiment||'neutral')} ${unread?'unread':''}" data-aid="${esc(x.id)}">${x.ticker?`<div class="av" style="width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:.7rem;color:#fff;flex:none;background:${colorFor(x.ticker+(h?h.exchange:''))}">${esc(x.ticker.slice(0,4))}</div>`:`<div style="width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none;background:var(--surface-3)"><svg class="ic"><use href="#i-info"/></svg></div>`}
+      <div class="body"><div class="t">${esc(x.title||'')}${unread?` <span class="chip info" style="font-size:.62rem;padding:1px 6px">${t('al.new')}</span>`:''}</div><div class="d">${esc(x.detail||'')}</div>
+      <div class="meta"><span class="chip sev-${esc(x.severity||'low')}" style="font-size:.66rem">${t('al.sev.'+(x.severity||'low'))}</span><span class="chip outline" style="font-size:.66rem">${t('al.types.'+(x.type||'other'))}</span>${x.date?`<span>${esc(x.date)}</span>`:''}${x.action?`<span>· ${esc(x.action)}</span>`:''}${x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener" style="display:inline-flex;gap:3px;align-items:center;color:var(--primary);text-decoration:none"><svg class="ic sm" style="width:12px;height:12px"><use href="#i-ext"/></svg>${t('scan.sources')}</a>`:''}${h?`<button class="btn ghost sm" data-dd="${h.id}" style="margin-inline-start:auto;min-height:28px;padding:0 8px;font-size:.74rem">${t('al.open')}</button>`:''}</div></div></div>`; };
+  const locItems=items.filter(x=>x.src==='local'), aiItems=items.filter(x=>x.src!=='local');
+  box.innerHTML=`${locItems.length?`<div class="section-title"><h2>${t('al.local')}</h2><span class="chip info">${t('local')}</span><div class="line"></div></div><div class="list">${locItems.map(card).join('')}</div>`:''}
+    <div class="section-title"><h2>${t('al.ai')} <span class="faint">(${aiItems.length})</span></h2><div class="line"></div>${A.items.length?`<button class="btn ghost sm" id="al-read">${t('al.markread')}</button>`:''}</div>
+    ${aiItems.length?`<div class="list">${aiItems.map(card).join('')}</div>`:`<div class="card">${emptyHTML('i-shield',t('al.none'),t('al.none.d'))}</div>`}
+    ${A.quiet&&A.quiet.length?`<div class="chips" style="margin-top:4px"><span class="faint" style="font-size:.78rem">${t('al.quiet')}:</span>${A.quiet.map(q=>`<span class="chip outline">${esc(q)}</span>`).join('')}</div>`:''}
+    ${sourcesHTML(A.sources)}<div class="disclaimer">${t('disclaimer')}</div>`;
+  const rb=$('#al-read'); if(rb) rb.onclick=()=>{ A.items.forEach(x=>A.seen[x.id]=true); save(); renderAlerts(); };
+}
+function markAlertsSeen(){ const A=S.alerts; let ch=false; A.items.forEach(x=>{ if(!A.seen[x.id]){ A.seen[x.id]=true; ch=true; } }); if(ch){ save(); updateBell(); } }
+async function runAlerts({auto}={}){
+  if(alertsRunning) return; if(!S.holdings.length){ if(!auto) toast(t('al.nohold'),'err'); return; } if(!S.settings.apiKey){ if(!auto){ toast(t('q.needkey'),'err'); go('settings'); } return; } alertsRunning=true; const bell=$('#btn-bell'); bell.classList.add('scanning'); const btn=$('#btn-alerts'); if(btn) setLoading(btn,true); if(!auto) toast(t('al.scanning'));
+  try{ const r=await scanAlerts(); const before=unreadAlerts(); mergeAlerts(r.items); S.alerts.ts=Date.now(); S.alerts.quiet=r.quiet; S.alerts.sources=r.sources; S.alerts.asOf=r.asOf; save(); renderAlerts();
+    const fresh=unreadAlerts()-before; if(fresh>0||!auto) toast(fresh>0?t('al.found',{n:fresh}):t('al.none'),fresh>0?'':'ok'); }
+  catch(e){ console.warn('alerts failed',e); if(!auto&&!e.cancelled) toast(t('err.api')+': '+e.message,'err'); }
+  finally{ alertsRunning=false; bell.classList.remove('scanning'); if(btn) setLoading(btn,false); }
+}
+/** Runs once per app load when auto-scan is on. No background re-scans. */
+function autoAlertsOnOpen(){ if(!S.settings.autoAlerts||!S.settings.apiKey||!S.holdings.length) return; setTimeout(()=>runAlerts({auto:true}),1200); }
+
 /* ---------- Job bar (visible progress + cancel for long requests) ---------- */
 let currentJob=null;
 function jobStart(title){
@@ -1737,7 +1833,7 @@ function importFile(file){
 }
 
 /* ---------- Render all & events ---------- */
-function renderAll(){ renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderSettings(); }
+function renderAll(){ renderDashboard(); renderPortfolio(); renderWatchlist(); renderScannerControls(); renderScanResults(); renderInsights(); renderAlerts(); renderSettings(); }
 function bind(){
   $$('[data-nav]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.nav)));
   $$('[data-ccy]').forEach(b=>b.addEventListener('click',()=>{ S.settings.currency=b.dataset.ccy; save(); renderAll(); }));
@@ -1752,7 +1848,7 @@ function bind(){
     const dl=e.target.closest('[data-del]'); if(dl){ e.stopPropagation(); confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true}).then(ok=>{ if(ok){ S.holdings=S.holdings.filter(x=>x.id!==dl.dataset.del); save(); renderAll(); } }); return; } });
   $('#pf-table').tHead.addEventListener('click',e=>{ const th=e.target.closest('th'); if(!th||th.dataset.k==='act') return; if(sortKey===th.dataset.k) sortDir*=-1; else { sortKey=th.dataset.k; sortDir=th.dataset.k==='sym'?1:-1; } renderPortfolio(); });
   $('#pf-search').addEventListener('input',e=>{ pfFilter=e.target.value.trim().toLowerCase(); renderPortfolio(); });
-  $('#btn-add').onclick=()=>openForm(); $('#btn-watch-add').onclick=openWatchForm; $('#btn-export').onclick=()=>exportJSON(false); $('#btn-export2').onclick=()=>exportJSON(true);
+  $('#btn-add').onclick=()=>openForm(); $('#btn-watch-add').onclick=openWatchForm; $('#btn-alerts').onclick=()=>runAlerts({auto:false}); $('#al-auto').addEventListener('change',e=>{ S.settings.autoAlerts=e.target.checked; save(); }); $('#btn-export').onclick=()=>exportJSON(false); $('#btn-export2').onclick=()=>exportJSON(true);
   $('#btn-import').onclick=$('#btn-import2').onclick=()=>$('#file-import').click(); $('#file-import').addEventListener('change',e=>{ if(e.target.files[0]) importFile(e.target.files[0]); e.target.value=''; });
   $('#scan-sectors').addEventListener('click',e=>{ const b=e.target.closest('[data-s]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.sectors.add(b.dataset.s):scanSel.sectors.delete(b.dataset.s); });
   $('#scan-markets').addEventListener('click',e=>{ const b=e.target.closest('[data-m]'); if(!b) return; const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed',on); on?scanSel.markets.add(b.dataset.m):scanSel.markets.delete(b.dataset.m); });
@@ -1785,7 +1881,7 @@ function bind(){
 function fillDatalist(){ const d=$('#ticker-list'); if(d) d.innerHTML=UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join(''); }
 function init(){
   applyTheme(); applyI18n(); fillDatalist(); bind(); renderAll();
-  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','scanner','insights','settings'].includes(h)?h:'dashboard');
+  const h=(location.hash||'').slice(1); go(['dashboard','portfolio','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen();
   document.documentElement.style.setProperty('--dirx',lang()==='he'?'-1':'1');
 }
 document.addEventListener('DOMContentLoaded',init);
