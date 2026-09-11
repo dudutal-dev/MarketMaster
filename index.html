@@ -225,6 +225,13 @@ label.chip input{margin-top:3px;flex:none;width:18px;height:18px}
 .kpi.hero .val{font-size:1.9rem}
 .kpi.hero .accent-bar{display:none}
 .kpi.hero::after{content:"";position:absolute;inset:auto -30% -60% auto;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+.kpi.hero{grid-column:span 2;flex-direction:row;align-items:stretch;gap:14px;padding:0;overflow:hidden}
+.kpi.hero .hero-main{flex:1;min-width:0;padding:16px 18px;display:flex;flex-direction:column;gap:6px;position:relative;z-index:1}
+.kpi.hero .hero-fx{flex:0 0 auto;min-width:112px;padding:16px 16px;display:flex;flex-direction:column;justify-content:center;gap:4px;position:relative;z-index:1;
+  background:linear-gradient(160deg,rgba(6,10,28,.55),rgba(6,10,28,.35));border-inline-start:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+.kpi.hero .hero-fx .lbl{color:rgba(255,255,255,.72);font-size:.72rem;letter-spacing:.04em}
+.kpi.hero .hero-fx .val{font-size:1.5rem;color:#fff}
+.kpi.hero .hero-fx .delta{color:rgba(255,255,255,.6);font-size:.72rem}
 
 /* ---------- Table ---------- */
 .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-sm);border:1px solid var(--border)}
@@ -416,7 +423,7 @@ td.num,th.num{text-align:end}
   .bottom-nav button[aria-current="page"] .nav-ico{background:linear-gradient(135deg,var(--nav-c),color-mix(in srgb, var(--nav-c) 70%, #000 12%));color:#fff;box-shadow:0 6px 16px color-mix(in srgb, var(--nav-c) 40%, transparent);transform:translateY(-2px)}
   .bottom-nav button[aria-current="page"] span:last-child{font-weight:800}
   .grid.two,.grid.three{grid-template-columns:1fr}
-  .kpi .val{font-size:1.35rem}.kpi.hero .val{font-size:1.65rem}
+  .kpi .val{font-size:1.35rem}.kpi.hero .val{font-size:1.65rem}.kpi.hero .hero-fx .val{font-size:1.3rem}.kpi.hero .hero-fx{min-width:100px;padding:14px 12px}
   .scen{grid-template-columns:1fr}
   .hbar .r{grid-template-columns:86px 1fr 56px}
   .hide-m{display:none!important}
@@ -726,7 +733,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2216';
+const APP_VERSION='2026.09.11-2224';
 
 const I18N = {
   he: {
@@ -1501,10 +1508,10 @@ function renderDashboard(){
   const c=computed(); const cur=S.settings.currency;
   const k=$('#kpis'); const dayCls=c.dayIls>=0?'gain':'loss', pnlCls=c.pnlIls>=0?'gain':'loss';
   k.innerHTML=`
-   <div class="card kpi hero"><div class="lbl"><svg class="ic sm"><use href="#i-wallet"/></svg>${t('kpi.total')}</div><div class="val num">${fmtC(dispIls(c.nav))}</div><div class="delta">${c.cashIls>0?t('kpi.cash')+' '+fmtCompact(dispIls(c.cashIls))+' · ':''}${S.holdings.length} ${t('kpi.holdings')}</div></div>
+   <div class="card kpi hero"><div class="hero-main"><div class="lbl"><svg class="ic sm"><use href="#i-wallet"/></svg>${t('kpi.total')}</div><div class="val num">${fmtC(dispIls(c.nav))}</div><div class="delta">${c.cashIls>0?t('kpi.cash')+' '+fmtCompact(dispIls(c.cashIls))+' · ':''}${S.holdings.length} ${t('kpi.holdings')}</div></div>
+     <div class="hero-fx" title="${esc(S.settings.fxSource||'')}"><div class="lbl">USD/ILS</div><div class="val num">${fmtN(c.fx,3)}</div></div></div>
    <div class="card kpi"><span class="accent-bar" style="background:var(--${dayCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-${c.dayIls>=0?'trend':'trend-down'}"/></svg>${t('kpi.day')}</div><div class="val num ${dayCls}">${fmtC(dispIls(c.dayIls))}</div><div class="delta ${dayCls}">${fmtP(c.dayPct)}</div></div>
-   <div class="card kpi"><span class="accent-bar" style="background:var(--${pnlCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-target"/></svg>${t('kpi.pnl')}</div><div class="val num ${pnlCls}">${fmtC(dispIls(c.pnlIls))}</div><div class="delta ${pnlCls}">${fmtP(c.pnlPct)} · ${t('kpi.cost')} ${fmtCompact(dispIls(c.costIls))}</div></div>
-   <div class="card kpi"><span class="accent-bar"></span><div class="lbl"><svg class="ic sm"><use href="#i-globe"/></svg>${t('kpi.fx')} USD/ILS</div><div class="val num">${fmtN(c.fx,3)}</div><div class="delta faint">${S.settings.fxKind==='rep'?fxLabel(S.settings.fxSource)+(S.settings.fxRepDate?' '+S.settings.fxRepDate.slice(5).split('-').reverse().join('.'):'')+' · ':S.settings.fxKind==='spot'?t('fx.live')+' · ':''}${t('ins.fxexp')} ${fmtN(c.usdShare,0)}% · ${S.settings.fxUpdated?fmtDate(S.settings.fxUpdated):t('never')}</div></div>`;
+   <div class="card kpi"><span class="accent-bar" style="background:var(--${pnlCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-target"/></svg>${t('kpi.pnl')}</div><div class="val num ${pnlCls}">${fmtC(dispIls(c.pnlIls))}</div><div class="delta ${pnlCls}">${fmtP(c.pnlPct)} · ${t('kpi.cost')} ${fmtCompact(dispIls(c.costIls))}</div></div>`;
   // history
   const since=histRange?Date.now()-histRange*864e5:0; const pts=S.history.filter(p=>p.ts>=since).map(p=>({x:p.ts,y:p.nav??p.ils}));
   if(pts.length===1&&c.nav>0) pts.push({x:Date.now(),y:c.nav});
