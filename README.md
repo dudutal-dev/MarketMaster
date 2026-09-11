@@ -2,13 +2,18 @@
 
 אפליקציית **קובץ HTML יחיד** (ללא שרת, ללא build) לניהול תיק מניות הנסחרות בבורסת תל אביב (TASE) ובבורסות ניו יורק (NYSE / NASDAQ), עם מנוע תובנות מובנה המבוסס על Claude API.
 
+<p align="center"><img src="assets/icon-192.png" width="112" alt="MarketMaster"></p>
+
 ## הפעלה
+**אונליין (GitHub Pages):** https://dudutal-dev.github.io/MarketMaster/ — נפרס אוטומטית מ-`main` (Workflow `pages.yml`).
+
+**מקומי:**
 1. פתחו את `index.html` בדפדפן (Chrome / Safari / Edge, מחשב או סלולר).
 2. **הגדרות → מפתח API** — הדביקו מפתח Anthropic (`sk-ant-…`) ולחצו *בדוק חיבור*.
    המפתח נשמר ב-`localStorage` של הדפדפן בלבד ונשלח ישירות ל-`api.anthropic.com`.
 3. הוסיפו אחזקות (או *טען תיק לדוגמה*) ולחצו **עדכן שערים**.
 
-> טיפ לסלולר: "הוסף למסך הבית" מ-Safari/Chrome — האפליקציה מותאמת ל-safe-area ולניווט תחתון.
+> **PWA:** "הוסף למסך הבית" מ-Safari/Chrome — האפליקציה נפתחת כאפליקציה עצמאית עם אייקון ייעודי (`manifest.webmanifest`, אייקונים ב-`assets/`), safe-area וניווט תחתון.
 
 ## מה יש בפנים
 | מסך | יכולות |
