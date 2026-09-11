@@ -5,7 +5,7 @@
 <p align="center"><img src="assets/icon-192.png" width="112" alt="MarketMaster"></p>
 
 ## הפעלה
-**אונליין (GitHub Pages):** https://dudutal-dev.github.io/MarketMaster/ — נפרס אוטומטית מ-`main` (Workflow `pages.yml`).
+**אונליין (GitHub Pages):** https://dudutal-dev.github.io/MarketMaster/ — מתפרסם אוטומטית מהענף `main` (GitHub Pages, Deploy from a branch).
 
 **מקומי:**
 1. פתחו את `index.html` בדפדפן (Chrome / Safari / Edge, מחשב או סלולר).
