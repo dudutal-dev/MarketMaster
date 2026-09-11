@@ -188,6 +188,7 @@ select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xml
 [dir="ltr"] select.input{background-position:right 12px center;padding-inline-start:12px;padding-inline-end:36px}
 .input-wrap{position:relative}
 .input-wrap .btn{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%)}
+.input-wrap:has(#f-detect) #f-ticker{padding-inline-end:96px}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:.76rem;font-weight:600;background:var(--surface-3);color:var(--text-2);border:1px solid transparent;white-space:nowrap}
 .chip.gain{background:var(--gain-soft);color:var(--gain)}.chip.loss{background:var(--loss-soft);color:var(--loss)}
 .chip.warn{background:var(--warn-soft);color:var(--warn)}.chip.info{background:var(--primary-soft);color:var(--primary)}
@@ -661,7 +662,7 @@ const I18N = {
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
     'th.sym':'נייר','th.qty':'כמות','th.cost':'עלות ממוצעת','th.price':'שער','th.chg':'שינוי יומי','th.value':'שווי','th.pnl':'רווח/הפסד','th.weight':'משקל','th.act':'',
     'empty.pf':'התיק ריק','empty.pf.d':'הוסף מניות ידנית, ייבא קובץ, או טען תיק לדוגמה כדי להתחיל.','empty.hist':'אין עדיין היסטוריה','empty.hist.d':'כל עדכון שערים שומר נקודת נתונים. לאחר כמה עדכונים יופיע כאן גרף.','empty.scan':'טרם בוצעה סריקה','empty.scan.d':'בחר תחומים ובורסות ולחץ על "הפעל סריקה".','empty.ins':'אין ניתוח עדיין','empty.ins.d':'לחץ על "נתח את התיק" כדי לקבל ציון, סיכונים והמלצות.',
-    'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'התחל להקליד — או הזן סימול חופשי (למשל NVDA, TEVA, POLI)','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
+    'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'הקלד סימול ולחץ "זהה" — האפליקציה תמלא לבד בורסה, שם, סקטור ושער','f.detect':'זהה','f.detecting':'מזהה את הנייר ברשת…','f.detected':'זוהה: {n} · {e} · {s}','f.notfound':'לא זוהה נייר עם הסימול הזה — מלא ידנית','f.nokey':'להזנת פרטים אוטומטית הגדר מפתח API בהגדרות','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
     'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…',
     'conn.ok':'החיבור תקין ✓','conn.fail':'החיבור נכשל','saved':'נשמר','exported':'הקובץ יוצא','imported':'יובאו {n} אחזקות','sample.loaded':'תיק לדוגמה נטען — לחץ "עדכן שערים" לשערים עדכניים','wiped':'הנתונים נמחקו',
     'st.search':'מחפש ברשת','st.think':'מנתח','st.write':'מגבש תובנות','st.parse':'מעבד תוצאות',
@@ -690,7 +691,7 @@ const I18N = {
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
     'empty.pf':'Portfolio is empty','empty.pf.d':'Add stocks manually, import a file, or load the sample portfolio to get started.','empty.hist':'No history yet','empty.hist.d':'Every quote refresh stores a data point. A chart will appear after a few refreshes.','empty.scan':'No scan yet','empty.scan.d':'Choose sectors and exchanges, then click "Run scan".','empty.ins':'No analysis yet','empty.ins.d':'Click "Analyze portfolio" to get a score, risks and recommendations.',
-    'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Start typing — or enter any ticker (e.g. NVDA, TEVA, POLI)','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
+    'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Type a ticker and press "Detect" — exchange, name, sector and price are filled automatically','f.detect':'Detect','f.detecting':'Identifying the security online…','f.detected':'Found: {n} · {e} · {s}','f.notfound':'No security found for this ticker — fill in manually','f.nokey':'Set an API key in Settings to auto-fill details','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
     'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…',
     'conn.ok':'Connection OK ✓','conn.fail':'Connection failed','saved':'Saved','exported':'File exported','imported':'Imported {n} holdings','sample.loaded':'Sample loaded — click "Refresh quotes" for live prices','wiped':'Data deleted',
     'st.search':'Searching the web','st.think':'Analyzing','st.write':'Composing insights','st.parse':'Processing results',
@@ -1072,6 +1073,26 @@ Bull/base/bear probabilities must sum to 100. News sorted newest first (max 8).`
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, webSources:r.sources, ts:Date.now()};
 }
+
+/* ============================================================
+   Engine 5 — Security lookup (auto-identify a ticker)
+   ============================================================ */
+async function lookupSecurity(ticker, hintExchange){
+  ticker=String(ticker||'').trim().toUpperCase(); if(!ticker) throw new Error('ticker');
+  S.lookups=S.lookups||{}; const cached=S.lookups[ticker]; if(cached&&Date.now()-cached.ts<7*864e5) return cached;
+  const codes=SECTORS.map(x=>x[0]).join('|');
+  const user=`Identify the publicly traded security with ticker "${ticker}"${hintExchange?' (user hint: exchange '+hintExchange+')':''}. Use 1–3 web searches (Yahoo Finance / Google Finance / TASE / Globes / Bizportal). If the same ticker trades on several exchanges (e.g. a TASE company with a US ADR), prefer the exchange from the hint, otherwise the primary US listing for US companies and TASE for Israeli companies.
+Return JSON exactly:
+{"found":true,"ticker":"${ticker}","exchange":"TASE|NYSE|NASDAQ","name_en":"Official short company name","name_he":"שם החברה בעברית (transliterate if no official Hebrew name)","sector":"one of: ${codes}","industry":"short free-text industry","currency":"ILS|USD","price":0,"prevClose":0,"asOf":"YYYY-MM-DD","marketCap":"e.g. $12.4B","description":"one sentence on what the company does","confidence":0-100}
+If the ticker cannot be identified return {"found":false,"reason":"..."}. TASE prices in shekels (not agorot).`;
+  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(3)], maxTokens:1500, effort:'medium'});
+  const j=extractJSON(r.text); if(!j) throw new Error(t('err.parse'));
+  if(j.found===false) return {found:false,reason:j.reason||''};
+  if(!['TASE','NYSE','NASDAQ'].includes(j.exchange)) j.exchange=hintExchange||'NASDAQ';
+  if(!SECTORS.some(x=>x[0]===j.sector)) j.sector='Other';
+  const out={...j,found:true,ticker,ts:Date.now()}; S.lookups[ticker]=out; save(); return out;
+}
+
 async function testConnection(){
   const r=await claude({system:'Reply with exactly: OK', user:'ping', maxTokens:20});
   return /OK/i.test(r.text);
@@ -1246,7 +1267,7 @@ function openForm(h,prefill){
   const secOpts=SECTORS.map(s=>`<option value="${s[0]}" ${d.sector===s[0]?'selected':''}>${lang()==='he'?s[1]:s[2]}</option>`).join('');
   const body=`<form id="hform" style="display:flex;flex-direction:column;gap:14px" novalidate>
     <div class="grid two" style="gap:12px">
-      <div class="field"><label for="f-ticker">${t('f.ticker')} *</label><input class="input mono" id="f-ticker" list="ticker-list" value="${esc(d.ticker)}" autocomplete="off" autocapitalize="characters" required placeholder="NVDA / POLI"><datalist id="ticker-list">${UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join('')}</datalist><div class="help">${t('f.ticker.help')}</div><div class="err">${t('req')}</div></div>
+      <div class="field"><label for="f-ticker">${t('f.ticker')} *</label><div class="input-wrap"><input class="input mono" id="f-ticker" list="ticker-list" value="${esc(d.ticker)}" autocomplete="off" autocapitalize="characters" required placeholder="NVDA / POLI"><button type="button" class="btn sm primary" id="f-detect"><span class="spin"></span><svg class="ic sm"><use href="#i-sparkles"/></svg><span class="lbl">${t('f.detect')}</span></button></div><datalist id="ticker-list">${UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join('')}</datalist><div class="help" id="f-lookup">${t('f.ticker.help')}</div><div class="err">${t('req')}</div></div>
       <div class="field"><label for="f-ex">${t('f.exchange')}</label><select class="input" id="f-ex"><option ${d.exchange==='TASE'?'selected':''}>TASE</option><option ${d.exchange==='NASDAQ'?'selected':''}>NASDAQ</option><option ${d.exchange==='NYSE'?'selected':''}>NYSE</option></select></div>
     </div>
     <div class="grid two" style="gap:12px">
@@ -1262,18 +1283,31 @@ function openForm(h,prefill){
     <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px">${isEdit?`<button type="button" class="btn danger" id="f-del">${t('delete')}</button><div style="flex:1"></div>`:''}<button type="button" class="btn" id="f-cancel">${t('cancel')}</button><button type="submit" class="btn primary">${t('save')}</button></div></form>`;
   openSheet(isEdit?t('edit.title'):t('add.title'),body);
   const tk=$('#f-ticker'), ex=$('#f-ex');
-  const autofill=()=>{ const u=findSec(tk.value,ex.value); if(u){ if(!isEdit){ ex.value=u.exchange; $('#f-sector').value=u.sector; } $('#f-name').value=lang()==='he'?u.name_he:u.name_en; $('#f-name').dataset.he=u.name_he; $('#f-name').dataset.en=u.name_en; } $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; };
-  tk.addEventListener('change',autofill); tk.addEventListener('input',()=>{ tk.value=tk.value.toUpperCase(); }); ex.addEventListener('change',()=>{ $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; });
+  const applyLookup=(u)=>{ ex.value=u.exchange; $('#f-sector').value=u.sector; $('#f-name').value=lang()==='he'?u.name_he:u.name_en; $('#f-name').dataset.he=u.name_he; $('#f-name').dataset.en=u.name_en; if(u.price&&!$('#f-price').value) $('#f-price').value=u.price; if(u.prevClose) $('#f-price').dataset.prev=u.prevClose; $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; };
+  const lookupStatus=(msg,cls)=>{ const el=$('#f-lookup'); if(!el) return; el.textContent=msg; el.style.color=cls==='ok'?'var(--gain)':cls==='err'?'var(--loss)':''; };
+  let lookupBusy=false;
+  const detect=async(auto)=>{ const sym=tk.value.trim().toUpperCase(); if(!sym||lookupBusy) return;
+    const u=findSec(sym,auto?null:ex.value); if(u&&auto){ applyLookup({...u,price:null}); lookupStatus(t('f.detected',{n:lang()==='he'?u.name_he:u.name_en,e:u.exchange,s:sectorLabel(u.sector)}),'ok'); return; }
+    if(!S.settings.apiKey){ if(u) applyLookup({...u,price:null}); lookupStatus(t('f.nokey'),'err'); return; }
+    const btn=$('#f-detect'); lookupBusy=true; setLoading(btn,true); lookupStatus(t('f.detecting'));
+    try{ const r=await lookupSecurity(sym,u?u.exchange:null); if(!r.found){ if(u) applyLookup({...u,price:null}); lookupStatus(t('f.notfound')+(r.reason?' · '+r.reason:''),'err'); }
+      else { applyLookup(r); lookupStatus(t('f.detected',{n:lang()==='he'?r.name_he:r.name_en,e:r.exchange,s:sectorLabel(r.sector)})+(r.price?' · '+fmtC(r.price,r.currency==='ILS'?'ILS':'USD'):''),'ok'); } }
+    catch(e){ console.error(e); lookupStatus(t('err.api')+': '+e.message,'err'); }
+    finally{ lookupBusy=false; setLoading(btn,false); } };
+  const autofill=()=>{ if(isEdit) return; detect(true); };
+  $('#f-detect').onclick=()=>detect(false);
+  tk.addEventListener('change',autofill); tk.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); detect(false); } }); tk.addEventListener('input',()=>{ tk.value=tk.value.toUpperCase(); }); ex.addEventListener('change',()=>{ $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; });
   $('#f-cancel').onclick=closeSheet;
   if(isEdit) $('#f-del').onclick=()=>{ if(confirm(t('confirm.del'))){ S.holdings=S.holdings.filter(x=>x.id!==h.id); save(); closeSheet(); renderAll(); } };
   $('#hform').onsubmit=e=>{ e.preventDefault(); let ok=true;
     const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),price:$('#f-price').value!==''?parseFloat($('#f-price').value):null,sector:$('#f-sector').value,note:$('#f-note').value.trim()};
     [['#f-ticker',!v.ticker],['#f-qty',!(v.qty>0)],['#f-cost',!(v.avgCost>=0)]].forEach(([s,bad])=>{ $(s).closest('.field').classList.toggle('invalid',bad); if(bad) ok=false; });
     if(!ok){ $('.field.invalid input').focus(); return; }
-    const nm=$('#f-name').value.trim(); const u=findSec(v.ticker,v.exchange);
+    const nm=$('#f-name').value.trim(); const u=findSec(v.ticker,v.exchange)||(S.lookups&&S.lookups[v.ticker]);
     const nameEn=$('#f-name').dataset.en||(u&&u.name_en)||nm, nameHe=$('#f-name').dataset.he||(u&&u.name_he)||nm;
+    const prevL=$('#f-price').dataset.prev?parseFloat($('#f-price').dataset.prev):null; if(v.price!=null&&prevL) v.prevClose=prevL;
     if(isEdit){ Object.assign(h,v,{name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe}); if(v.price!=null){ h.updatedAt=Date.now(); delete h.sample; } }
-    else S.holdings.push({id:uid(),...v,name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe,prevClose:null,updatedAt:v.price!=null?Date.now():null,addedAt:Date.now()});
+    else S.holdings.push({id:uid(),prevClose:null,...v,name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe,updatedAt:v.price!=null?Date.now():null,addedAt:Date.now()});
     save(); closeSheet(); renderAll(); toast(t('saved'),'ok'); };
   setTimeout(()=>tk.focus(),350);
 }
