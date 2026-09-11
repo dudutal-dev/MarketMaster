@@ -706,6 +706,7 @@ td.num,th.num{text-align:end}
             <div class="card-h"><h2 data-i18n="set.about">אודות</h2></div>
             <div class="md muted" style="font-size:.9rem">
               <p><b>MarketMaster</b> — <span data-i18n="about.1">אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.</span></p>
+              <p><b data-i18n="about.dev">פיתוח: דודו טל</b></p>
               <p data-i18n="about.2">שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.</p>
             </div>
           </div>
@@ -741,7 +742,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2233';
+const APP_VERSION='2026.09.11-2246';
 
 const I18N = {
   he: {
@@ -756,7 +757,7 @@ const I18N = {
     'set.api':'חיבור ל-Anthropic API','set.key':'מפתח API','set.key.help':'המפתח נשמר מקומית בדפדפן בלבד (localStorage) ונשלח ישירות ל-api.anthropic.com.','set.model':'מודל לניתוחים (סורק, תובנות, ניתוח מניה)','set.dataModel':'מודל לשליפת נתונים (שערים, דולר, זיהוי סימול)','set.fast':'מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה','set.effort':'עומק חשיבה לניתוחים','elapsed':'שנ׳','searches':'חיפושים','eff.med':'בינוני','eff.high':'גבוה','eff.xhigh':'מקסימלי','set.test':'בדוק חיבור','set.clearkey':'מחק מפתח',
     'set.display':'תצוגה ומטבע','set.lang':'שפה','set.theme':'ערכת עיצוב','theme.light':'בהיר','theme.dark':'כהה','theme.auto':'אוטומטי','set.fx':'שער דולר/שקל','set.fx.fetch':'עדכן מהרשת','set.fx.help':'השער היומי האחרון הידוע: שער יציג של בנק ישראל, או מקור יומי חופשי אם הבנק לא נגיש. נשלף ישירות מהאינטרנט (ללא AI); ניתן להזין ידנית.','set.cash':'מזומן בתיק',
     'set.data':'נתונים','set.sample':'טען תיק לדוגמה','set.backup':'גיבוי מלא (JSON)','set.restore':'שחזור מגיבוי','set.wipe':'מחק את כל הנתונים','set.data.help':'כל הנתונים נשמרים בדפדפן זה בלבד. מומלץ לגבות מדי פעם.','set.about':'אודות',
-    'about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
+    'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
     // dynamic
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
@@ -786,7 +787,7 @@ const I18N = {
     'set.api':'Anthropic API connection','set.key':'API key','set.key.help':'Stored only in this browser (localStorage) and sent directly to api.anthropic.com.','set.model':'Model for analyses (scanner, insights, deep dive)','set.dataModel':'Model for data fetching (quotes, FX, ticker lookup)','set.fast':'Fast mode for Opus 5 — up to 2.5× faster output, double cost','set.effort':'Reasoning depth for analyses','elapsed':'s','searches':'searches','eff.med':'Medium','eff.high':'High','eff.xhigh':'Max','set.test':'Test connection','set.clearkey':'Clear key',
     'set.display':'Display & currency','set.lang':'Language','set.theme':'Theme','theme.light':'Light','theme.dark':'Dark','theme.auto':'Auto','set.fx':'USD/ILS rate','set.fx.fetch':'Fetch online','set.fx.help':'Last known daily rate: Bank of Israel representative rate, or a free daily source if the bank is unreachable. Fetched directly (no AI); can be entered manually.','set.cash':'Cash in portfolio',
     'set.data':'Data','set.sample':'Load sample portfolio','set.backup':'Full backup (JSON)','set.restore':'Restore backup','set.wipe':'Delete all data','set.data.help':'All data lives in this browser only. Back up occasionally.','set.about':'About',
-    'about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
+    'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
@@ -1383,7 +1384,7 @@ function applyI18n(){
   const dm=$('#set-datamodel'); if(dm){ dm.options[0].text=L==='he'?'Haiku 4.5 — הכי מהיר':'Haiku 4.5 — fastest'; dm.options[1].text=L==='he'?'Sonnet 5 — מומלץ':'Sonnet 5 — recommended'; dm.options[2].text=L==='he'?'Opus 5 — איטי יותר':'Opus 5 — slower'; }
   const m=$('#set-model'); if(m){ m.options[0].text=L==='he'?'Opus 5 — איכות מקסימלית':'Opus 5 — best quality'; m.options[1].text=L==='he'?'Sonnet 5 — מהיר וחסכוני':'Sonnet 5 — fast & economical'; m.options[2].text=L==='he'?'Haiku 4.5 — הכי מהיר':'Haiku 4.5 — fastest'; }
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===L));
-  $('#page-title').textContent=t('nav.'+currentPage);
+  setTitle();
 }
 function applyTheme(){
   const pref=S.settings.theme; const dark=pref==='dark'||(pref==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);
@@ -1396,7 +1397,7 @@ function go(page){
   currentPage=page;
   $$('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
   $$('[data-nav]').forEach(b=>{ if(b.dataset.nav===page) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
-  $('#page-title').textContent=t('nav.'+page)+((page==='dashboard'||page==='portfolio'||page==='insights')&&curView()!=='all'?' · '+pfName(curView()):'');
+  setTitle();
   if(page==='alerts'){ renderAlerts(); setTimeout(markAlertsSeen,1500); }
   window.scrollTo({top:0,behavior:'instant'});
   try{ history.replaceState(null,'','#'+page); }catch(_){}
@@ -1524,7 +1525,8 @@ function renderViewSelectors(){
   const html=`<button aria-pressed="${v==='all'}" data-view="all">${t('pf.all')}<span class="n">${S.holdings.length}</span></button>${S.portfolios.map(p=>`<button aria-pressed="${v===p.id}" data-view="${esc(p.id)}">${esc(p.name)}<span class="n">${counts[p.id]||0}</span></button>`).join('')}<button data-view="__manage" aria-label="${t('pf.manage')}" title="${t('pf.manage')}"><svg class="ic sm"><use href="#i-settings"/></svg></button>`;
   $$('.view-seg').forEach(el=>{ el.innerHTML=html; });
 }
-function setView(v){ S.view=v; save(); renderAll(); }
+function setView(v){ S.view=v; save(); renderAll(); setTitle(); }
+function setTitle(){ const page=currentPage; $('#page-title').textContent=t('nav.'+page)+((page==='dashboard'||page==='portfolio'||page==='insights')&&curView()!=='all'?' · '+pfName(curView()):''); }
 function openPortfolioManager(){
   const list=()=>S.portfolios.map(p=>{ const c=computed(p.id); const n=S.holdings.filter(h=>h.pid===p.id).length; return `<div class="row" style="gap:10px;flex-wrap:wrap"><input class="input" style="flex:1;min-width:140px;min-height:40px" value="${esc(p.name)}" data-pname="${esc(p.id)}" aria-label="${t('pf.rename')}"><span class="faint" style="font-size:.8rem;white-space:nowrap">${t('pf.count',{n})} · ${fmtCompact(dispIls(c.totalIls))}</span><button class="btn ghost icon sm" data-pdel="${esc(p.id)}" aria-label="${t('pf.deletep')}" ${S.portfolios.length<2?'disabled':''}><svg class="ic sm"><use href="#i-trash"/></svg></button></div>`; }).join('');
   openSheet(t('pf.manage'),`<div class="list" id="pm-list">${list()}</div>
@@ -1543,7 +1545,7 @@ function renderDashboard(){
   const c=computed(); const cur=S.settings.currency;
   const k=$('#kpis'); const dayCls=c.dayIls>=0?'gain':'loss', pnlCls=c.pnlIls>=0?'gain':'loss';
   k.innerHTML=`
-   <div class="card kpi hero"><div class="hero-main"><div class="lbl"><svg class="ic sm"><use href="#i-wallet"/></svg>${t('kpi.total')}</div><div class="val num">${fmtC(dispIls(c.nav))}</div><div class="delta">${c.cashIls>0?t('kpi.cash')+' '+fmtCompact(dispIls(c.cashIls))+' · ':''}${S.holdings.length} ${t('kpi.holdings')}</div></div>
+   <div class="card kpi hero"><div class="hero-main"><div class="lbl"><svg class="ic sm"><use href="#i-wallet"/></svg>${t('kpi.total')}</div><div class="val num">${fmtC(dispIls(c.nav))}</div><div class="delta">${c.cashIls>0?t('kpi.cash')+' '+fmtCompact(dispIls(c.cashIls))+' · ':''}${c.rows.length} ${t('kpi.holdings')}</div></div>
      <div class="hero-fx" title="${esc(S.settings.fxSource||'')}"><div class="lbl">USD/ILS</div><div class="val num">${fmtN(c.fx,3)}</div></div></div>
    <div class="card kpi"><span class="accent-bar" style="background:var(--${dayCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-${c.dayIls>=0?'trend':'trend-down'}"/></svg>${t('kpi.day')}</div><div class="val num ${dayCls}">${fmtC(dispIls(c.dayIls))}</div><div class="delta ${dayCls}">${fmtP(c.dayPct)}</div></div>
    <div class="card kpi"><span class="accent-bar" style="background:var(--${pnlCls})"></span><div class="lbl"><svg class="ic sm"><use href="#i-target"/></svg>${t('kpi.pnl')}</div><div class="val num ${pnlCls}">${fmtC(dispIls(c.pnlIls))}</div><div class="delta ${pnlCls}">${fmtP(c.pnlPct)} · ${t('kpi.cost')} ${fmtCompact(dispIls(c.costIls))}</div></div>`;
