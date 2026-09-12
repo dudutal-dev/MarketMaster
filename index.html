@@ -308,7 +308,8 @@ td.num,th.num{text-align:end}
 .news .s{font-size:.86rem;color:var(--text-2);margin-top:2px}
 .news .sent{width:8px;border-radius:4px;flex:none}
 .src{font-size:.76rem;color:var(--text-3);display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:10px}
-.src a{color:var(--text-2);text-decoration:none;display:inline-flex;gap:4px;align-items:center;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.src a{color:var(--text-2);text-decoration:none;display:inline-flex;gap:4px;align-items:center;max-width:100%;min-width:0}
+.src a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;unicode-bidi:isolate;max-width:min(320px,80vw)}
 .src a:hover{color:var(--primary);text-decoration:underline}
 
 /* ---------- Charts ---------- */
@@ -815,7 +816,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-0746';
+const APP_VERSION='2026.09.12-0751';
 
 const I18N = {
   he: {
@@ -1577,7 +1578,7 @@ function localAlerts(){
 /* Event-level de-duplication: the same event re-reported with different wording (or from another source) must not create a new alert or resurrect a dismissed one. */
 function alertDate(x){ const d=String((x&&x.date)||'').slice(0,10); return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:ilToday(); }
 function alertTokens(s){ return new Set(String(s||'').toLowerCase().replace(/[^a-z0-9\u0590-\u05ff ]+/g,' ').split(/\s+/).filter(w=>w.length>2)); }
-function alertSim(a,b){ const ta=alertTokens(a.title+' '+String(a.detail||'').slice(0,90)), tb=alertTokens(b.title+' '+String(b.detail||'').slice(0,90)); if(!ta.size||!tb.size) return 0; let n=0; ta.forEach(w=>{ if(tb.has(w)) n++; }); return n/Math.min(ta.size,tb.size); }
+function alertSim(a,b){ const ta=alertTokens(a.title+' '+String(a.detail||'').slice(0,90)), tb=alertTokens(b.title+' '+String(b.detail||'').slice(0,90)); if(!ta.size||!tb.size) return 0; let n=0; ta.forEach(w=>{ if(tb.has(w)) n++; }); if(n<3&&Math.min(ta.size,tb.size)<4&&n!==Math.min(ta.size,tb.size)) return 0; return n/Math.min(ta.size,tb.size); }
 function alertSimilar(a,b){ if(!a||!b||String(a.ticker||'').toUpperCase()!==String(b.ticker||'').toUpperCase()) return false; const dd=Math.abs(new Date(alertDate(a))-new Date(alertDate(b)))/864e5; if(dd>4) return false; const sameType=(a.type||'other')===(b.type||'other'); const sim=alertSim(a,b); return (sameType&&(dd<=1||sim>=0.3))||sim>=0.5; }
 const sevRank=s=>({high:3,medium:2,low:1}[s]||0);
 function alertMeta(x){ return {ts:Date.now(),ticker:x.ticker,type:x.type||'other',date:alertDate(x),title:String(x.title||'').slice(0,80),src:x.src}; }
@@ -2133,7 +2134,7 @@ function renderScanResults(){
   $$('[data-addpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.addpick); const u=findSec(p.ticker,p.exchange); openForm(null,{ticker:p.ticker,exchange:p.exchange||'NASDAQ',sector:p.sector||(u&&u.sector)||'Other',name:p.name||(u&&u.name_en)||'',name_he:(u&&u.name_he)||p.name||'',price:p.price??''}); });
   $$('[data-watchpick]',box).forEach(b=>b.onclick=()=>{ const p=JSON.parse(b.dataset.watchpick); if(addToWatch({...p,source:'scan'})) renderScanResults(); });
 }
-function sourcesHTML(list){ if(!list||!list.length) return ''; return `<div class="card flat"><div class="src"><b style="width:100%;color:var(--text-2)">${t('scan.sources')}</b>${list.slice(0,14).map(s=>{ let host=''; try{host=new URL(s.url).hostname.replace('www.','');}catch(_){ } return `<a href="${esc(s.url)}" target="_blank" rel="noopener"><svg class="ic sm" style="width:12px;height:12px"><use href="#i-ext"/></svg>${esc(s.title&&s.title.length<70?s.title:host)}</a>`; }).join('')}</div></div>`; }
+function sourcesHTML(list){ if(!list||!list.length) return ''; const seen=new Set(); const uniq=list.filter(s=>{ const k=String(s.title||s.url||'').toLowerCase().replace(/\s+/g,' ').trim(); if(!k||seen.has(k)) return false; seen.add(k); return true; }); return `<div class="card flat"><div class="src"><b style="width:100%;color:var(--text-2)">${t('scan.sources')}</b>${uniq.slice(0,14).map(s=>{ let host=''; try{host=new URL(s.url).hostname.replace('www.','');}catch(_){ } const label=s.title&&s.title.length<90?s.title:host; return `<a href="${esc(s.url)}" target="_blank" rel="noopener" title="${esc(s.title||host)}"><svg class="ic sm" style="width:12px;height:12px;flex:none"><use href="#i-ext"/></svg><span>${esc(label)}</span></a>`; }).join('')}</div></div>`; }
 async function doScan(){
   const btn=$('#btn-scan'); if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   const sectors=[...scanSel.sectors], markets=[...scanSel.markets]; if(!markets.length){ toast(t('scan.markets'),'err'); return; }
@@ -2299,10 +2300,10 @@ function renderAlerts(){
     <div class="section-title"><h2>${t('al.ai')} <span class="faint">(${aiItems.length})</span></h2><div class="line"></div>${A.items.length?`<button class="btn sm danger" id="al-clear"><svg class="ic sm"><use href="#i-trash"/></svg>${t('al.clear')}</button>`:''}</div>
     ${aiItems.length?`<div class="list">${aiItems.map(card).join('')}</div>`:`<div class="card">${emptyHTML('i-shield',t('al.none'),t('al.none.d'))}</div>`}
     ${A.quiet&&A.quiet.length?`<div class="chips" style="margin-top:4px"><span class="faint" style="font-size:.78rem">${t('al.quiet')}:</span>${A.quiet.map(q=>`<span class="chip outline">${esc(q)}</span>`).join('')}</div>`:''}
-    ${sourcesHTML(A.sources)}<p class="faint" style="font-size:.76rem">${t('al.expiry')}</p><div class="disclaimer">${t('disclaimer')}</div>`;
-  const cb=$('#al-clear'); if(cb) cb.onclick=async()=>{ if(!(await confirmDlg(t('al.clear')+'?',{yes:t('al.clear'),danger:true}))) return; A.dismissed=A.dismissed||{}; A.items.forEach(x=>{ A.dismissed[x.id]=alertMeta(x); }); A.items=[]; A.quiet=[]; save(); renderAlerts(); toast(t('al.cleared'),'ok'); };
+    ${aiItems.length?sourcesHTML(A.sources):''}<p class="faint" style="font-size:.76rem">${t('al.expiry')}</p><div class="disclaimer">${t('disclaimer')}</div>`;
+  const cb=$('#al-clear'); if(cb) cb.onclick=async()=>{ if(!(await confirmDlg(t('al.clear')+'?',{yes:t('al.clear'),danger:true}))) return; A.dismissed=A.dismissed||{}; A.items.forEach(x=>{ A.dismissed[x.id]=alertMeta(x); }); A.items=[]; A.quiet=[]; A.sources=[]; save(); renderAlerts(); toast(t('al.cleared'),'ok'); };
 }
-function dismissAlert(id){ const A=S.alerts; A.dismissed=A.dismissed||{}; const x=A.items.find(y=>y.id===id); A.dismissed[id]=x?alertMeta(x):Date.now(); A.items=A.items.filter(y=>y.id!==id); save(); renderAlerts(); }
+function dismissAlert(id){ const A=S.alerts; A.dismissed=A.dismissed||{}; const x=A.items.find(y=>y.id===id); A.dismissed[id]=x?alertMeta(x):Date.now(); A.items=A.items.filter(y=>y.id!==id); if(!A.items.some(y=>y.src==='ai')) A.sources=[]; save(); renderAlerts(); }
 function markAlertsSeen(){ const A=S.alerts; let ch=false; A.items.forEach(x=>{ if(!A.seen[x.id]){ A.seen[x.id]=true; ch=true; } }); if(ch){ save(); updateBell(); } }
 async function runAlerts({auto}={}){
   if(alertsRunning) return; if(!S.holdings.length){ if(!auto) toast(t('al.nohold'),'err'); return; } if(!S.settings.apiKey){ if(!auto){ toast(t('q.needkey'),'err'); go('settings'); } return; } alertsRunning=true; const bell=$('#btn-bell'); bell.classList.add('scanning'); const btn=$('#btn-alerts'); if(btn) setLoading(btn,true); if(!auto) toast(t('al.scanning'));
