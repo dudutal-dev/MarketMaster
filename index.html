@@ -878,7 +878,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-1024';
+const APP_VERSION='2026.09.12-1031';
 
 const I18N = {
   he: {
@@ -1316,6 +1316,7 @@ async function fetchQuotesChunk(list,{signal,onStatus,onText,strict}={}){
   const user=`Get the CURRENT quote (last price and previous close) for these ${list.length} securities. Do NOT rely on search snippets or news articles — they are often stale.
 Method, per security: web_fetch the URLs below IN ORDER, each EXACTLY as written, stopping at the first that works: (a) Yahoo chart JSON → meta.regularMarketPrice (price), meta.chartPreviousClose or meta.previousClose, meta.currency, meta.regularMarketTime (unix seconds); (b) StockAnalysis quote page → current price, previous close and the timestamp shown; (c) Google Finance page → price, previous close, timestamp. Only if all fail, use web_search for "<TICKER> stock price" and take the most recent quote you can find (prefer fetching a result page over reading a snippet).
 Currency rules: if meta.currency is "ILA" (agorot) divide price and previous close by 100 to get ILS. TASE prices must be in ILS (shekels), US prices in USD.
+Speed matters: fetch source (a) for all securities first (they can be fetched in parallel); as soon as a Yahoo JSON answers, use it and do not open any other source for that security. Do not think at length — extract the numbers and answer.
 Freshness: the quote must be from the most recent trading session. If a page shows a date older than 5 days, it is stale — move to the next source. Never take a price from a search snippet or a news article.
 Securities and URLs:
 ${urls}
@@ -1323,7 +1324,7 @@ ${urls}
 Respond with ONLY this JSON object (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.${strict?'\nIMPORTANT: a previous attempt returned STALE quotes for these securities ('+list.map(x=>x.ticker+' dated '+x.staleDate+', latest session is '+x.lastDay).join('; ')+'). Fetch the Yahoo chart JSON (a) first and read meta.regularMarketTime; only if it fails use Google Finance (c). Return the latest session close with its real date; if you cannot verify a fresh price return price:null.':''}`;
-  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+1),webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
+  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+1),webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,75000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1355,12 +1356,12 @@ async function fetchQuotes({signal,onProgress,onText,force}={}){
   const list=wanted.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
   if(!list.length) return {applied:0,failed:0,total:0,skipped,allSkipped:true,errors:[]};
   const groups={}; list.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
-  const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=3) chunks.push(g.slice(i,i+3)); });
+  const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=2) chunks.push(g.slice(i,i+2)); });
   let done=0, applied=0, failed=0; const errors=[];
   const run=async(chunk)=>{ try{ const j=await fetchQuotesChunk(chunk,{signal,onText}); applied+=applyQuotes(j,{noHistory:true}); }
     catch(e){ if(e.cancelled) throw e; failed+=chunk.length; errors.push(e); console.warn('chunk failed',chunk.map(c=>c.ticker),e); }
     finally{ done+=chunk.length; onProgress&&onProgress(done,list.length); } };
-  const queue=[...chunks]; const workers=Array.from({length:Math.min(3,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
+  const queue=[...chunks]; const workers=Array.from({length:Math.min(5,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
   // one strict retry for quotes that came back stale (e.g. a source showing a weeks-old date)
   const staleNow=wanted.filter(h=>h.stale); let stale=0;
@@ -1532,10 +1533,10 @@ async function fetchIndices({signal,onProgress,force}={}){
   const wanted=force?INDICES:INDICES.filter(ix=>needsIndex(ix)); const skipped=INDICES.length-wanted.length;
   if(!wanted.length) return {applied:0,total:0,skipped,allSkipped:true,errors:[]};
   const groups={}; wanted.forEach(ix=>{ (groups[ix.market]=groups[ix.market]||[]).push(ix); });
-  const chunks=[]; Object.entries(groups).forEach(([mk,g])=>{ const n=mk==='TASE'?2:3; for(let i=0;i<g.length;i+=n) chunks.push(g.slice(i,i+n)); });
+  const chunks=[]; Object.entries(groups).forEach(([mk,g])=>{ const n=2; for(let i=0;i<g.length;i+=n) chunks.push(g.slice(i,i+n)); });
   let done=0, applied=0; const errors=[];
   const run=async(chunk)=>{ try{ const j=await fetchIndicesChunk(chunk,{signal}); applied+=applyIndexQuotes(j); } catch(e){ if(e.cancelled||(signal&&signal.aborted)) throw e; errors.push(e); console.warn('index chunk failed',chunk.map(c=>c.key),e); } finally{ const now=Date.now(); chunk.forEach(ix=>{ const v=S.indices[ix.key]; if(!v||v.price==null) S.indices[ix.key]={...(v||{}),triedAt:now}; }); save(); done+=chunk.length; onProgress&&onProgress(done,wanted.length); } };
-  const queue=[...chunks]; const workers=Array.from({length:Math.min(3,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
+  const queue=[...chunks]; const workers=Array.from({length:Math.min(5,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
   return {applied,total:wanted.length,skipped,allSkipped:false,errors};
 }
@@ -2545,6 +2546,7 @@ async function doRefresh({afterUpdate,force}={}){
     finally{ jobEnd(); setLoading(btn,false); }
     return; }
   const job=jobStart(t('job.quotes'));
+  const fxP=fxIsFresh()?null:fetchFx().catch(e=>{ console.warn('fx failed',e); return null; }); // free, independent → runs alongside the quotes
   try{
     // Phase 1: quotes (parallel chunks, progressive rendering)
     const res=await fetchQuotes({force,signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderPortfolio(); renderDashboard(); },onText:x=>job.live(x)});
@@ -2552,10 +2554,8 @@ async function doRefresh({afterUpdate,force}={}){
     recordHistory(); save(); renderAll();
     if(res.stale) toast(t('q.stale.n',{n:res.stale}),'err');
     if(res.allSkipped) closedToast(); else if(res.applied===res.total){ toast(t('q.done'),'ok'); if(res.skipped) toast(t('q.closed.some',{n:res.skipped})); } else toast(t('q.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err');
-    // Phase 2: Bank of Israel representative rate (skipped when today's is already stored; cancellable, 40s cap)
-    if(!fxIsFresh()){ job.title(t('job.fx')); job.live('');
-      try{ const fxr=await fetchFx(); if(fxr&&applyFx(fxr)){ recordHistory(); renderAll(); } }
-      catch(e){ if(e.cancelled) throw e; console.warn('fx failed',e); toast(t('fx.failed'),''); } }
+    // Phase 2: Bank of Israel representative rate (already in flight since the start; skipped when today's is stored)
+    if(fxP){ job.title(t('job.fx')); job.live(''); const fxr=await fxP; if(fxr&&applyFx(fxr)){ recordHistory(); renderAll(); } else if(!fxr) toast(t('fx.failed'),''); }
   }
   catch(e){ if(e.cancelled) console.info('refresh cancelled'); else console.error(e); renderAll(); toast(e.cancelled?e.message:(t('err.api')+': '+e.message),e.cancelled?'':'err'); }
   finally{ jobEnd(); setLoading(btn,false); }
