@@ -741,6 +741,7 @@ td.num,th.num{text-align:end}
                   <option value="claude-opus-5">Claude Opus 5 — איטי יותר</option>
                 </select></div>
               <label class="chip outline" style="cursor:pointer;justify-content:flex-start"><input type="checkbox" id="set-fast" style="accent-color:var(--primary)"> <span data-i18n="set.fast">מצב Fast ל-Opus 5 — פלט מהיר עד פי 2.5, עלות כפולה</span></label>
+              <div class="field"><label class="chip outline" style="cursor:pointer;justify-content:flex-start"><input type="checkbox" id="set-mkthours" checked style="accent-color:var(--primary)"> <span data-i18n="set.mkthours">רענון שערים רק כשיש מסחר חדש (חוסך קרדיטים)</span></label><div class="help" data-i18n="set.mkthours.help">מחוץ לשעות המסחר, בסופי שבוע ובחגים האפליקציה לא מושכת שוב שער שכבר משקף את הסגירה האחרונה. ת"א: א׳–ה׳, ניו יורק: ב׳–ו׳.</div><div class="help" id="mkt-status" style="color:var(--text-2)"></div></div>
               <div class="field"><label data-i18n="set.effort">עומק חשיבה לניתוחים</label>
                 <div class="seg" id="set-effort"><button aria-pressed="false" data-e="medium" data-i18n="eff.med">בינוני</button><button aria-pressed="true" data-e="high" data-i18n="eff.high">גבוה</button><button aria-pressed="false" data-e="xhigh" data-i18n="eff.xhigh">מקסימלי</button></div></div>
               <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" id="btn-test"><span class="spin"></span><span class="lbl" data-i18n="set.test">בדוק חיבור</span></button><button class="btn ghost" id="btn-clearkey" data-i18n="set.clearkey">מחק מפתח</button></div>
@@ -814,7 +815,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-0708';
+const APP_VERSION='2026.09.12-0731';
 
 const I18N = {
   he: {
@@ -836,7 +837,7 @@ const I18N = {
     'bld.invested':'מושקע','bld.cashleft':'נשאר במזומן','bld.positions':'פוזיציות','bld.vol':'תנודתיות צפויה','bld.yield':'תשואת דיבידנד','bld.beta':'β S&P 500','bld.alloc':'הרכב התיק','bld.sector':'חלוקה לפי סקטור','bld.risks':'סיכונים עיקריים','bld.fx':'חשיפת מט"ח','bld.rebal':'איזון מחדש','bld.drawdown':'תרחיש שנה גרועה','bld.alts':'חלופות','bld.create':'צור תיק חדש מההמלצה','bld.watch':'הוסף הכל למעקב','bld.created':'נוצר תיק "{n}" עם {k} פוזיציות','bld.create.confirm':'ליצור תיק חדש "{n}" עם {k} פוזיציות בסך {v}? פוזיציות ללא מחיר יתווספו למעקב.','bld.shares':'{n} יח׳ × {p}','bld.noprice':'ללא מחיר','bld.weight':'משקל','bld.amount':'סכום','bld.asof':'מחירים נכון ל-{d}','bld.role.core':'ליבה','bld.role.growth':'צמיחה','bld.role.defensive':'הגנתי','bld.role.income':'הכנסה','bld.role.satellite':'לוויין','bld.budget.of':'תקציב','bld.pricing':'מעדכן מחירים לתיק המומלץ…','bld.done':'התיק המומלץ מוכן','bld.priceWait':'ממתין למחיר','bld.reprice':'עדכן מחירים','bld.pricesPending':'המחירים מתעדכנים ברקע — הכמויות יחושבו כשיגיעו','bld.step1':'בחירת המניות','bld.pfname':'תיק AI','bld.watched':'{n} מניות נוספו למעקב',
     'upd.applying':'נמצאה גרסה חדשה ({v}) — מעדכן…','set.usage':'שימוש ועלות API','usage.help':'הערכה מקומית לפי ספירת הטוקנים האמיתית שחוזרת בכל בקשה ומחירון Anthropic הנוכחי. ה-API לא חושף את יתרת החשבון, לכן היתרה כאן מחושבת מהסכום שהזנת פחות השימוש מאז.','usage.month':'החודש','usage.today':'היום','usage.all':'סה"כ מאז {d}','usage.calls':'{n} בקשות','usage.remaining':'יתרה משוערת','usage.credit':'קרדיט שנטען','usage.credit.set':'עדכן יתרה','usage.credit.help':'הזינו את היתרה שמופיעה בקונסולת Anthropic (Billing). מאותו רגע האפליקציה תפחית ממנה את העלות המשוערת של כל בקשה.','usage.credit.ph':'סכום בדולרים','usage.credit.since':'מאז {d}','usage.low':'היתרה המשוערת נמוכה — כדאי לטעון קרדיט','usage.none':'עדיין לא נרשם שימוש','usage.billing':'יתרה ורכישת קרדיט','usage.console':'שימוש בקונסולה','usage.keys':'מפתחות API','usage.bytag':'לפי סוג פעולה','usage.tokens':'{i} קלט · {o} פלט · {s} חיפושים','usage.reset':'אפס מונה','usage.reset.confirm':'לאפס את היסטוריית השימוש? היתרה שהוזנה תישאר.','usage.saved':'היתרה עודכנה','usage.lowcredit':'יתרת ה-API נגמרה — לחצו לטעינת קרדיט','usage.last':'בקשה אחרונה',
     'usage.tag.quotes':'רענון שערים','usage.tag.scan':'סורק שוק','usage.tag.analyze':'ניתוח תיק','usage.tag.build':'בניית תיק AI','usage.tag.deepdive':'ניתוח מניה','usage.tag.lookup':'זיהוי מניה','usage.tag.hist':'גרפים היסטוריים','usage.tag.alerts':'התראות','usage.tag.test':'בדיקת חיבור','usage.tag.other':'אחר',
-    'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
+    'q.closed':'השוק סגור והשערים כבר משקפים את הסגירה האחרונה — לא בוצעה משיכה (חוסך קרדיטים). לחיצה כאן תרענן בכל זאת.','q.closed.some':'{n} ניירות דולגו: השוק שלהם סגור והשער כבר מעודכן לסגירה','q.closed.one':'השוק של {t} סגור והשער כבר משקף את הסגירה האחרונה. לרענן בכל זאת?','set.mkthours':'רענון שערים רק כשיש מסחר חדש (חוסך קרדיטים)','set.mkthours.help':'מחוץ לשעות המסחר, בסופי שבוע ובחגים האפליקציה לא מושכת שוב שער שכבר משקף את הסגירה האחרונה. ת"א: א׳–ה׳, ניו יורק: ב׳–ו׳.','mkt.now':'כרגע','mkt.open':'פתוח','mkt.closed':'סגור','mkt.tase':'ת"א','mkt.us':'ניו יורק','refresh.anyway':'רענן בכל זאת','about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
     // dynamic
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
@@ -873,7 +874,7 @@ const I18N = {
     'bld.invested':'Invested','bld.cashleft':'Cash left','bld.positions':'Positions','bld.vol':'Expected volatility','bld.yield':'Dividend yield','bld.beta':'β S&P 500','bld.alloc':'Allocation','bld.sector':'By sector','bld.risks':'Key risks','bld.fx':'FX exposure','bld.rebal':'Rebalancing','bld.drawdown':'Bad-year scenario','bld.alts':'Alternatives','bld.create':'Create portfolio from plan','bld.watch':'Add all to watchlist','bld.created':'Created portfolio "{n}" with {k} positions','bld.create.confirm':'Create a new portfolio "{n}" with {k} positions totalling {v}? Positions without a price go to the watchlist.','bld.shares':'{n} sh × {p}','bld.noprice':'no price','bld.weight':'Weight','bld.amount':'Amount','bld.asof':'Prices as of {d}','bld.role.core':'Core','bld.role.growth':'Growth','bld.role.defensive':'Defensive','bld.role.income':'Income','bld.role.satellite':'Satellite','bld.budget.of':'Budget','bld.pricing':'Fetching prices for the plan…','bld.done':'Portfolio plan ready','bld.priceWait':'awaiting price','bld.reprice':'Refresh prices','bld.pricesPending':'Prices are loading in the background — share counts follow','bld.step1':'Selecting stocks','bld.pfname':'AI portfolio','bld.watched':'{n} stocks added to watchlist',
     'upd.applying':'New version found ({v}) — updating…','set.usage':'API usage & cost','usage.help':'Local estimate based on the real token counts returned with every request and current Anthropic pricing. The API does not expose your account balance, so the balance here is the amount you entered minus usage since then.','usage.month':'This month','usage.today':'Today','usage.all':'Total since {d}','usage.calls':'{n} requests','usage.remaining':'Estimated balance','usage.credit':'Credit loaded','usage.credit.set':'Update balance','usage.credit.help':'Enter the balance shown in the Anthropic Console (Billing). From that moment the app subtracts the estimated cost of every request.','usage.credit.ph':'Amount in USD','usage.credit.since':'since {d}','usage.low':'Estimated balance is low — consider adding credit','usage.none':'No usage recorded yet','usage.billing':'Balance & buy credit','usage.console':'Usage in Console','usage.keys':'API keys','usage.bytag':'By operation','usage.tokens':'{i} in · {o} out · {s} searches','usage.reset':'Reset meter','usage.reset.confirm':'Reset usage history? The entered balance stays.','usage.saved':'Balance updated','usage.lowcredit':'API credit exhausted — tap to add credit','usage.last':'Last request',
     'usage.tag.quotes':'Quote refresh','usage.tag.scan':'Market scan','usage.tag.analyze':'Portfolio analysis','usage.tag.build':'AI builder','usage.tag.deepdive':'Stock deep dive','usage.tag.lookup':'Ticker lookup','usage.tag.hist':'Price history','usage.tag.alerts':'Alerts','usage.tag.test':'Connection test','usage.tag.other':'Other',
-    'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
+    'q.closed':'Markets are closed and quotes already reflect the last close — nothing fetched (saves credits). Tap here to refresh anyway.','q.closed.some':'{n} securities skipped: their market is closed and the quote already reflects the close','q.closed.one':'The market for {t} is closed and the quote already reflects the last close. Refresh anyway?','set.mkthours':'Refresh quotes only when there is new trading (saves credits)','set.mkthours.help':'Outside trading hours, on weekends and holidays the app does not re-fetch a quote that already reflects the last close. TASE: Sun–Thu, New York: Mon–Fri.','mkt.now':'Now','mkt.open':'open','mkt.closed':'closed','mkt.tase':'TASE','mkt.us':'New York','refresh.anyway':'Refresh anyway','about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
@@ -944,7 +945,7 @@ const SAMPLE_HOLDINGS = [
 /* ---------- State ---------- */
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
-  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
+  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,marketHoursOnly:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
   portfolios:[{id:'main',name:'התיק הראשי',createdAt:0,cashIls:0,cashUsd:0}], view:'all',
   holdings:[], watchlist:[], trades:[], history:[], scans:[], usage:{log:[],months:{},credit:null,total:0,calls:0,since:null}, analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{}}
 };
@@ -1258,9 +1259,28 @@ If a security cannot be found, include it with price:null and a short note. chan
   return j;
 }
 /** Fetch quotes for all holdings in parallel chunks (max 3 tickers per request, 3 requests at a time), applying each chunk as it lands. */
-async function fetchQuotes({signal,onProgress,onText}={}){
-  const seen=new Set(); const list=[...S.holdings,...S.watchlist].filter(h=>{ const k=h.ticker+'|'+h.exchange; if(seen.has(k)) return false; seen.add(k); return true; }).map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
-  if(!list.length) throw new Error(t('q.nohold'));
+/* ---------- Market hours (skip pointless quote fetches outside trading) ---------- */
+const MARKETS={TASE:{tz:'Asia/Jerusalem',days:[0,1,2,3,4],open:[9,59],close:d=>d===0?[15,55]:[17,30]},US:{tz:'America/New_York',days:[1,2,3,4,5],open:[9,30],close:()=>[16,0]}};
+function mktOf(exchange){ return exchange==='TASE'?'TASE':'US'; }
+function tzParts(ts,tz){ const f=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); const o={}; f.formatToParts(new Date(ts)).forEach(p=>o[p.type]=p.value); return {y:+o.year,m:+o.month,d:+o.day,h:+o.hour%24,mi:+o.minute}; }
+function tzOffsetMin(ts,tz){ const p=tzParts(ts,tz); return Math.round((Date.UTC(p.y,p.m-1,p.d,p.h,p.mi)-Math.floor(ts/60000)*60000)/60000); }
+/** {open, lastClose, nextOpen} for an exchange at `now` (weekends handled; holidays are not known and count as trading days). */
+function marketState(exchange,now=Date.now()){
+  const spec=MARKETS[mktOf(exchange)]; const off=tzOffsetMin(now,spec.tz); const p=tzParts(now,spec.tz);
+  const session=k=>{ const day=new Date(Date.UTC(p.y,p.m-1,p.d+k)); const wd=day.getUTCDay(); if(!spec.days.includes(wd)) return null; const o=spec.open, c=spec.close(wd); const mk=(h,mi)=>Date.UTC(day.getUTCFullYear(),day.getUTCMonth(),day.getUTCDate(),h,mi)-off*60000; return {open:mk(o[0],o[1]),close:mk(c[0],c[1])}; };
+  let open=false,lastClose=null,nextOpen=null;
+  for(let k=0;k>=-8&&lastClose==null;k--){ const s=session(k); if(!s) continue; if(k===0&&now>=s.open&&now<s.close) open=true; if(s.close<=now) lastClose=s.close; }
+  for(let k=0;k<=8&&nextOpen==null;k++){ const s=session(k); if(s&&s.open>now) nextOpen=s.open; }
+  return {open,lastClose,nextOpen,market:mktOf(exchange)};
+}
+/** A fresh fetch is worth paying for only if the market traded since the last stored quote. */
+function needsQuote(h,now=Date.now()){ if(S.settings.marketHoursOnly===false) return true; if(h.price==null||!h.updatedAt) return true; const st=marketState(h.exchange,now); if(st.open) return true; if(!st.lastClose) return true; return h.updatedAt<st.lastClose+15*60000; }
+async function fetchQuotes({signal,onProgress,onText,force}={}){
+  const seen=new Set(); const all=[...S.holdings,...S.watchlist].filter(h=>{ const k=h.ticker+'|'+h.exchange; if(seen.has(k)) return false; seen.add(k); return true; });
+  if(!all.length) throw new Error(t('q.nohold'));
+  const wanted=force?all:all.filter(h=>needsQuote(h)); const skipped=all.length-wanted.length;
+  const list=wanted.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
+  if(!list.length) return {applied:0,failed:0,total:0,skipped,allSkipped:true,errors:[]};
   const groups={}; list.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
   const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=3) chunks.push(g.slice(i,i+3)); });
   let done=0, applied=0, failed=0; const errors=[];
@@ -1269,7 +1289,7 @@ async function fetchQuotes({signal,onProgress,onText}={}){
     finally{ done+=chunk.length; onProgress&&onProgress(done,list.length); } };
   const queue=[...chunks]; const workers=Array.from({length:Math.min(3,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
-  return {applied,failed,total:list.length,errors};
+  return {applied,failed,total:list.length,skipped,allSkipped:false,errors};
 }
 function applyQuotes(j,opts={}){
   let n=0; const now=Date.now();
@@ -2071,6 +2091,7 @@ function openCreditSheet(){
   $('#cform').onsubmit=e=>{ e.preventDefault(); const v=parseFloat($('#c-amt').value); if(!(v>=0)){ $('#c-amt').closest('.field').classList.add('invalid'); return; } S.usage.credit={amount:v,since:Date.now()}; save(); closeSheet(); renderUsage(); toast(t('usage.saved'),'ok'); };
   setTimeout(()=>$('#c-amt').focus(),350);
 }
+function closedToast(){ const el=document.createElement('div'); el.className='toast'; el.style.cursor='pointer'; el.innerHTML=`<svg class="ic sm"><use href="#i-info"/></svg><span>${t('q.closed')}</span>`; el.onclick=()=>{ el.remove(); doRefresh({force:true}); }; $('#toasts').appendChild(el); setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),320); },9000); }
 let billingToastT=0;
 function billingToast(){ if(Date.now()-billingToastT<60000) return; billingToastT=Date.now(); const el=document.createElement('div'); el.className='toast err'; el.style.cursor='pointer'; el.innerHTML=`<svg class="ic sm"><use href="#i-alert"/></svg><span>${t('usage.lowcredit')}</span>`; el.onclick=()=>window.open(BILLING_URL,'_blank','noopener'); $('#toasts').appendChild(el); setTimeout(()=>el.remove(),12000); }
 function onUsageRecorded(){ if(currentPage==='settings') renderUsage(); }
@@ -2194,7 +2215,7 @@ function openDeepDive(id){
   openSheet(t('dd.title'),body,acts);
   if(isWatch) $('#dd-w2pf').onclick=()=>openForm(null,{ticker:h.ticker,exchange:h.exchange,sector:h.sector,name:h.name,name_he:h.name_he,price:h.price??'',watchId:h.id});
   else $('#dd-edit').onclick=()=>openForm(h);
-  $('#dd-refresh').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } const b=$('#dd-refresh'); b.disabled=true; b.querySelector('svg').style.display='none'; b.querySelector('.spin').style.display='inline-block'; toast(t('q.updating'));
+  $('#dd-refresh').onclick=async()=>{ if(!S.settings.apiKey){ toast(t('q.needkey'),'err'); return; } if(!needsQuote(h)&&!(await confirmDlg(t('q.closed.one',{t:h.ticker}),{yes:t('refresh.anyway')}))) return; const b=$('#dd-refresh'); b.disabled=true; b.querySelector('svg').style.display='none'; b.querySelector('.spin').style.display='inline-block'; toast(t('q.updating'));
     try{ const j=await fetchQuotesChunk([{ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}],{signal:withTimeout(null,90000)}); const n=applyQuotes(j,{noHistory:isWatch}); renderAll(); if(n){ toast(t('q.done'),'ok'); openDeepDive(h.id); } else toast(t('q.none')+(j.quotes[0]&&j.quotes[0].note?' · '+j.quotes[0].note:''),'err'); }
     catch(e){ console.error(e); toast(t('err.api')+': '+e.message,'err'); }
     finally{ b.disabled=false; } };
@@ -2320,7 +2341,7 @@ function jobStart(title){
 function jobEnd(){ if(!currentJob) return; clearInterval(currentJob.tick); currentJob.el.remove(); currentJob=null; }
 
 /* ---------- Quotes refresh ---------- */
-async function doRefresh({afterUpdate}={}){
+async function doRefresh({afterUpdate,force}={}){
   const btn=$('#btn-refresh'); if(currentJob) return; const anySec=S.holdings.length||S.watchlist.length; if(anySec&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   setLoading(btn,true);
   if(!afterUpdate){ // the home-screen app is rarely closed: refresh also pulls the latest build, then continues the refresh in the new version
@@ -2334,10 +2355,10 @@ async function doRefresh({afterUpdate}={}){
   const job=jobStart(t('job.quotes'));
   try{
     // Phase 1: quotes (parallel chunks, progressive rendering)
-    const res=await fetchQuotes({signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderPortfolio(); renderDashboard(); },onText:x=>job.live(x)});
+    const res=await fetchQuotes({force,signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderPortfolio(); renderDashboard(); },onText:x=>job.live(x)});
     S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<12e4) delete h.sample; });
     recordHistory(); save(); renderAll();
-    if(res.applied===res.total) toast(t('q.done'),'ok'); else toast(t('q.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err');
+    if(res.allSkipped) closedToast(); else if(res.applied===res.total){ toast(t('q.done'),'ok'); if(res.skipped) toast(t('q.closed.some',{n:res.skipped})); } else toast(t('q.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err');
     // Phase 2: Bank of Israel representative rate (skipped when today's is already stored; cancellable, 40s cap)
     if(!fxIsFresh()){ job.title(t('job.fx')); job.live('');
       try{ const fxr=await fetchFx(); if(fxr&&applyFx(fxr)){ recordHistory(); renderAll(); } }
@@ -2349,7 +2370,7 @@ async function doRefresh({afterUpdate}={}){
 
 /* ---------- Settings ---------- */
 function renderSettings(){
-  const s=S.settings; $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-datamodel').value=s.dataModel||'claude-sonnet-5'; $('#set-fast').checked=!!s.fastMode; $('#set-fx').value=s.usdIls; $('#set-cash-list').innerHTML=cashRowsHTML();
+  const s=S.settings; $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-datamodel').value=s.dataModel||'claude-sonnet-5'; $('#set-fast').checked=!!s.fastMode; const mh=$('#set-mkthours'); if(mh) mh.checked=s.marketHoursOnly!==false; const ms=$('#mkt-status'); if(ms){ const a=marketState('TASE'),b=marketState('NYSE'); ms.textContent=`${t('mkt.now')}: ${t('mkt.tase')} ${a.open?t('mkt.open'):t('mkt.closed')} · ${t('mkt.us')} ${b.open?t('mkt.open'):t('mkt.closed')}`; } $('#set-fx').value=s.usdIls; $('#set-cash-list').innerHTML=cashRowsHTML();
   $$('#set-effort button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.e===s.effort));
   $$('#set-theme button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===s.theme));
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
@@ -2421,6 +2442,7 @@ function bind(){
   $('#set-model').addEventListener('change',e=>{ S.settings.model=e.target.value; save(); });
   $('#set-datamodel').addEventListener('change',e=>{ S.settings.dataModel=e.target.value; save(); });
   $('#set-fast').addEventListener('change',e=>{ S.settings.fastMode=e.target.checked; save(); });
+  $('#set-mkthours').addEventListener('change',e=>{ S.settings.marketHoursOnly=e.target.checked; save(); });
   $$('#set-effort button').forEach(b=>b.onclick=()=>{ S.settings.effort=b.dataset.e; save(); renderSettings(); });
   $$('#set-lang button').forEach(b=>b.onclick=()=>{ S.settings.lang=b.dataset.l; save(); applyI18n(); renderAll(); });
   $$('#set-theme button').forEach(b=>b.onclick=()=>{ S.settings.theme=b.dataset.t; save(); applyTheme(); renderAll(); });
