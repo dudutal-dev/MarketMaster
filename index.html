@@ -347,6 +347,14 @@ td.num,th.num{text-align:end}
 .bld-pos .risk{font-size:.76rem;color:var(--text-3)}
 .chip.role{font-size:.64rem;padding:1px 7px;background:var(--surface-3);color:var(--text-2)}
 @media (max-width:480px){.ins-tabs{width:100%}.ins-tabs button{flex:1;justify-content:center}}
+.usage-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.usage-bal{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border)}
+.usage-bal .big{font-size:1.6rem;font-weight:800;letter-spacing:-.02em}
+.usage-bal.low{border-color:color-mix(in srgb, var(--warn) 50%, transparent);background:var(--warn-soft)}
+.usage-links{display:flex;gap:8px;flex-wrap:wrap}
+.usage-links a{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.usage-tag{display:grid;grid-template-columns:1fr auto auto;gap:6px 12px;font-size:.84rem;align-items:center}
+.usage-tag .c{color:var(--text-3)}
 .chart-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .chart-tools .seg.sm button{padding:4px 9px}
 .chart-tools .chip-toggle{min-height:30px;padding:4px 10px;font-size:.76rem}
@@ -751,6 +759,10 @@ td.num,th.num{text-align:end}
             </div>
           </div>
         </div>
+        <div class="card" id="usage-card">
+          <div class="card-h"><h2 data-i18n="set.usage">שימוש ועלות API</h2><span class="chip info" data-i18n="local">חישוב מקומי</span></div>
+          <div id="usage-body"></div>
+        </div>
         <div class="grid two">
           <div class="card">
             <div class="card-h"><h2 data-i18n="set.data">נתונים</h2></div>
@@ -802,7 +814,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-0631';
+const APP_VERSION='2026.09.12-0708';
 
 const I18N = {
   he: {
@@ -822,7 +834,9 @@ const I18N = {
     'set.cash.help':'יתרת מזומן לכל תיק, בשקלים ובדולרים. נכללת בשווי הכולל וניתנת לעדכון אוטומטי בקנייה ומכירה.','pf.cash':'מזומן','kpi.realized':'ממומש',
     'ins.tab.analyze':'ניתוח התיק','ins.tab.build':'בניית תיק AI','bld.title':'בניית תיק מומלץ ב-AI','bld.sub':'Claude מרכיב תיק מודל מאפס לפי פרופיל הסיכון, אופק ההשקעה והתקציב שלך, עם מחירים עדכניים מהרשת. אפשר ליצור ממנו תיק חדש באפליקציה בלחיצה.','bld.profile':'פרופיל משקיע','prof.income':'דיבידנד','bld.budget':'תקציב','bld.horizon':'אופק השקעה','hor.short':'עד שנה','hor.mid':'1–3 שנים','hor.long':'3+ שנים','bld.markets':'שווקים','bld.n':'מספר פוזיציות','bld.prefs':'העדפות ומגבלות (אופציונלי)','bld.prefs.ph':'למשל: דגש על טכנולוגיה, בלי נדל"ן, לכלול תעודות סל…','bld.run':'בנה תיק מומלץ','bld.err.budget':'יש להזין תקציב','bld.err.markets':'יש לבחור לפחות שוק אחד','bld.empty':'עדיין לא נבנה תיק','bld.empty.d':'בחרו פרופיל, תקציב ושווקים ולחצו "בנה תיק מומלץ". התוצאה נשמרת כאן.',
     'bld.invested':'מושקע','bld.cashleft':'נשאר במזומן','bld.positions':'פוזיציות','bld.vol':'תנודתיות צפויה','bld.yield':'תשואת דיבידנד','bld.beta':'β S&P 500','bld.alloc':'הרכב התיק','bld.sector':'חלוקה לפי סקטור','bld.risks':'סיכונים עיקריים','bld.fx':'חשיפת מט"ח','bld.rebal':'איזון מחדש','bld.drawdown':'תרחיש שנה גרועה','bld.alts':'חלופות','bld.create':'צור תיק חדש מההמלצה','bld.watch':'הוסף הכל למעקב','bld.created':'נוצר תיק "{n}" עם {k} פוזיציות','bld.create.confirm':'ליצור תיק חדש "{n}" עם {k} פוזיציות בסך {v}? פוזיציות ללא מחיר יתווספו למעקב.','bld.shares':'{n} יח׳ × {p}','bld.noprice':'ללא מחיר','bld.weight':'משקל','bld.amount':'סכום','bld.asof':'מחירים נכון ל-{d}','bld.role.core':'ליבה','bld.role.growth':'צמיחה','bld.role.defensive':'הגנתי','bld.role.income':'הכנסה','bld.role.satellite':'לוויין','bld.budget.of':'תקציב','bld.pricing':'מעדכן מחירים לתיק המומלץ…','bld.done':'התיק המומלץ מוכן','bld.priceWait':'ממתין למחיר','bld.reprice':'עדכן מחירים','bld.pricesPending':'המחירים מתעדכנים ברקע — הכמויות יחושבו כשיגיעו','bld.step1':'בחירת המניות','bld.pfname':'תיק AI','bld.watched':'{n} מניות נוספו למעקב',
-    'upd.applying':'נמצאה גרסה חדשה ({v}) — מעדכן…','about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
+    'upd.applying':'נמצאה גרסה חדשה ({v}) — מעדכן…','set.usage':'שימוש ועלות API','usage.help':'הערכה מקומית לפי ספירת הטוקנים האמיתית שחוזרת בכל בקשה ומחירון Anthropic הנוכחי. ה-API לא חושף את יתרת החשבון, לכן היתרה כאן מחושבת מהסכום שהזנת פחות השימוש מאז.','usage.month':'החודש','usage.today':'היום','usage.all':'סה"כ מאז {d}','usage.calls':'{n} בקשות','usage.remaining':'יתרה משוערת','usage.credit':'קרדיט שנטען','usage.credit.set':'עדכן יתרה','usage.credit.help':'הזינו את היתרה שמופיעה בקונסולת Anthropic (Billing). מאותו רגע האפליקציה תפחית ממנה את העלות המשוערת של כל בקשה.','usage.credit.ph':'סכום בדולרים','usage.credit.since':'מאז {d}','usage.low':'היתרה המשוערת נמוכה — כדאי לטעון קרדיט','usage.none':'עדיין לא נרשם שימוש','usage.billing':'יתרה ורכישת קרדיט','usage.console':'שימוש בקונסולה','usage.keys':'מפתחות API','usage.bytag':'לפי סוג פעולה','usage.tokens':'{i} קלט · {o} פלט · {s} חיפושים','usage.reset':'אפס מונה','usage.reset.confirm':'לאפס את היסטוריית השימוש? היתרה שהוזנה תישאר.','usage.saved':'היתרה עודכנה','usage.lowcredit':'יתרת ה-API נגמרה — לחצו לטעינת קרדיט','usage.last':'בקשה אחרונה',
+    'usage.tag.quotes':'רענון שערים','usage.tag.scan':'סורק שוק','usage.tag.analyze':'ניתוח תיק','usage.tag.build':'בניית תיק AI','usage.tag.deepdive':'ניתוח מניה','usage.tag.lookup':'זיהוי מניה','usage.tag.hist':'גרפים היסטוריים','usage.tag.alerts':'התראות','usage.tag.test':'בדיקת חיבור','usage.tag.other':'אחר',
+    'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
     // dynamic
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
@@ -857,7 +871,9 @@ const I18N = {
     'set.cash.help':'Cash balance per portfolio, in ILS and USD. Included in total value and can be updated automatically on buys and sells.','pf.cash':'Cash','kpi.realized':'realized',
     'ins.tab.analyze':'Portfolio analysis','ins.tab.build':'AI portfolio builder','bld.title':'AI-recommended portfolio','bld.sub':'Claude designs a model portfolio from scratch for your risk profile, horizon and budget, with current prices from the web. Create it as a new portfolio in the app with one tap.','bld.profile':'Investor profile','prof.income':'Income','bld.budget':'Budget','bld.horizon':'Horizon','hor.short':'Up to 1 year','hor.mid':'1–3 years','hor.long':'3+ years','bld.markets':'Markets','bld.n':'Positions','bld.prefs':'Preferences & constraints (optional)','bld.prefs.ph':'e.g. tech tilt, no real estate, include ETFs…','bld.run':'Build portfolio','bld.err.budget':'Enter a budget','bld.err.markets':'Pick at least one market','bld.empty':'No portfolio built yet','bld.empty.d':'Choose a profile, budget and markets and tap "Build portfolio". The result is kept here.',
     'bld.invested':'Invested','bld.cashleft':'Cash left','bld.positions':'Positions','bld.vol':'Expected volatility','bld.yield':'Dividend yield','bld.beta':'β S&P 500','bld.alloc':'Allocation','bld.sector':'By sector','bld.risks':'Key risks','bld.fx':'FX exposure','bld.rebal':'Rebalancing','bld.drawdown':'Bad-year scenario','bld.alts':'Alternatives','bld.create':'Create portfolio from plan','bld.watch':'Add all to watchlist','bld.created':'Created portfolio "{n}" with {k} positions','bld.create.confirm':'Create a new portfolio "{n}" with {k} positions totalling {v}? Positions without a price go to the watchlist.','bld.shares':'{n} sh × {p}','bld.noprice':'no price','bld.weight':'Weight','bld.amount':'Amount','bld.asof':'Prices as of {d}','bld.role.core':'Core','bld.role.growth':'Growth','bld.role.defensive':'Defensive','bld.role.income':'Income','bld.role.satellite':'Satellite','bld.budget.of':'Budget','bld.pricing':'Fetching prices for the plan…','bld.done':'Portfolio plan ready','bld.priceWait':'awaiting price','bld.reprice':'Refresh prices','bld.pricesPending':'Prices are loading in the background — share counts follow','bld.step1':'Selecting stocks','bld.pfname':'AI portfolio','bld.watched':'{n} stocks added to watchlist',
-    'upd.applying':'New version found ({v}) — updating…','about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
+    'upd.applying':'New version found ({v}) — updating…','set.usage':'API usage & cost','usage.help':'Local estimate based on the real token counts returned with every request and current Anthropic pricing. The API does not expose your account balance, so the balance here is the amount you entered minus usage since then.','usage.month':'This month','usage.today':'Today','usage.all':'Total since {d}','usage.calls':'{n} requests','usage.remaining':'Estimated balance','usage.credit':'Credit loaded','usage.credit.set':'Update balance','usage.credit.help':'Enter the balance shown in the Anthropic Console (Billing). From that moment the app subtracts the estimated cost of every request.','usage.credit.ph':'Amount in USD','usage.credit.since':'since {d}','usage.low':'Estimated balance is low — consider adding credit','usage.none':'No usage recorded yet','usage.billing':'Balance & buy credit','usage.console':'Usage in Console','usage.keys':'API keys','usage.bytag':'By operation','usage.tokens':'{i} in · {o} out · {s} searches','usage.reset':'Reset meter','usage.reset.confirm':'Reset usage history? The entered balance stays.','usage.saved':'Balance updated','usage.lowcredit':'API credit exhausted — tap to add credit','usage.last':'Last request',
+    'usage.tag.quotes':'Quote refresh','usage.tag.scan':'Market scan','usage.tag.analyze':'Portfolio analysis','usage.tag.build':'AI builder','usage.tag.deepdive':'Stock deep dive','usage.tag.lookup':'Ticker lookup','usage.tag.hist':'Price history','usage.tag.alerts':'Alerts','usage.tag.test':'Connection test','usage.tag.other':'Other',
+    'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
@@ -930,7 +946,7 @@ const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
   settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
   portfolios:[{id:'main',name:'התיק הראשי',createdAt:0,cashIls:0,cashUsd:0}], view:'all',
-  holdings:[], watchlist:[], trades:[], history:[], scans:[], analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{}}
+  holdings:[], watchlist:[], trades:[], history:[], scans:[], usage:{log:[],months:{},credit:null,total:0,calls:0,since:null}, analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{}}
 };
 let S = load();
 function load(){
@@ -940,6 +956,7 @@ function load(){
     st.holdings.forEach(h=>{ if(!h.pid||!st.portfolios.some(x=>x.id===h.pid)) h.pid=st.portfolios[0].id; });
     if(st.view!=='all'&&!st.portfolios.some(x=>x.id===st.view)) st.view='all';
     if(!Array.isArray(st.trades)) st.trades=[];
+    st.usage={log:[],months:{},credit:null,total:0,calls:0,since:null,...(p.usage||{})}; if(!Array.isArray(st.usage.log)) st.usage.log=[]; if(!st.usage.months||typeof st.usage.months!=='object') st.usage.months={};
     if(st.portfolios.length===1){ const pid=st.portfolios[0].id; st.history.forEach(h=>{ const v=h.nav??h.ils; if(v!=null) h.byPid={[pid]:v}; }); } // single portfolio: per-portfolio series == total series
     st.portfolios.forEach(pf=>{ pf.cashIls=+pf.cashIls||0; pf.cashUsd=+pf.cashUsd||0; });
     // one-time: global cash (settings) → first portfolio
@@ -1049,6 +1066,23 @@ function applyTrade({side,pid,ticker,exchange,qty,price,ts,fee,cash,note,meta}){
   const trade={id:uid(),ts:ts||Date.now(),pid,ticker,exchange,ccy,side,qty,price,fee,fx,cash:!!cash,note:note||'',name:h.name||ticker,name_he:h.name_he||h.name||ticker,avgCost:side==='sell'?h.avgCost:undefined,realizedNative:realizedNative!=null?+realizedNative.toFixed(2):undefined,realizedIls:realizedNative!=null?+(ccy==='ILS'?realizedNative:realizedNative*fx).toFixed(2):undefined,closed};
   S.trades.push(trade); return {holding:h,trade,closed};
 }
+/* ---------- API usage meter (local estimate from real token counts) ---------- */
+const PRICES=[[/fable|mythos/,10,50],[/opus-5|opus-4-[678]/,5,25],[/sonnet-5/,2,10],[/sonnet-4-6/,3,15],[/haiku-4-5/,1,5],[/./,5,25]]; // USD per 1M tokens: input, output
+const SEARCH_PRICE=0.01; // USD per web search
+function priceFor(model,fast){ const p=PRICES.find(x=>x[0].test(model||''))||PRICES[PRICES.length-1]; const k=fast&&/opus-5|opus-4-8/.test(model||'')?2:1; return {inp:p[1]*k,out:p[2]*k}; }
+function usageCost({model,fast,inp=0,out=0,cacheRead=0,cacheWrite=0,searches=0}){ const p=priceFor(model,fast); return (inp*p.inp+out*p.out+cacheRead*p.inp*0.1+cacheWrite*p.inp*1.25)/1e6+searches*SEARCH_PRICE; }
+function monthKey(ts){ const d=new Date(ts||Date.now()); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function recordUsage({tag,model,fast,usage}){
+  if(!usage) return; const U=S.usage=S.usage||{log:[],months:{},credit:null,total:0,calls:0,since:null};
+  const inp=+usage.input_tokens||0, out=+usage.output_tokens||0, cacheRead=+usage.cache_read_input_tokens||0, cacheWrite=+usage.cache_creation_input_tokens||0; const st=usage.server_tool_use||{}; const searches=+st.web_search_requests||0, fetches=+st.web_fetch_requests||0;
+  const cost=usageCost({model,fast,inp,out,cacheRead,cacheWrite,searches}); const ts=Date.now(); const e={ts,tag:tag||'other',model,fast:!!fast,inp,out,searches,fetches,cost:+cost.toFixed(5)};
+  U.log.push(e); if(U.log.length>400) U.log=U.log.slice(-400);
+  const mk=monthKey(ts); const m=U.months[mk]=U.months[mk]||{cost:0,calls:0,inp:0,out:0,searches:0,byTag:{}}; m.cost+=e.cost; m.calls++; m.inp+=inp; m.out+=out; m.searches+=searches; const bt=m.byTag[e.tag]=m.byTag[e.tag]||{cost:0,calls:0}; bt.cost+=e.cost; bt.calls++;
+  U.total=(U.total||0)+e.cost; U.calls=(U.calls||0)+1; if(!U.since) U.since=ts; const keys=Object.keys(U.months).sort(); if(keys.length>18) keys.slice(0,keys.length-18).forEach(k=>delete U.months[k]);
+  save(); if(typeof onUsageRecorded==='function') { try{ onUsageRecorded(e); }catch(_){} } return e;
+}
+function usageSince(ts){ return (S.usage.log||[]).filter(e=>e.ts>=ts).reduce((a,e)=>a+e.cost,0); }
+function fmtUsd(v,d){ if(v==null||isNaN(v)) return '—'; d=d==null?(Math.abs(v)<1?3:2):d; return (v<0?'-':'')+'$'+new Intl.NumberFormat(locale(),{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(v)); }
 function dispIls(vIls){ return S.settings.currency==='ILS'?vIls:vIls/(S.settings.usdIls||3.35); }
 </script>
 <script>
@@ -1084,7 +1118,7 @@ async function claude(opts={}){
     }
   } finally{ releaseWake(); }
 }
-async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=null, model:modelOverride=null, onStatus=()=>{}, onText=()=>{}, signal}={}){
+async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=null, model:modelOverride=null, onStatus=()=>{}, onText=()=>{}, signal, tag='other'}={}){
   const key=(S.settings.apiKey||'').trim();
   if(!key) throw new Error(t('q.needkey'));
   const model=modelOverride||S.settings.model||'claude-opus-5';
@@ -1104,7 +1138,7 @@ async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=nul
     if(!res.ok){
       let msg='HTTP '+res.status; let raw='';
       try{ raw=await res.text(); const j=JSON.parse(raw); msg=(j.error&&j.error.message)||msg; }catch(_){ if(raw) msg+=' '+raw.slice(0,200); }
-      const e=new Error(msg); e.status=res.status; e.raw=raw; throw e;
+      const e=new Error(msg); e.status=res.status; e.raw=raw; if(res.status===400&&/credit balance|billing|purchase credits/i.test(msg)){ e.billing=true; if(typeof billingToast==='function') try{ billingToast(); }catch(_){} } throw e;
     }
     return res;
   };
@@ -1119,10 +1153,11 @@ async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=nul
   }
 
   const reader=res.body.getReader(), dec=new TextDecoder();
-  let buf='', text='', stopReason=null, usage=null, refusal=null; const sources=[], blocks={};
+  let buf='', text='', stopReason=null, usage=null, usage0=null, refusal=null; const sources=[], blocks={};
   const handle=(ev)=>{
     const type=ev.type;
-    if(type==='content_block_start'){
+    if(type==='message_start'){ if(ev.message&&ev.message.usage) usage0=ev.message.usage; }
+    else if(type==='content_block_start'){
       const cb=ev.content_block; blocks[ev.index]=cb.type;
       if(cb.type==='server_tool_use') onStatus('search', cb.input&&cb.input.query);
       if(cb.type==='web_fetch_tool_result'){ onStatus('think'); }
@@ -1154,7 +1189,9 @@ async function claudeOnce({system, user, tools=null, maxTokens=16000, effort=nul
   if(stopReason==='refusal'){ const e=new Error(t('err.refusal')+(refusal&&refusal.explanation?': '+refusal.explanation:'')); e.refusal=true; throw e; }
   // de-dup sources
   const seen=new Set(); const uniq=sources.filter(s=>{ try{ const k=new URL(s.url).hostname+new URL(s.url).pathname; if(seen.has(k)) return false; seen.add(k); return true; }catch(_){ return false; } });
-  return {text, sources:uniq, stopReason, usage};
+  const merged={...(usage0||{}),...(usage||{})}; if(usage0&&usage&&usage.input_tokens==null) merged.input_tokens=usage0.input_tokens; if(usage0&&usage0.server_tool_use&&!(usage&&usage.server_tool_use)) merged.server_tool_use=usage0.server_tool_use;
+  try{ recordUsage({tag,model,fast:body.speed==='fast',usage:merged}); }catch(e){ console.warn('usage',e); }
+  return {text, sources:uniq, stopReason, usage:merged};
 }
 
 function extractJSON(text){
@@ -1216,7 +1253,7 @@ ${urls}
 Respond with ONLY this JSON object (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+1),webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
+  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+1),webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,90000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1315,7 +1352,7 @@ Return JSON:
  "watch":["short notes on 2–4 names that are close to a trigger"],
  "caveats":"data freshness / limitations"}
 Order picks by conviction desc. Ensure every pick has a real, currently traded ticker on the stated exchange.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(8)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
+  const r=await claude({tag:'scan', system:SYSTEM_BASE(), user, tools:[webSearchTool(8)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, sources:r.sources, ts:Date.now(), params:{sectors,markets,mode,focus}};
 }
@@ -1350,7 +1387,7 @@ Return JSON:
  "macro":"3–4 sentences on the macro context relevant to this portfolio",
  "nextReview":"what to check and when"}
 Be specific: use the actual tickers, weights and P&L from the data. Keep text fields concise (1–3 sentences each); at most 5 strengths, 5 risks, 8 actions.`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:useWeb?[webSearchTool(5)]:null, maxTokens:9000, effort:S.settings.effort, onStatus, onText});
+  const r=await claude({tag:'analyze', system:SYSTEM_BASE(), user, tools:useWeb?[webSearchTool(5)]:null, maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, sources:r.sources, ts:Date.now(), profile};
 }
@@ -1379,7 +1416,7 @@ Return JSON:
  "fxNote":"one sentence on USD exposure and whether/how to hedge",
  "rebalance":"when and how to rebalance",
  "alternatives":[{"ticker":"","exchange":"","name":"","sector":"","why":"one sentence"}]}`;
-  const r=await claude({system:SYSTEM_BASE(),user,tools:useWeb?[webSearchTool(3)]:null,maxTokens:6000,effort:S.settings.effort,signal:withTimeout(signal,240000),onStatus,onText});
+  const r=await claude({tag:'build', system:SYSTEM_BASE(),user,tools:useWeb?[webSearchTool(3)]:null,maxTokens:6000,effort:S.settings.effort,signal:withTimeout(signal,240000),onStatus,onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.positions)){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   j.positions=j.positions.filter(p=>p&&p.ticker).map(p=>{ const tk=String(p.ticker).toUpperCase().trim(); const u=findSec(tk,p.exchange); const ex=normEx(p.exchange||(u&&u.exchange)); return {...p,ticker:tk,exchange:ex,currency:ex==='TASE'?'ILS':'USD',name:p.name||(u&&u.name_en)||tk,name_he:p.name_he||(u&&u.name_he)||p.name||tk,sector:SECTORS.some(s=>s[0]===p.sector)?p.sector:(u?u.sector:'Other'),weightPct:Math.max(0,+p.weightPct||0),price:(p.price!=null&&isFinite(+p.price)&&+p.price>0)?+p.price:null}; });
   j.cashPct=Math.max(0,+j.cashPct||0); const wsum=j.positions.reduce((a,p)=>a+p.weightPct,0)+j.cashPct; if(wsum>0&&Math.abs(wsum-100)>0.5){ const k=100/wsum; j.positions.forEach(p=>p.weightPct=+(p.weightPct*k).toFixed(2)); j.cashPct=+(j.cashPct*k).toFixed(2); }
@@ -1433,7 +1470,7 @@ Return JSON:
  "positionAdvice":"${pos?'2–3 sentences tailored to the user position: hold/add/trim, stop level, sizing':'general entry guidance with levels'}",
  "sources":["short list of sources used"]}
 Bull/base/bear probabilities must sum to 100. News sorted newest first (max 6). Keep every text field concise (1–2 sentences).`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(6)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
+  const r=await claude({tag:'deepdive', system:SYSTEM_BASE(), user, tools:[webSearchTool(6)], maxTokens:9000, effort:S.settings.effort, onStatus, onText});
   const j=extractJSON(r.text); if(!j){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   return {...j, webSources:r.sources, ts:Date.now()};
 }
@@ -1449,7 +1486,7 @@ async function lookupSecurity(ticker, hintExchange){
 Return JSON exactly:
 {"found":true,"ticker":"${ticker}","exchange":"TASE|NYSE|NASDAQ","name_en":"Official short company name","name_he":"שם החברה בעברית (transliterate if no official Hebrew name)","sector":"one of: ${codes}","industry":"short free-text industry","currency":"ILS|USD","price":0,"prevClose":0,"asOf":"YYYY-MM-DD","marketCap":"e.g. $12.4B","description":"one sentence on what the company does","confidence":0-100}
 If the ticker cannot be identified return {"found":false,"reason":"..."}. TASE prices in shekels (not agorot).`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel});
+  const r=await claude({tag:'lookup', system:SYSTEM_BASE(), user, tools:[webSearchTool(2)], maxTokens:1200, effort:'low', model:S.settings.dataModel});
   const j=extractJSON(r.text); if(!j) throw new Error(t('err.parse'));
   if(j.found===false) return {found:false,reason:j.reason||''};
   if(!['TASE','NYSE','NASDAQ'].includes(j.exchange)) j.exchange=hintExchange||'NASDAQ';
@@ -1477,7 +1514,7 @@ Respond with ONLY this JSON (no prose), points in chronological order (oldest fi
 {"currency":"USD|ILS","source":"stockanalysis|yahoo|stooq|other","points":[["YYYY-MM-DD",open,high,low,close,volume],["2026-09-10",101.2,104.9,100.7,103.4,1234567]]}
 Use null for a missing open/high/low/volume (close is required). Volume as an integer number of shares.
 If nothing worked: {"error":"short reason"}.`;
-  const res=await claude({system:SYSTEM_BASE(), user, tools:[webFetchTool(6),webSearchTool(2)], maxTokens:9000, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,150000)});
+  const res=await claude({tag:'hist', system:SYSTEM_BASE(), user, tools:[webFetchTool(6),webSearchTool(2)], maxTokens:9000, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,150000)});
   const j=extractJSON(res.text); if(!j||!Array.isArray(j.points)||j.points.length<3) throw new Error((j&&j.error)||t('chart.fail'));
   const num=x=>(x==null||x===''||isNaN(+x))?null:+x;
   const points=j.points.map(p=>{ if(!Array.isArray(p)) return null; const d=String(p[0]).slice(0,10); let o,h,l,c,v; if(p.length>=5){ o=num(p[1]);h=num(p[2]);l=num(p[3]);c=num(p[4]);v=num(p[5]); } else { c=num(p[1]); } if(!(c>0)) return null; if(!(o>0)) o=c; if(!(h>0)) h=Math.max(o,c); if(!(l>0)) l=Math.min(o,c); h=Math.max(h,o,c); l=Math.min(l,o,c); return {d,o,h,l,c,v:v!=null&&v>=0?v:null}; }).filter(p=>p&&/^\d{4}-\d{2}-\d{2}$/.test(p.d)).sort((a,b)=>a.d<b.d?-1:1);
@@ -1504,7 +1541,7 @@ Respond with ONLY this JSON:
  "quiet":["TICKERS with nothing unusual"],"asOf":"YYYY-MM-DD HH:MM"}
 Rules: max 3 alerts per ticker, most important first; include the source URL when you have it; if nothing unusual anywhere return an empty alerts array — do NOT invent events.
 ${known.length?'ALREADY REPORTED to the user — do NOT repeat these events, even reworded or from another source. Report only genuinely NEW events or a material NEW development:\n- '+known.join('\n- '):''}`;
-  const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(rows.length/2)))], maxTokens:3500, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,120000)});
+  const r=await claude({tag:'alerts', system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(rows.length/2)))], maxTokens:3500, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,120000)});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.alerts)){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
   const items=j.alerts.filter(a=>a&&a.ticker).map(a=>({...a,ticker:String(a.ticker).toUpperCase(),date:alertDate(a),id:'ai:'+String(a.ticker).toUpperCase()+':'+(a.type||'other')+':'+alertDate(a),src:'ai',ts:Date.now()}));
   return {items, quiet:Array.isArray(j.quiet)?j.quiet:[], asOf:j.asOf||null, sources:r.sources};
@@ -1543,7 +1580,7 @@ function mergeAlerts(newItems){
 const unreadAlerts=()=>S.alerts.items.filter(x=>!S.alerts.seen[x.id]).length;
 
 async function testConnection(){
-  const r=await claude({system:'Reply with exactly: OK', user:'ping', maxTokens:20});
+  const r=await claude({tag:'test', system:'Reply with exactly: OK', user:'ping', maxTokens:20});
   return /OK/i.test(r.text);
 }
 </script>
@@ -2006,6 +2043,38 @@ async function createFromBuilder(){
   S.view=id; save(); renderAll(); setTitle(); toast(t('bld.created',{n:name,k:buyable.length}),'ok'); go('portfolio');
 }
 
+/* ---------- API usage meter UI ---------- */
+const BILLING_URL='https://platform.claude.com/settings/billing', USAGE_URL='https://platform.claude.com/settings/usage', KEYS_URL='https://platform.claude.com/settings/keys';
+function usageRemaining(){ const U=S.usage||{}; if(!U.credit||!(U.credit.amount>0)) return null; return {amount:U.credit.amount,since:U.credit.since,left:U.credit.amount-usageSince(U.credit.since)}; }
+function renderUsage(){
+  const box=$('#usage-body'); if(!box) return; const U=S.usage||{log:[],months:{}}; const mk=monthKey(); const m=U.months[mk]||{cost:0,calls:0,inp:0,out:0,searches:0,byTag:{}};
+  const dayStart=new Date(); dayStart.setHours(0,0,0,0); const today=usageSince(dayStart.getTime()); const todayCalls=(U.log||[]).filter(e=>e.ts>=dayStart.getTime()).length;
+  const rem=usageRemaining(); const low=rem&&(rem.left<=Math.max(2,rem.amount*0.1));
+  const last=(U.log||[])[U.log.length-1];
+  const linkBtn=(href,label,icon)=>`<a class="btn sm" href="${href}" target="_blank" rel="noopener"><svg class="ic sm"><use href="#${icon}"/></svg>${label}<svg class="ic sm" style="opacity:.6"><use href="#i-ext"/></svg></a>`;
+  box.innerHTML=`
+    <div class="usage-bal ${low?'low':''}"><div style="flex:1;min-width:160px"><div class="faint" style="font-size:.76rem">${t('usage.remaining')}</div><div class="big num">${rem?fmtUsd(rem.left,2):'—'}</div><div class="faint" style="font-size:.74rem">${rem?`${t('usage.credit')} ${fmtUsd(rem.amount,2)} · ${t('usage.credit.since',{d:new Date(rem.since).toLocaleDateString(locale())})}`:t('usage.credit.help')}</div>${low?`<div class="warn" style="font-size:.8rem;margin-top:4px;font-weight:600">⚠ ${t('usage.low')}</div>`:''}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary sm" id="usage-set"><svg class="ic sm"><use href="#i-wallet"/></svg>${t('usage.credit.set')}</button>${linkBtn(BILLING_URL,t('usage.billing'),'i-key')}</div></div>
+    <div class="usage-tiles" style="margin-top:12px">${tile(t('usage.month'),fmtUsd(m.cost),'',t('usage.calls',{n:m.calls}))}${tile(t('usage.today'),fmtUsd(today),'',t('usage.calls',{n:todayCalls}))}${tile(t('usage.all',{d:U.since?new Date(U.since).toLocaleDateString(locale()):'—'}),fmtUsd(U.total||0),'',t('usage.calls',{n:U.calls||0}))}${last?tile(t('usage.last'),fmtUsd(last.cost),'',`${t('usage.tag.'+last.tag)} · ${fmtDate(last.ts)}`):''}</div>
+    ${m.calls?`<div style="margin-top:12px"><div class="faint" style="font-size:.78rem;margin-bottom:6px">${t('usage.bytag')} · ${t('usage.tokens',{i:fmtCompact(m.inp,'USD').replace('$',''),o:fmtCompact(m.out,'USD').replace('$',''),s:m.searches})}</div><div class="usage-tag">${Object.entries(m.byTag).sort((a,b)=>b[1].cost-a[1].cost).map(([k,v])=>`<span>${t('usage.tag.'+k)}</span><span class="c num">${t('usage.calls',{n:v.calls})}</span><b class="num">${fmtUsd(v.cost)}</b>`).join('')}</div></div>`:`<p class="faint" style="font-size:.82rem;margin-top:10px">${t('usage.none')}</p>`}
+    <div class="usage-links" style="margin-top:12px">${linkBtn(USAGE_URL,t('usage.console'),'i-pie')}${linkBtn(KEYS_URL,t('usage.keys'),'i-key')}${U.calls?`<button class="btn ghost sm" id="usage-reset"><svg class="ic sm"><use href="#i-trash"/></svg>${t('usage.reset')}</button>`:''}</div>
+    <p class="help" style="margin-top:10px">${t('usage.help')}</p>`;
+  $('#usage-set').onclick=openCreditSheet;
+  const rs=$('#usage-reset'); if(rs) rs.onclick=async()=>{ if(!(await confirmDlg(t('usage.reset.confirm'),{yes:t('usage.reset'),danger:true}))) return; S.usage={...S.usage,log:[],months:{},total:0,calls:0,since:null}; save(); renderUsage(); };
+}
+function openCreditSheet(){
+  const rem=usageRemaining();
+  openSheet(t('usage.credit.set'),`<form id="cform" novalidate><p class="muted" style="font-size:.88rem;line-height:1.6">${t('usage.credit.help')}</p>
+    <div class="field" style="margin-top:12px"><label for="c-amt">${t('usage.credit')} (USD)</label><input class="input num" id="c-amt" type="number" inputmode="decimal" step="0.01" min="0" placeholder="${t('usage.credit.ph')}" value="${rem?rem.left.toFixed(2):''}" required></div>
+    <div style="display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:14px"><a class="btn" href="${BILLING_URL}" target="_blank" rel="noopener"><svg class="ic sm"><use href="#i-ext"/></svg>${t('usage.billing')}</a><div style="display:flex;gap:10px"><button type="button" class="btn" id="c-cancel">${t('cancel')}</button><button type="submit" class="btn primary">${t('save')}</button></div></div></form>`);
+  $('#c-cancel').onclick=closeSheet;
+  $('#cform').onsubmit=e=>{ e.preventDefault(); const v=parseFloat($('#c-amt').value); if(!(v>=0)){ $('#c-amt').closest('.field').classList.add('invalid'); return; } S.usage.credit={amount:v,since:Date.now()}; save(); closeSheet(); renderUsage(); toast(t('usage.saved'),'ok'); };
+  setTimeout(()=>$('#c-amt').focus(),350);
+}
+let billingToastT=0;
+function billingToast(){ if(Date.now()-billingToastT<60000) return; billingToastT=Date.now(); const el=document.createElement('div'); el.className='toast err'; el.style.cursor='pointer'; el.innerHTML=`<svg class="ic sm"><use href="#i-alert"/></svg><span>${t('usage.lowcredit')}</span>`; el.onclick=()=>window.open(BILLING_URL,'_blank','noopener'); $('#toasts').appendChild(el); setTimeout(()=>el.remove(),12000); }
+function onUsageRecorded(){ if(currentPage==='settings') renderUsage(); }
+
 /* ---------- Sheet ---------- */
 function openSheet(title,body,actions=''){ $('#sheet-title').textContent=title; $('#sheet-body').innerHTML=body; $('#sheet-actions').innerHTML=actions; $('#scrim').classList.add('open'); $('#sheet').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeSheet(){ $('#scrim').classList.remove('open'); $('#sheet').classList.remove('open'); document.body.style.overflow=''; }
@@ -2286,6 +2355,7 @@ function renderSettings(){
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
   $$('#ins-profile button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.p===insProfile));
   $$('[data-ccy]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ccy===s.currency));
+  renderUsage();
   const ok=!!s.apiKey; $('#api-dot').classList.toggle('ok',ok); $('#api-status').textContent=ok?t('api.set'):t('api.notset'); $('#side-fx').textContent=fmtN(s.usdIls,3); const fxm=$('#fx-meta'); if(fxm){ fxm.textContent=s.fxUpdated?`${s.fxKind==='spot'?t('fx.live'):s.fxKind==='rep'?fxLabel(s.fxSource):s.fxKind==='manual'?t('fx.manual'):''}${s.fxSource?' · '+s.fxSource:''}${s.fxAsOf?' · '+s.fxAsOf:''} · ${t('dd.updated')} ${fmtDate(s.fxUpdated)}${s.fxRep?' · '+t('fx.rep')+' '+fmtN(s.fxRep,4)+(s.fxRepDate?' ('+s.fxRepDate+')':''):''}${s.fxNote?' · '+s.fxNote:''}`:t('never'); fxm.style.color=''; } $('#side-updated').textContent=s.lastQuotes?t('dd.updated')+' '+fmtDate(s.lastQuotes):t('never');
 }
 function loadSample(){
