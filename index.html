@@ -878,7 +878,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-1031';
+const APP_VERSION='2026.09.12-1035';
 
 const I18N = {
   he: {
@@ -967,8 +967,9 @@ const SECTORS = [
   ['Media','מדיה','Media'],['Industrial','תעשייה','Industrial'],['Materials','חומרי גלם','Materials'],['Payments','תשלומים','Payments'],['AutoTech','רכב','Auto'],
   ['Aerospace','תעופה וחלל','Aerospace'],['Airlines','חברות תעופה','Airlines'],['Food','מזון','Food'],['Crypto','קריפטו/פינטק','Crypto/Fintech'],['ETF','קרנות סל','ETFs'],['Other','אחר','Other']
 ];
-const SECTOR_COLOR = {};
-SECTORS.forEach((s,i)=>SECTOR_COLOR[s[0]] = `var(--s${(i%8)+1})`);
+// One distinct, fixed colour per sector (qualitative palette; sectors that usually appear together get well-separated hues)
+const SECTOR_COLOR = {Tech:'#1f77b4',Semis:'#9467bd',Banks:'#2ca02c',Insurance:'#17becf',Defense:'#7f7f7f',Energy:'#ff7f0e',Utilities:'#bcbd22',RealEstate:'#8c564b',Construction:'#c49c94',Pharma:'#d62728',Healthcare:'#e377c2',Biotech:'#c5b0d5',Retail:'#ffbb78',Consumer:'#98df8a',Telecom:'#aec7e8',Media:'#f7b6d2',Industrial:'#393b79',Materials:'#dbdb8d',Payments:'#9edae5',AutoTech:'#637939',Aerospace:'#8c6d31',Airlines:'#ff9896',Food:'#843c39',Crypto:'#f5b800',ETF:'#6b6ecf',Other:'#c7c7c7'};
+SECTORS.forEach((s,i)=>{ if(!SECTOR_COLOR[s[0]]) SECTOR_COLOR[s[0]]=`var(--s${(i%8)+1})`; });
 
 const UNIVERSE = [
  // TASE
