@@ -38,7 +38,7 @@
   --primary:#1c5cab; --primary-2:#2a78d6; --primary-soft:#e3edfb; --on-primary:#ffffff;
   --accent:#1baf7a; --accent-soft:#dff5ec;
   --gain:#0a8a3c; --gain-soft:#e2f5e9; --loss:#c62f2f; --loss-soft:#fbe6e6;
-  --warn:#b7791f; --warn-soft:#fdf1d8; --info:#1c5cab;
+  --warn:#b7791f; --warn-soft:#fdf1d8; --info:#1c5cab; --clock-bg:linear-gradient(165deg,#ffffff 0%,#eef2f9 100%);
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
   --grid:#e6e8ee;
   --shadow-1:0 1px 2px rgba(15,23,42,.05),0 1px 3px rgba(15,23,42,.06);
@@ -59,7 +59,7 @@
   --primary:#3987e5; --primary-2:#5598e7; --primary-soft:#16294a; --on-primary:#ffffff;
   --accent:#199e70; --accent-soft:#0f2e25;
   --gain:#34c26a; --gain-soft:#0f2b1a; --loss:#f06060; --loss-soft:#361616;
-  --warn:#f0b64a; --warn-soft:#3a2a0c; --info:#5598e7;
+  --warn:#f0b64a; --warn-soft:#3a2a0c; --info:#5598e7; --clock-bg:linear-gradient(165deg,#111b2e 0%,#0b1220 100%);
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#2fa32f; --s7:#9085e9; --s8:#e66767;
   --grid:#1f2837;
   --shadow-1:0 1px 2px rgba(0,0,0,.35);
@@ -357,21 +357,27 @@ td.num,th.num{text-align:end}
 .usage-tag{display:grid;grid-template-columns:1fr auto auto;gap:6px 12px;font-size:.84rem;align-items:center}
 .usage-tag .c{color:var(--text-3)}
 .clocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
-.clock{position:relative;overflow:hidden;border-radius:var(--radius);padding:16px 18px;color:#fff;background:linear-gradient(140deg,var(--c1) 0%,var(--c2) 100%);box-shadow:var(--shadow-2);min-height:164px;display:flex;flex-direction:column;gap:6px}
-.clock::after{content:"";position:absolute;inset:auto -25% -55% auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%);pointer-events:none}
-.clock .city{display:flex;align-items:center;gap:8px;font-size:.84rem;font-weight:600;opacity:.92}
-.clock .city .flag{font-size:1.2rem;line-height:1}
-.clock .time{font-size:2.35rem;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
-.clock .time small{font-size:1rem;font-weight:600;opacity:.75;margin-inline-start:4px}
-.clock .date{font-size:.78rem;opacity:.85}
-.clock .status{margin-top:auto;display:flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:10px;background:rgba(0,0,0,.22);width:100%;min-width:0;white-space:nowrap}
+.clock{position:relative;overflow:hidden;border-radius:var(--radius);padding:18px 14px 16px;color:var(--text);background:var(--clock-bg);border:1px solid color-mix(in srgb, var(--c1) 30%, var(--border));box-shadow:var(--shadow-2), inset 0 1px 0 rgba(255,255,255,.05);min-height:176px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.clock::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 75% at 50% -15%, color-mix(in srgb, var(--c1) 38%, transparent), transparent 62%);pointer-events:none}
+.clock::after{content:"";position:absolute;top:0;inset-inline:0;height:3px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.clock>*{position:relative;z-index:1}
+.clock .city{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.84rem;font-weight:700;color:var(--text-2);width:100%}
+.clock .city .flag{font-size:1.15rem;line-height:1}
+.clock .city .tz{font-size:.66rem;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:99px;background:color-mix(in srgb, var(--c1) 16%, transparent);color:color-mix(in srgb, var(--c1) 70%, var(--text))}
+.clock .time{font-size:2.7rem;font-weight:800;letter-spacing:.01em;line-height:1;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:flex;align-items:baseline;justify-content:center;margin-top:6px;color:var(--text);text-shadow:0 2px 18px color-mix(in srgb, var(--c1) 35%, transparent)}
+.clock .time .colon{display:inline-block;width:.42em;text-align:center;animation:mkblink 1s steps(1,end) infinite;color:color-mix(in srgb, var(--c1) 75%, var(--text))}
+.clock .time small{font-size:.9rem;font-weight:700;color:var(--text-3);margin-inline-start:6px;letter-spacing:0}
+.clock .date{font-size:.78rem;color:var(--text-2)}
+.clock .status{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:.74rem;font-weight:700;padding:5px 12px;border-radius:99px;background:color-mix(in srgb, var(--surface-3) 85%, transparent);border:1px solid var(--border);color:var(--text);max-width:100%;min-width:0;white-space:nowrap}
 .clock .status>span:nth-child(2){flex:none}
-.clock .status .dot{width:8px;height:8px;border-radius:50%;background:#9aa4b2;flex:none}
-.clock .status.open .dot{background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:mkpulse 1.6s ease-out infinite}
+.clock .status .dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);flex:none}
+.clock .status.open{background:var(--gain-soft);color:var(--gain);border-color:color-mix(in srgb, var(--gain) 40%, transparent)}
+.clock .status.open .dot{background:var(--gain);box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:mkpulse 1.6s ease-out infinite}
 .clock .status .cd{opacity:.85;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.clock .cdl{font-size:.72rem;opacity:.85;margin-top:-2px}
-.clock .sess{height:4px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
-.clock .sess i{display:block;height:100%;background:#fff;border-radius:3px;opacity:.9}
+.clock .cdl{font-size:.72rem;color:var(--text-2);margin-top:-2px}
+.clock .sess{width:100%;height:4px;border-radius:3px;background:var(--surface-3);overflow:hidden}
+.clock .sess i{display:block;height:100%;background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:3px}
+@keyframes mkblink{50%{opacity:.2}}
 @keyframes mkpulse{0%{box-shadow:0 0 0 0 rgba(61,220,132,.6)}70%{box-shadow:0 0 0 8px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
 .mk-ex{margin-bottom:14px}
 .mk-ex .mk-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
@@ -393,8 +399,8 @@ td.num,th.num{text-align:end}
 .idx .rng i{position:absolute;top:-2px;width:9px;height:9px;border-radius:50%;background:var(--idx-c,var(--primary));box-shadow:0 0 0 2px var(--surface)}
 .idx .meta{display:flex;justify-content:space-between;font-size:.66rem;color:var(--text-3);font-variant-numeric:tabular-nums}
 .idx.empty .val{color:var(--text-3)}
-@media (max-width:560px){.clocks{grid-template-columns:1fr 1fr;gap:10px}.clock{padding:14px;min-height:140px}.clock .time{font-size:1.9rem}.clock .time small{font-size:.85rem}.idx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.idx .val{font-size:1.15rem}}
-@media (max-width:380px){.clock .time{font-size:1.65rem}}
+@media (max-width:560px){.clocks{grid-template-columns:1fr 1fr;gap:10px}.clock{padding:14px 10px 12px;min-height:168px}.clock .time{font-size:2.05rem}.clock .time small{font-size:.8rem}.idx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.idx .val{font-size:1.15rem}}
+@media (max-width:380px){.clock .time{font-size:1.75rem}}
 .chart-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .chart-tools .seg.sm button{padding:4px 9px}
 .chart-tools .chip-toggle{min-height:30px;padding:4px 10px;font-size:.76rem}
@@ -863,7 +869,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.12-0815';
+const APP_VERSION='2026.09.12-0821';
 
 const I18N = {
   he: {
@@ -2212,16 +2218,16 @@ function clockHTML(cfg){
   const tf2=new Intl.DateTimeFormat(locale(),{timeZone:cfg.tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}); const wdf=new Intl.DateTimeFormat(locale(),{timeZone:cfg.tz,weekday:'short'});
   const sb=sessionBounds(cfg.exchange,now); const cd=st.open?t('mk.closes',{t:fmtCountdown((sb||{}).close-now)}):(st.nextOpen?t('mk.opens',{t:fmtCountdown(st.nextOpen-now)}):'');
   const when=st.open?t('mk.until',{t:tf2.format(new Date(sb.close))}):(st.nextOpen?t('mk.at',{d:wdf.format(new Date(st.nextOpen)),t:tf2.format(new Date(st.nextOpen))}):'');
-  return `<div class="clock" style="--c1:${cfg.c1};--c2:${cfg.c2}" data-clock="${cfg.market}"><div class="city"><span class="flag">${cfg.flag}</span><span>${t(cfg.label)}</span><span class="faint" style="margin-inline-start:auto;font-size:.7rem;opacity:.75">${cfg.tzShort}</span></div>
-    <div class="time" data-el="time">${parts.hour}:${parts.minute}<small data-el="sec">${parts.second}</small></div><div class="date" data-el="date">${esc(df)}</div>
+  return `<div class="clock" style="--c1:${cfg.c1};--c2:${cfg.c2}" data-clock="${cfg.market}"><div class="city"><span class="flag">${cfg.flag}</span><span>${t(cfg.label)}</span><span class="tz">${cfg.tzShort}</span></div>
+    <div class="time" data-el="time">${parts.hour}<span class="colon">:</span>${parts.minute}<small data-el="sec">${parts.second}</small></div><div class="date" data-el="date">${esc(df)}</div>
     <div class="status ${st.open?'open':''}" data-el="status"><span class="dot"></span><span>${st.open?t('mkt.open'):t('mkt.closed')}</span>${when?`<span class="cd">· ${when}</span>`:''}</div>${cd?`<div class="date cdl">${cd}</div>`:''}
     ${st.open?`<div class="sess" title="${t('mk.session')}"><i style="width:${prog.toFixed(1)}%"></i></div>`:`<div class="date" style="font-size:.68rem;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t(cfg.market==='TASE'?'mk.week.tase':'mk.week.us')} · ${openStr}–${cfg.market==='TASE'?'17:30':'16:00'}${cfg.market==='TASE'?` (${lang()==='he'?'ו׳':'Fri'} 14:00)`:''}</div>`}</div>`;
 }
 /** Today's session bounds for an exchange (null when no session today). */
 function sessionBounds(exchange,now=Date.now()){ const spec=MARKETS[mktOf(exchange)]; const off=tzOffsetMin(now,spec.tz); const p=tzParts(now,spec.tz); const day=new Date(Date.UTC(p.y,p.m-1,p.d)); const wd=day.getUTCDay(); if(!spec.days.includes(wd)) return null; const o=spec.open,c=spec.close(wd); const mk=(h,mi)=>Date.UTC(p.y,p.m-1,p.d,h,mi)-off*60000; return {open:mk(o[0],o[1]),close:mk(c[0],c[1])}; }
-const CLOCKS=[{market:'TASE',exchange:'TASE',tz:'Asia/Jerusalem',tzShort:'IST',label:'mk.israel',flag:'🇮🇱',c1:'#1d4ed8',c2:'#0ea5e9'},{market:'US',exchange:'NYSE',tz:'America/New_York',tzShort:'ET',label:'mk.ny',flag:'🇺🇸',c1:'#6d28d9',c2:'#db2777'}];
+const CLOCKS=[{market:'TASE',exchange:'TASE',tz:'Asia/Jerusalem',tzShort:'IST',label:'mk.israel',flag:'🇮🇱',c1:'#3b82f6',c2:'#22d3ee'},{market:'US',exchange:'NYSE',tz:'America/New_York',tzShort:'ET',label:'mk.ny',flag:'🇺🇸',c1:'#8b5cf6',c2:'#f472b6'}];
 function renderClocks(){ const el=$('#mk-clocks'); if(!el) return; el.innerHTML=CLOCKS.map(clockHTML).join(''); }
-function tickClocks(){ const now=new Date(); CLOCKS.forEach(c=>{ const box=$(`[data-clock="${c.market}"]`); if(!box) return; const tf=new Intl.DateTimeFormat(locale(),{timeZone:c.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}); const p={}; tf.formatToParts(now).forEach(x=>p[x.type]=x.value); const tm=$('[data-el=time]',box); if(tm) tm.innerHTML=`${p.hour}:${p.minute}<small data-el="sec">${p.second}</small>`; }); if(now.getSeconds()===0) renderClocks(); }
+function tickClocks(){ const now=new Date(); CLOCKS.forEach(c=>{ const box=$(`[data-clock="${c.market}"]`); if(!box) return; const tf=new Intl.DateTimeFormat(locale(),{timeZone:c.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}); const p={}; tf.formatToParts(now).forEach(x=>p[x.type]=x.value); const tm=$('[data-el=time]',box); if(tm) tm.innerHTML=`${p.hour}<span class="colon">:</span>${p.minute}<small data-el="sec">${p.second}</small>`; }); if(now.getSeconds()===0) renderClocks(); }
 function startClocks(){ stopClocks(); renderClocks(); clockTimer=setInterval(tickClocks,1000); }
 function stopClocks(){ if(clockTimer){ clearInterval(clockTimer); clockTimer=null; } }
 function sparkSVG(vals,color){ const v=(vals||[]).filter(x=>x>0); if(v.length<2) return '<svg class="spark" viewBox="0 0 100 36"></svg>'; const min=Math.min(...v),max=Math.max(...v); const W=100,H=36,pad=3; const pts=v.map((x,i)=>[pad+i*(W-2*pad)/(v.length-1), max===min?H/2:H-pad-(x-min)/(max-min)*(H-2*pad)]); const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' '); const area=d+` L${pts[pts.length-1][0].toFixed(1)} ${H} L${pts[0][0].toFixed(1)} ${H} Z`; return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${area}" fill="${color}" opacity=".12"/><path d="${d}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="${pts[pts.length-1][0].toFixed(1)}" cy="${pts[pts.length-1][1].toFixed(1)}" r="2.2" fill="${color}"/></svg>`; }
