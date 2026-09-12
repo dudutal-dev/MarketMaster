@@ -802,7 +802,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.11-2359';
+const APP_VERSION='2026.09.12-0631';
 
 const I18N = {
   he: {
@@ -1494,6 +1494,7 @@ function snapshotSeries(sec){ const arr=(S.priceHist&&S.priceHist[sec.ticker+'|'
 async function scanAlerts({signal}={}){
   const c=computed('all'); const rows=c.rows.map(r=>({ticker:r.h.ticker,exchange:r.h.exchange,name:r.h.name||r.h.name_he||'',price:r.price,dayPct:r.dayPct!=null?+r.dayPct.toFixed(2):null,weightPct:+r.weightEq.toFixed(1)}));
   if(!rows.length) throw new Error(t('al.nohold'));
+  const A0=S.alerts||{}; const known=[...(A0.items||[]).filter(x=>x.src==='ai'),...Object.values(A0.dismissed||{}).filter(v=>v&&typeof v==='object'&&v.ticker)].map(x=>`${x.ticker} ${x.date||''} [${x.type||''}] ${String(x.title||'').slice(0,70)}`).filter((v,i,a)=>a.indexOf(v)===i).slice(0,40);
   const user=`QUICK ALERT SCAN for a portfolio. Today is ${todayStr()} (Israel time ${new Date().toLocaleTimeString('he-IL',{timeZone:'Asia/Jerusalem',hour:'2-digit',minute:'2-digit'})}). Only report UNUSUAL, MATERIAL events from the last 48 hours — good or bad. Nothing routine.
 Holdings (JSON): ${JSON.stringify(rows)}
 Use web search efficiently: batch several tickers per query (e.g. "TICKER1 TICKER2 TICKER3 stock news today"), at most ${Math.min(8,2+Math.ceil(rows.length/2))} searches total. For TASE tickers prefer globes/bizportal/calcalist/themarker/tase.co.il; for US prefer Reuters/CNBC/Bloomberg/MarketWatch/Yahoo Finance.
@@ -1501,10 +1502,11 @@ Event types to flag: earnings/results and guidance, analyst rating or target cha
 Respond with ONLY this JSON:
 {"alerts":[{"ticker":"NVDA","type":"earnings|analyst|news|price|ma|regulatory|insider|dividend|technical|macro|other","sentiment":"positive|negative|neutral","severity":"high|medium|low","title":"short headline (max 12 words)","detail":"1–2 sentences: what happened, numbers, why it matters","date":"YYYY-MM-DD","url":"https://... or null","action":"one short suggested action or null"}],
  "quiet":["TICKERS with nothing unusual"],"asOf":"YYYY-MM-DD HH:MM"}
-Rules: max 3 alerts per ticker, most important first; include the source URL when you have it; if nothing unusual anywhere return an empty alerts array — do NOT invent events.`;
+Rules: max 3 alerts per ticker, most important first; include the source URL when you have it; if nothing unusual anywhere return an empty alerts array — do NOT invent events.
+${known.length?'ALREADY REPORTED to the user — do NOT repeat these events, even reworded or from another source. Report only genuinely NEW events or a material NEW development:\n- '+known.join('\n- '):''}`;
   const r=await claude({system:SYSTEM_BASE(), user, tools:[webSearchTool(Math.min(8,2+Math.ceil(rows.length/2)))], maxTokens:3500, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,120000)});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.alerts)){ const e=new Error(t('err.parse')); e.raw=r.text; throw e; }
-  const items=j.alerts.filter(a=>a&&a.ticker).map(a=>({...a,ticker:String(a.ticker).toUpperCase(),id:'ai:'+String(a.ticker).toUpperCase()+':'+(a.type||'other')+':'+(a.date||'')+':'+String(a.title||'').toLowerCase().replace(/[^a-z0-9֐-׿]+/g,'').slice(0,40),src:'ai',ts:Date.now()}));
+  const items=j.alerts.filter(a=>a&&a.ticker).map(a=>({...a,ticker:String(a.ticker).toUpperCase(),date:alertDate(a),id:'ai:'+String(a.ticker).toUpperCase()+':'+(a.type||'other')+':'+alertDate(a),src:'ai',ts:Date.now()}));
   return {items, quiet:Array.isArray(j.quiet)?j.quiet:[], asOf:j.asOf||null, sources:r.sources};
 }
 /** Local alerts computed without AI. */
@@ -1515,10 +1517,28 @@ function localAlerts(){
   const hs=hoursSince(S.settings.lastQuotes); if(S.holdings.length&&isFinite(hs)&&hs>30) out.push({id:'loc:stale:'+today,ticker:'',type:'other',sentiment:'neutral',severity:'low',title:t('al.stale'),detail:t('al.stale.d',{h:Math.round(hs)}),date:today,src:'local',ts:Date.now()});
   return out;
 }
+/* Event-level de-duplication: the same event re-reported with different wording (or from another source) must not create a new alert or resurrect a dismissed one. */
+function alertDate(x){ const d=String((x&&x.date)||'').slice(0,10); return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:ilToday(); }
+function alertTokens(s){ return new Set(String(s||'').toLowerCase().replace(/[^a-z0-9\u0590-\u05ff ]+/g,' ').split(/\s+/).filter(w=>w.length>2)); }
+function alertSim(a,b){ const ta=alertTokens(a.title+' '+String(a.detail||'').slice(0,90)), tb=alertTokens(b.title+' '+String(b.detail||'').slice(0,90)); if(!ta.size||!tb.size) return 0; let n=0; ta.forEach(w=>{ if(tb.has(w)) n++; }); return n/Math.min(ta.size,tb.size); }
+function alertSimilar(a,b){ if(!a||!b||String(a.ticker||'').toUpperCase()!==String(b.ticker||'').toUpperCase()) return false; const dd=Math.abs(new Date(alertDate(a))-new Date(alertDate(b)))/864e5; if(dd>4) return false; const sameType=(a.type||'other')===(b.type||'other'); const sim=alertSim(a,b); return (sameType&&(dd<=1||sim>=0.3))||sim>=0.5; }
+const sevRank=s=>({high:3,medium:2,low:1}[s]||0);
+function alertMeta(x){ return {ts:Date.now(),ticker:x.ticker,type:x.type||'other',date:alertDate(x),title:String(x.title||'').slice(0,80),src:x.src}; }
 function mergeAlerts(newItems){
-  const A=S.alerts; A.dismissed=A.dismissed||{}; const dcut=Date.now()-7*864e5; Object.keys(A.dismissed).forEach(k=>{ if(A.dismissed[k]<dcut) delete A.dismissed[k]; });
-  const byId=new Map(A.items.map(x=>[x.id,x])); newItems.forEach(x=>{ if(A.dismissed[x.id]) return; if(!byId.has(x.id)) byId.set(x.id,x); else byId.set(x.id,{...byId.get(x.id),...x,ts:byId.get(x.id).ts}); });
-  const cutoff=Date.now()-7*864e5; A.items=[...byId.values()].filter(x=>x.ts>=cutoff).sort((a,b)=>b.ts-a.ts); Object.keys(A.seen).forEach(k=>{ if(!byId.has(k)) delete A.seen[k]; });
+  const A=S.alerts; A.dismissed=A.dismissed||{}; A.seen=A.seen||{}; const dcut=Date.now()-7*864e5;
+  Object.keys(A.dismissed).forEach(k=>{ const v=A.dismissed[k]; const ts=typeof v==='number'?v:(v&&v.ts)||0; if(ts<dcut) delete A.dismissed[k]; });
+  const dismissedMeta=Object.values(A.dismissed).filter(v=>v&&typeof v==='object'&&v.ticker);
+  const out=[], seen={};
+  const add=(raw,isNew)=>{ const oldId=raw.id; const x=raw.src==='ai'?{...raw,date:alertDate(raw),id:'ai:'+raw.ticker+':'+(raw.type||'other')+':'+alertDate(raw)}:raw;
+    if(A.dismissed[oldId]||A.dismissed[x.id]) return; if(x.src==='ai'&&dismissedMeta.some(d=>alertSimilar(d,x))) return;
+    const wasSeen=!!(A.seen[oldId]||A.seen[x.id]);
+    const dup=out.find(y=>y.id===x.id||(x.src==='ai'&&y.src==='ai'&&alertSimilar(y,x)));
+    if(dup){ if(isNew){ if(x.url&&!dup.url) dup.url=x.url; if(String(x.detail||'').length>String(dup.detail||'').length) dup.detail=x.detail; if(sevRank(x.severity)>sevRank(dup.severity)) dup.severity=x.severity; if(!dup.action&&x.action) dup.action=x.action; } if(wasSeen) seen[dup.id]=true; return; }
+    out.push(x); if(wasSeen) seen[x.id]=true; };
+  (A.items||[]).forEach(x=>add(x,false)); (newItems||[]).forEach(x=>add(x,true));
+  const cutoff=Date.now()-7*864e5; let items=out.filter(x=>x.ts>=cutoff).sort((a,b)=>(sevRank(b.severity)-sevRank(a.severity))||(b.ts-a.ts));
+  const per={}; items=items.filter(x=>{ if(x.src!=='ai') return true; per[x.ticker]=(per[x.ticker]||0)+1; return per[x.ticker]<=3; }); // max 3 AI alerts per stock
+  A.items=items.sort((a,b)=>b.ts-a.ts); A.seen=seen;
 }
 const unreadAlerts=()=>S.alerts.items.filter(x=>!S.alerts.seen[x.id]).length;
 
@@ -2190,9 +2210,9 @@ function renderAlerts(){
     ${aiItems.length?`<div class="list">${aiItems.map(card).join('')}</div>`:`<div class="card">${emptyHTML('i-shield',t('al.none'),t('al.none.d'))}</div>`}
     ${A.quiet&&A.quiet.length?`<div class="chips" style="margin-top:4px"><span class="faint" style="font-size:.78rem">${t('al.quiet')}:</span>${A.quiet.map(q=>`<span class="chip outline">${esc(q)}</span>`).join('')}</div>`:''}
     ${sourcesHTML(A.sources)}<p class="faint" style="font-size:.76rem">${t('al.expiry')}</p><div class="disclaimer">${t('disclaimer')}</div>`;
-  const cb=$('#al-clear'); if(cb) cb.onclick=async()=>{ if(!(await confirmDlg(t('al.clear')+'?',{yes:t('al.clear'),danger:true}))) return; A.dismissed=A.dismissed||{}; A.items.forEach(x=>{ A.dismissed[x.id]=Date.now(); }); A.items=[]; A.quiet=[]; save(); renderAlerts(); toast(t('al.cleared'),'ok'); };
+  const cb=$('#al-clear'); if(cb) cb.onclick=async()=>{ if(!(await confirmDlg(t('al.clear')+'?',{yes:t('al.clear'),danger:true}))) return; A.dismissed=A.dismissed||{}; A.items.forEach(x=>{ A.dismissed[x.id]=alertMeta(x); }); A.items=[]; A.quiet=[]; save(); renderAlerts(); toast(t('al.cleared'),'ok'); };
 }
-function dismissAlert(id){ const A=S.alerts; A.dismissed=A.dismissed||{}; A.dismissed[id]=Date.now(); A.items=A.items.filter(x=>x.id!==id); save(); renderAlerts(); }
+function dismissAlert(id){ const A=S.alerts; A.dismissed=A.dismissed||{}; const x=A.items.find(y=>y.id===id); A.dismissed[id]=x?alertMeta(x):Date.now(); A.items=A.items.filter(y=>y.id!==id); save(); renderAlerts(); }
 function markAlertsSeen(){ const A=S.alerts; let ch=false; A.items.forEach(x=>{ if(!A.seen[x.id]){ A.seen[x.id]=true; ch=true; } }); if(ch){ save(); updateBell(); } }
 async function runAlerts({auto}={}){
   if(alertsRunning) return; if(!S.holdings.length){ if(!auto) toast(t('al.nohold'),'err'); return; } if(!S.settings.apiKey){ if(!auto){ toast(t('q.needkey'),'err'); go('settings'); } return; } alertsRunning=true; const bell=$('#btn-bell'); bell.classList.add('scanning'); const btn=$('#btn-alerts'); if(btn) setLoading(btn,true); if(!auto) toast(t('al.scanning'));
@@ -2347,7 +2367,7 @@ function bind(){
 }
 function fillDatalist(){ const d=$('#ticker-list'); if(d) d.innerHTML=UNIVERSE.map(u=>`<option value="${u.ticker}">${u.exchange} · ${lang()==='he'?u.name_he:u.name_en}</option>`).join(''); }
 function init(){
-  applyTheme(); applyI18n(); fillDatalist(); bind(); renderAll();
+  applyTheme(); applyI18n(); fillDatalist(); bind(); if(S.alerts&&S.alerts.items&&S.alerts.items.length){ try{ mergeAlerts([]); }catch(e){ console.warn(e); } } renderAll();
   const h=(location.hash||'').slice(1); go(['dashboard','portfolio','watchlist','scanner','insights','alerts','settings'].includes(h)?h:'dashboard'); autoAlertsOnOpen(); let resume=null; try{ resume=sessionStorage.getItem('mm.resume'); sessionStorage.removeItem('mm.resume'); }catch(_){} if(resume==='refresh') setTimeout(()=>doRefresh({afterUpdate:true}),600); else setTimeout(()=>checkUpdate(),2500); const vb=$('#btn-update'); if(vb) vb.onclick=()=>checkUpdate({manual:true}); const vl=$('#app-version'); if(vl) vl.textContent=APP_VERSION;
   document.documentElement.style.setProperty('--dirx',lang()==='he'?'-1':'1');
 }
