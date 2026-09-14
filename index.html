@@ -893,7 +893,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.14-1243';
+const APP_VERSION='2026.09.14-1937';
 
 const I18N = {
   he: {
@@ -1345,7 +1345,7 @@ ${urls}
 
 Respond with ONLY this JSON object (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
-If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.${strict?'\nIMPORTANT: a previous attempt returned an OUT-OF-DATE quote for these securities ('+list.map(x=>x.ticker+' dated '+x.staleDate+', latest session is '+x.lastDay).join('; ')+'). Fetch the Yahoo chart JSON (a) and read meta.regularMarketPrice with meta.regularMarketTime; for Tel Aviv use the symbol resolver (d) when the .TA symbol is not found. Return the value of the latest session (intraday when the market is open) with its real date; if you cannot verify it, return price:null.':''}`;
+If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.${strict?'\nIMPORTANT: this security is DUAL-LISTED in some cases (e.g. Elbit Systems trades as ESLT on both NASDAQ and Tel Aviv) — read the Tel Aviv listing only, in shekels, never the price or date of the US listing. A previous attempt returned an OUT-OF-DATE quote for these securities ('+list.map(x=>x.ticker+' dated '+x.staleDate+', latest session is '+x.lastDay).join('; ')+'). Fetch the Yahoo chart JSON (a) and read meta.regularMarketPrice with meta.regularMarketTime; for Tel Aviv use the symbol resolver (d) when the .TA symbol is not found. Return the value of the latest session (intraday when the market is open) with its real date; if you cannot verify it, return price:null.':''}`;
   const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+2),webSearchTool(hasTase?2:1)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,hasTase?90000:60000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
@@ -1366,7 +1366,9 @@ function marketState(exchange,now=Date.now()){
   return {open,lastClose,nextOpen,market:mktOf(exchange)};
 }
 /** A fresh fetch is worth paying for only if the market traded since the last stored quote. */
-function needsQuote(h,now=Date.now()){ if(S.settings.marketHoursOnly===false) return true; if(h.price==null||!h.updatedAt||!h.source) return true; /* no engine quote yet (lookup/manual price) → always fetch */ const st=marketState(h.exchange,now); if(st.open) return true; if(!st.lastClose) return true; return h.updatedAt<st.lastClose+15*60000; }
+function needsQuote(h,now=Date.now()){ if(S.settings.marketHoursOnly===false) return true; if(h.price==null||!h.updatedAt||!h.source) return true; /* no engine quote yet (lookup/manual price) → always fetch */
+  if(h.stale||h.qlag) return true; /* the stored value is out of date: fetching it again is never pointless, closed market or not */
+  const st=marketState(h.exchange,now); if(st.open) return true; if(!st.lastClose) return true; return h.updatedAt<st.lastClose+15*60000; }
 /** Returns the quote's date when it is older than the last trading session by more than 3 days, else null. */
 function quoteDateOf(str){ const m=String(str||'').match(/(\d{4})-(\d{2})-(\d{2})/); if(m) return m[1]+'-'+m[2]+'-'+m[3]; const m2=String(str||'').match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})/); if(m2) return m2[3]+'-'+m2[2].padStart(2,'0')+'-'+m2[1].padStart(2,'0'); return null; }
 function lastSessionDay(exchange,now=Date.now()){ const st=marketState(exchange,now); const spec=MARKETS[mktOf(exchange)]; const ref=st.open?now:st.lastClose; if(!ref) return null; const p=tzParts(ref,spec.tz); return p.y+'-'+String(p.m).padStart(2,'0')+'-'+String(p.d).padStart(2,'0'); }
@@ -1395,8 +1397,12 @@ async function fetchQuotes({signal,onProgress,onText,force}={}){
   const queue=[...chunks]; const workers=Array.from({length:Math.min(6,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
   // one strict retry for quotes that came back stale (e.g. a source showing a weeks-old date)
-  const staleNow=wanted.filter(h=>h.stale||(h.qlag&&marketState(h.exchange).open)); let stale=0, behind=0;
-  if(staleNow.length&&!(signal&&signal.aborted)){ try{ const chunk=staleNow.slice(0,6).map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||'',staleDate:h.stale||h.quoteTime,lastDay:lastSessionDay(h.exchange)})); const j=await fetchQuotesChunk(chunk,{signal,onText,strict:true}); applyQuotes(j,{noHistory:true}); }catch(e){ if(signal&&signal.aborted) throw e; console.warn('strict retry failed',e); } stale=wanted.filter(h=>h.stale).length; behind=wanted.filter(h=>h.qlag&&marketState(h.exchange).open).length; }
+  const staleNow=wanted.filter(h=>h.price!=null&&(h.stale||(h.qlag&&marketState(h.exchange).open))); let stale=0, behind=0;
+  if(staleNow.length&&!(signal&&signal.aborted)){
+    const one=async(h)=>{ try{ const j=await fetchQuotesChunk([{ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||'',staleDate:h.stale||h.quoteTime,lastDay:lastSessionDay(h.exchange)}],{signal,onText,strict:true}); applyQuotes(j,{noHistory:true}); }catch(e){ if(signal&&signal.aborted) throw e; console.warn('strict retry failed',h.ticker,e); } };
+    const q2=staleNow.slice(0,6); const w2=Array.from({length:Math.min(4,q2.length)},async()=>{ while(q2.length){ if(signal&&signal.aborted) return; await one(q2.shift()); } });
+    const r2=await Promise.allSettled(w2); const c2=r2.find(r=>r.status==='rejected'); if(c2) throw c2.reason;
+    stale=staleNow.filter(h=>h.stale).length; behind=staleNow.filter(h=>h.qlag&&marketState(h.exchange).open).length; }
   return {applied,failed,timedOut,direct,total:list.length,skipped,stale,behind,allSkipped:false,errors};
 }
 /** TASE quotes arrive in shekels or agorot. Compare with a known reference (last price, snapshot, average cost)
@@ -1414,13 +1420,16 @@ function applyQuotes(j,opts={}){
     const tk=String(q.ticker).toUpperCase(); const all=[...S.holdings,...S.watchlist];
     const targets=all.filter(x=>x.ticker.toUpperCase()===tk&&(!q.exchange||x.exchange===q.exchange)); if(!targets.length){ const any=all.find(x=>x.ticker.toUpperCase()===tk); if(any) targets.push(any); }
     if(!targets.length) continue;
+    let wrote=false;
     for(const h of targets){ let p=+q.price, pc=q.prevClose!=null?+q.prevClose:null;
+    const nd=quoteDateOf(q.quoteTime||j.asOf), od=quoteDateOf(h.quoteTime);
+    if(h.price!=null&&!h.stale&&nd&&od&&nd<od){ console.warn('ignoring older quote',h.ticker,nd,'<',od); continue; } /* a source showing an older date must not overwrite a quote we already trust */
     const k=agorotFactor(h,p,q.currency); if(k!==1){ p=p*k; if(pc) pc=pc*k; }
     h.price=p; h.prevClose=pc; h.updatedAt=now; h.source=q.source||'web'; h.quoteTime=q.quoteTime||j.asOf||null;
     const sd=staleDate(h.exchange,h.quoteTime); if(sd) h.stale=sd; else delete h.stale;
     const lag=sessionLag(h.exchange,h.quoteTime); if(lag) h.qlag=lag; else delete h.qlag;
-    recordSnapshot(h); }
-    n++; }
+    recordSnapshot(h); wrote=true; }
+    if(wrote) n++; }
   S.settings.lastQuotes=now;
   if(!opts.noHistory) recordHistory();
   save(); return n;
