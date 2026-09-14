@@ -878,7 +878,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.14-0940';
+const APP_VERSION='2026.09.14-1102';
 
 const I18N = {
   he: {
@@ -1323,7 +1323,7 @@ async function fetchQuotesChunk(list,{signal,onStatus,onText,strict}={}){
 Method, per security: web_fetch the URLs below IN ORDER, each EXACTLY as written, stopping at the first that works: (a) Yahoo chart JSON → meta.regularMarketPrice (price), meta.chartPreviousClose or meta.previousClose, meta.currency, meta.regularMarketTime (unix seconds); (b) StockAnalysis quote page → current price, previous close and the timestamp shown; (c) Google Finance page → price, previous close, timestamp${hasTase?'; (d) Tel Aviv only — Yahoo symbol resolver, when the plain .TA symbol returns "Not Found"':''}. Only if all of them fail, use web_search and then web_fetch the best result page${hasTase?' (for Tel Aviv prefer globes.co.il, bizportal.co.il, calcalist.co.il, themarker.com, tase.co.il — read the price table on the page, never a snippet)':''}.
 When the market is OPEN the price must be from TODAY's session — an intraday price delayed by 15-20 minutes is exactly what we want. When the market is closed, return the last session's close. Always report the real date and time of the value in "quoteTime".
 Currency rules: Tel Aviv prices must be returned in SHEKELS (ILS). Yahoo reports TASE in agorot with meta.currency "ILA" — divide price and previous close by 100, and then report "currency":"ILS" (do not report ILA once you have divided). A TASE share priced in the thousands is a red flag that the division is missing.
-Speed matters: fetch source (a) for all securities first (they can be fetched in parallel); as soon as a Yahoo JSON answers, use it and do not open any other source for that security. Do not think at length — extract the numbers and answer.
+Speed matters, this is a live refresh: fetch source (a) for ALL securities in one parallel batch; the moment a Yahoo JSON answers, use it and open nothing else for that security. Budget about 15 seconds per security — if the listed sources do not answer, return price:null with a one-line note instead of looking further. Do not think at length; extract the numbers and answer.
 Freshness: the quote must be from the most recent trading session. If a page shows a date older than 5 days, it is stale — move to the next source. Never take a price from a search snippet or a news article.
 Securities and URLs:
 ${urls}
@@ -1331,7 +1331,7 @@ ${urls}
 Respond with ONLY this JSON object (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.${strict?'\nIMPORTANT: a previous attempt returned an OUT-OF-DATE quote for these securities ('+list.map(x=>x.ticker+' dated '+x.staleDate+', latest session is '+x.lastDay).join('; ')+'). Fetch the Yahoo chart JSON (a) and read meta.regularMarketPrice with meta.regularMarketTime; for Tel Aviv use the symbol resolver (d) when the .TA symbol is not found. Return the value of the latest session (intraday when the market is open) with its real date; if you cannot verify it, return price:null.':''}`;
-  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*3+2),webSearchTool(hasTase?3:2)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,hasTase?110000:75000), onStatus, onText});
+  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+2),webSearchTool(hasTase?2:1)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,hasTase?70000:55000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1540,10 +1540,11 @@ ${isTase?'• Tel Aviv escalation — do NOT give up after the Yahoo symbols fai
 Indices and sources:
 ${rows}
 
+Speed matters, this is a live refresh: budget about 20 seconds per index. Stop at the first source that answers, and if none of the listed sources answers, return price:null with a one-line note rather than searching further.
 Respond with ONLY this JSON (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"key":"SPX","price":0,"prevClose":0,"changePct":0,"dayHigh":null,"dayLow":null,"closes5d":[0,0,0,0,0],"source":"yahoo|google|bizportal|investing|search|other","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 Use the exact "key" values given. changePct = (price/prevClose-1)*100. The value must be from the latest trading session (state its date in quoteTime); never invent numbers. If an index truly cannot be found, include it with price:null and a short note. Numbers plain (no thousands separators).`;
-  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(Math.min(24,nUrls+4)),webSearchTool(isTase?6:2)], maxTokens:1600, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,isTase?150000:110000)});
+  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(Math.min(10,nUrls+2)),webSearchTool(isTase?2:1)], maxTokens:900, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,60000)});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1556,7 +1557,7 @@ async function fetchIndices({signal,onProgress,force}={}){
   const wanted=force?INDICES:INDICES.filter(ix=>needsIndex(ix)); const skipped=INDICES.length-wanted.length;
   if(!wanted.length) return {applied:0,total:0,skipped,allSkipped:true,errors:[]};
   const groups={}; wanted.forEach(ix=>{ (groups[ix.market]=groups[ix.market]||[]).push(ix); });
-  const chunks=[]; Object.entries(groups).forEach(([mk,g])=>{ const n=2; for(let i=0;i<g.length;i+=n) chunks.push(g.slice(i,i+n)); });
+  const chunks=[]; Object.values(groups).forEach(g=>{ g.forEach(ix=>chunks.push([ix])); }); // one index per request: short chain, streams in as each lands
   let done=0, applied=0; const errors=[];
   const run=async(chunk)=>{ let err=null; try{ const j=await fetchIndicesChunk(chunk,{signal}); applied+=applyIndexQuotes(j); } catch(e){ if(signal&&signal.aborted) throw e; err=e; errors.push(e); console.warn('index chunk failed',chunk.map(c=>c.key),e); } finally{ const now=Date.now(); chunk.forEach(ix=>{ const v=S.indices[ix.key]; if(!v||v.price==null) S.indices[ix.key]={...(v||{}),triedAt:now,note:(v&&v.note)||(err?(err.cancelled?t('job.timeout'):String(err.message).slice(0,90)):null)}; }); save(); done+=chunk.length; onProgress&&onProgress(done,wanted.length); } };
   const queue=[...chunks]; const workers=Array.from({length:Math.min(5,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
@@ -1788,7 +1789,7 @@ function go(page){
   $$('[data-nav]').forEach(b=>{ if(b.dataset.nav===page) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   setTitle();
   if(page==='alerts'){ renderAlerts(); setTimeout(markAlertsSeen,1500); }
-  if(page==='markets') onMarketsOpen(); else stopClocks();
+  if(page==='markets') onMarketsOpen(); else { stopClocks(); if(currentJob&&currentJob.kind==='indices'&&currentJob.auto){ currentJob.ctrl.abort('user'); jobEnd(currentJob); } }
   window.scrollTo({top:0,behavior:'instant'});
   try{ history.replaceState(null,'','#'+page); }catch(_){}
 }
@@ -2305,14 +2306,14 @@ function renderMarkets(){
 function tzDiffLabel(){ const d=(tzOffsetMin(Date.now(),'Asia/Jerusalem')-tzOffsetMin(Date.now(),'America/New_York'))/60; return (lang()==='he'?d+' שעות':d+' hours'); }
 async function doRefreshIndices({force,auto}={}){
   if(currentJob) return; if(!S.settings.apiKey){ if(!auto){ toast(t('q.needkey'),'err'); go('settings'); } return; }
-  const btn=$('#btn-mk-refresh'); if(btn) setLoading(btn,true); const job=jobStart(t('mk.loading'));
+  const btn=$('#btn-mk-refresh'); if(btn) setLoading(btn,true); const job=jobStart(t('mk.loading'),'indices'); if(auto) job.auto=true;
   try{ const res=await fetchIndices({force,signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderMarkets(); }});
     renderMarkets();
     if(res.allSkipped){ if(!auto){ const el=document.createElement('div'); el.className='toast'; el.style.cursor='pointer'; el.innerHTML=`<svg class="ic sm"><use href="#i-info"/></svg><span>${t('mk.stale')}</span>`; el.onclick=()=>{ el.remove(); doRefreshIndices({force:true}); }; $('#toasts').appendChild(el); setTimeout(()=>el.remove(),9000); } }
     else if(res.applied===res.total){ toast(t('mk.done'),'ok'); if(res.skipped&&!auto) toast(t('mk.some',{n:res.skipped})); }
     else toast(t('mk.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err'); }
   catch(e){ if(e.cancelled) toast(e.message); else { console.error(e); toast(t('err.api')+': '+e.message,'err'); } }
-  finally{ jobEnd(); const b2=$('#btn-mk-refresh'); if(b2) setLoading(b2,false); }
+  finally{ jobEnd(job); const b2=$('#btn-mk-refresh'); if(b2) setLoading(b2,false); }
 }
 let mkAutoT=0;
 function onMarketsOpen(){ startClocks(); renderMarkets(); if(S.settings.apiKey&&Date.now()-mkAutoT>5*60000&&INDICES.some(ix=>needsIndex(ix))){ mkAutoT=Date.now(); setTimeout(()=>{ if(currentPage==='markets') doRefreshIndices({auto:true}); },400); } }
@@ -2554,19 +2555,21 @@ async function checkUpdate({manual}={}){
 
 /* ---------- Job bar (visible progress + cancel for long requests) ---------- */
 let currentJob=null;
-function jobStart(title){
+function jobStart(title,kind){
   jobEnd(); const ctrl=new AbortController(); const el=document.createElement('div'); el.className='jobbar'; const t0=Date.now();
   el.innerHTML=`<span class="spin" style="width:18px;height:18px"></span><span class="t">${esc(title)}</span><span class="m" data-el="m">0 ${t('elapsed')}</span><span style="flex:1"></span><button class="btn sm danger" data-el="cancel">${t('cancel.job')}</button><div class="bar"><i style="width:4%"></i></div><div class="live" data-el="live"></div>`;
   $('.content').prepend(el); $('[data-el=cancel]',el).onclick=()=>{ ctrl.abort('user'); $('[data-el=cancel]',el).disabled=true; };
   const tick=setInterval(()=>{ const m=$('[data-el=m]',el); if(m) m.textContent=`${Math.round((Date.now()-t0)/1000)} ${t('elapsed')}${job.note?' · '+job.note:''}`; },1000);
-  const job={el,ctrl,signal:ctrl.signal,note:'',tick,title(x){ $('.t',el).textContent=x; job.note=''; $('.bar i',el).style.width='100%'; },progress(d,tt){ job.note=t('job.chunk',{d,t:tt}); $('.bar i',el).style.width=Math.max(4,Math.round(d/tt*100))+'%'; },live(txt){ const l=$('[data-el=live]',el); if(l) l.textContent=txt.slice(-160); }};
+  const job={el,ctrl,signal:ctrl.signal,kind:kind||'quotes',note:'',tick,title(x){ $('.t',el).textContent=x; job.note=''; $('.bar i',el).style.width='100%'; },progress(d,tt){ job.note=t('job.chunk',{d,t:tt}); $('.bar i',el).style.width=Math.max(4,Math.round(d/tt*100))+'%'; },live(txt){ const l=$('[data-el=live]',el); if(l) l.textContent=txt.slice(-160); }};
   currentJob=job; return job;
 }
-function jobEnd(){ if(!currentJob) return; clearInterval(currentJob.tick); currentJob.el.remove(); currentJob=null; }
+function jobEnd(j){ if(!currentJob||(j&&j!==currentJob)) return; clearInterval(currentJob.tick); currentJob.el.remove(); currentJob=null; }
 
 /* ---------- Quotes refresh ---------- */
 async function doRefresh({afterUpdate,force}={}){
-  const btn=$('#btn-refresh'); if(currentJob) return; const anySec=S.holdings.length||S.watchlist.length; if(anySec&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
+  const btn=$('#btn-refresh');
+  if(currentJob){ if(currentJob.kind!=='indices') return; currentJob.ctrl.abort('user'); jobEnd(currentJob); } // a background index load yields to the user
+  const anySec=S.holdings.length||S.watchlist.length; if(anySec&&!S.settings.apiKey){ toast(t('q.needkey'),'err'); go('settings'); return; }
   setLoading(btn,true);
   if(!afterUpdate){ // the home-screen app is rarely closed: refresh also pulls the latest build, then continues the refresh in the new version
     const v=await latestVersion(); if(v){ toast(t('upd.applying',{v}),'ok'); setTimeout(()=>applyUpdate(v,{resume:'refresh'}),350); return; } }
