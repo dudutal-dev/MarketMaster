@@ -878,7 +878,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.14-0926';
+const APP_VERSION='2026.09.14-0940';
 
 const I18N = {
   he: {
@@ -908,7 +908,7 @@ const I18N = {
     'kpi.total':'שווי תיק כולל','kpi.day':'שינוי יומי','kpi.pnl':'רווח/הפסד כולל','kpi.cost':'עלות כוללת','kpi.cash':'מזומן','kpi.holdings':'אחזקות','kpi.fx':'שער דולר',
     'th.sym':'נייר','th.qty':'כמות','th.cost':'עלות ממוצעת','th.price':'שער','th.chg':'שינוי יומי','th.value':'שווי','th.pnl':'רווח/הפסד','th.weight':'משקל','th.act':'',
     'empty.pf':'התיק ריק','empty.pf.d':'הוסף מניות ידנית, ייבא קובץ, או טען תיק לדוגמה כדי להתחיל.','empty.hist':'אין עדיין היסטוריה','empty.hist.d':'כל עדכון שערים שומר נקודת נתונים. לאחר כמה עדכונים יופיע כאן גרף.','empty.scan':'טרם בוצעה סריקה','empty.scan.d':'בחר תחומים ובורסות ולחץ על "הפעל סריקה".','empty.ins':'אין ניתוח עדיין','empty.ins.d':'לחץ על "נתח את התיק" כדי לקבל ציון, סיכונים והמלצות.',
-    'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'הקלד סימול ולחץ "זהה" — האפליקציה תמלא לבד בורסה, שם, סקטור ושער','f.detect':'זהה','f.detecting':'מזהה את הנייר ברשת…','f.detected':'זוהה: {n} · {e} · {s}','f.notfound':'לא זוהה נייר עם הסימול הזה — מלא ידנית','f.nokey':'להזנת פרטים אוטומטית הגדר מפתח API בהגדרות','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
+    'add.title':'הוספת נייר ערך','edit.title':'עריכת אחזקה','f.ticker':'סימול','f.ticker.help':'הקלד סימול ולחץ "זהה" — האפליקציה תמלא לבד בורסה, שם וסקטור','f.detect':'זהה','f.detecting':'מזהה את הנייר ברשת…','f.detected':'זוהה: {n} · {e} · {s}','f.notfound':'לא זוהה נייר עם הסימול הזה — מלא ידנית','f.nokey':'להזנת פרטים אוטומטית הגדר מפתח API בהגדרות','f.name':'שם','f.exchange':'בורסה','f.sector':'סקטור','f.qty':'כמות','f.cost':'מחיר קנייה ממוצע','f.price.auto':'השער הנוכחי נטען אוטומטית מיד לאחר השמירה, ובכל רענון שערים.','f.price':'שער נוכחי (אופציונלי)','f.note':'הערה','save':'שמור','cancel':'ביטול','delete':'מחק','confirm.del':'למחוק את האחזקה?','confirm.wipe':'פעולה זו תמחק את כל האחזקות, ההיסטוריה וההגדרות. להמשיך?','req':'שדה חובה','pos':'חייב להיות מספר חיובי',
     'q.updating':'מעדכן שערים…','q.done':'השערים עודכנו','q.partial':'עודכנו {n} מתוך {t} ניירות','q.none':'לא נמצאו שערים. נסה שוב.','q.needkey':'הגדר מפתח API בהגדרות תחילה','q.nohold':'אין אחזקות לעדכן','q.fxonly':'אין אחזקות — מעדכן שער דולר בלבד…','fx.bigchange':'שער הדולר עודכן מ-{o} ל-{n} ({p}) לפי {s}','ok':'אישור','cancel.job':'בטל','job.quotes':'מעדכן שערים','job.fx':'מעדכן שער יציג (בנק ישראל)','fx.failed':'שער הדולר לא עודכן הפעם — נשאר השער הקודם','fx.nosource':'אף מקור שערים לא היה זמין','job.chunk':'{d} מתוך {t} ניירות','job.cancelled':'בוטל','job.timeout':'הבקשה חרגה מהזמן המוקצב — נסה שוב','q.quotesfail':'שגיאה בחלק מהניירות','fx.manual':'הוזן ידנית','fx.rep':'יציג','fx.live':'שער שוק','fx.reponly':'שער יציג בנק ישראל','fx.daily':'שער יומי אחרון ידוע',
     'conn.ok':'החיבור תקין ✓','conn.fail':'החיבור נכשל','saved':'נשמר','exported':'הקובץ יוצא','imported':'יובאו {n} אחזקות','sample.loaded':'תיק לדוגמה נטען — לחץ "עדכן שערים" לשערים עדכניים','wiped':'הנתונים נמחקו',
     'st.search':'מחפש ברשת','st.think':'מנתח','st.write':'מגבש תובנות','st.parse':'מעבד תוצאות',
@@ -946,7 +946,7 @@ const I18N = {
     'kpi.total':'Total portfolio value','kpi.day':'Day change','kpi.pnl':'Total P&L','kpi.cost':'Total cost','kpi.cash':'Cash','kpi.holdings':'Holdings','kpi.fx':'USD rate',
     'th.sym':'Security','th.qty':'Qty','th.cost':'Avg cost','th.price':'Price','th.chg':'Day chg','th.value':'Value','th.pnl':'P&L','th.weight':'Weight','th.act':'',
     'empty.pf':'Portfolio is empty','empty.pf.d':'Add stocks manually, import a file, or load the sample portfolio to get started.','empty.hist':'No history yet','empty.hist.d':'Every quote refresh stores a data point. A chart will appear after a few refreshes.','empty.scan':'No scan yet','empty.scan.d':'Choose sectors and exchanges, then click "Run scan".','empty.ins':'No analysis yet','empty.ins.d':'Click "Analyze portfolio" to get a score, risks and recommendations.',
-    'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Type a ticker and press "Detect" — exchange, name, sector and price are filled automatically','f.detect':'Detect','f.detecting':'Identifying the security online…','f.detected':'Found: {n} · {e} · {s}','f.notfound':'No security found for this ticker — fill in manually','f.nokey':'Set an API key in Settings to auto-fill details','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
+    'add.title':'Add security','edit.title':'Edit holding','f.ticker':'Ticker','f.ticker.help':'Type a ticker and press "Detect" — the app fills in the exchange, name and sector','f.detect':'Detect','f.detecting':'Identifying the security online…','f.detected':'Found: {n} · {e} · {s}','f.notfound':'No security found for this ticker — fill in manually','f.nokey':'Set an API key in Settings to auto-fill details','f.name':'Name','f.exchange':'Exchange','f.sector':'Sector','f.qty':'Quantity','f.cost':'Average buy price','f.price.auto':'The current price is loaded automatically right after saving, and on every quote refresh.','f.price':'Current price (optional)','f.note':'Note','save':'Save','cancel':'Cancel','delete':'Delete','confirm.del':'Delete this holding?','confirm.wipe':'This will delete all holdings, history and settings. Continue?','req':'Required','pos':'Must be a positive number',
     'q.updating':'Updating quotes…','q.done':'Quotes updated','q.partial':'Updated {n} of {t} securities','q.none':'No quotes found. Try again.','q.needkey':'Set an API key in Settings first','q.nohold':'No holdings to update','q.fxonly':'No holdings — updating the USD rate only…','fx.bigchange':'USD/ILS updated from {o} to {n} ({p}) per {s}','ok':'OK','cancel.job':'Cancel','job.quotes':'Updating quotes','job.fx':'Updating Bank of Israel rate','fx.failed':'USD rate not updated this time — previous rate kept','fx.nosource':'No exchange-rate source was reachable','job.chunk':'{d} of {t} securities','job.cancelled':'Cancelled','job.timeout':'The request timed out — try again','q.quotesfail':'Some securities failed','fx.manual':'Manual','fx.rep':'BoI rep.','fx.live':'Market rate','fx.reponly':'Bank of Israel representative rate','fx.daily':'Last known daily rate',
     'conn.ok':'Connection OK ✓','conn.fail':'Connection failed','saved':'Saved','exported':'File exported','imported':'Imported {n} holdings','sample.loaded':'Sample loaded — click "Refresh quotes" for live prices','wiped':'Data deleted',
     'st.search':'Searching the web','st.think':'Analyzing','st.write':'Composing insights','st.parse':'Processing results',
@@ -2050,17 +2050,17 @@ function openForm(h,prefill){
       <div class="field"><label for="f-name">${t('f.name')}</label><input class="input" id="f-name" value="${esc(lang()==='he'?(d.name_he||d.name||''):(d.name||d.name_he||''))}"></div>
       <div class="field"><label for="f-sector">${t('f.sector')}</label><select class="input" id="f-sector">${secOpts}</select></div>
     </div>
-    <div class="grid three" style="gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))">
+    <div class="grid two" style="gap:12px">
       <div class="field"><label for="f-qty">${t('f.qty')} *</label><input class="input num" id="f-qty" type="number" inputmode="decimal" step="any" min="0" value="${esc(d.qty)}" required><div class="err">${t('pos')}</div></div>
       <div class="field"><label for="f-cost">${t('f.cost')} * <span class="faint" id="f-ccy">(${d.exchange==='TASE'?'₪':'$'})</span></label><input class="input num" id="f-cost" type="number" inputmode="decimal" step="any" min="0" value="${esc(d.avgCost)}" required><div class="err">${t('pos')}</div></div>
-      <div class="field"><label for="f-price">${t('f.price')}</label><input class="input num" id="f-price" type="number" inputmode="decimal" step="any" min="0" value="${esc(d.price??'')}"></div>
     </div>
+    <p class="help">${t('f.price.auto')}</p>
     <div class="grid two" style="gap:12px"><div class="field"><label for="f-pid">${t('pf.field')}</label><select class="input" id="f-pid">${S.portfolios.map(p=>`<option value="${esc(p.id)}" ${(d.pid||(curView()!=='all'?curView():S.portfolios[0].id))===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
     <div class="field"><label for="f-note">${t('f.note')}</label><input class="input" id="f-note" value="${esc(d.note||'')}"></div></div>
     <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:6px">${isEdit?`<button type="button" class="btn danger" id="f-del">${t('delete')}</button><div style="flex:1"></div>`:''}<button type="button" class="btn" id="f-cancel">${t('cancel')}</button><button type="submit" class="btn primary">${t('save')}</button></div></form>`;
   openSheet(isEdit?t('edit.title'):t('add.title'),body);
   const tk=$('#f-ticker'), ex=$('#f-ex');
-  const applyLookup=(u)=>{ ex.value=u.exchange; $('#f-sector').value=u.sector; $('#f-name').value=lang()==='he'?u.name_he:u.name_en; $('#f-name').dataset.he=u.name_he; $('#f-name').dataset.en=u.name_en; if(u.price&&!$('#f-price').value) $('#f-price').value=u.price; if(u.prevClose) $('#f-price').dataset.prev=u.prevClose; $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; };
+  const applyLookup=(u)=>{ ex.value=u.exchange; $('#f-sector').value=u.sector; $('#f-name').value=lang()==='he'?u.name_he:u.name_en; $('#f-name').dataset.he=u.name_he; $('#f-name').dataset.en=u.name_en; $('#f-ccy').textContent='('+(ex.value==='TASE'?'₪':'$')+')'; };
   const lookupStatus=(msg,cls)=>{ const el=$('#f-lookup'); if(!el) return; el.textContent=msg; el.style.color=cls==='ok'?'var(--gain)':cls==='err'?'var(--loss)':''; };
   let lookupBusy=false;
   const detect=async(auto)=>{ const sym=tk.value.trim().toUpperCase(); if(!sym||lookupBusy) return;
@@ -2077,17 +2077,16 @@ function openForm(h,prefill){
   $('#f-cancel').onclick=closeSheet;
   if(isEdit) $('#f-del').onclick=async()=>{ if(await confirmDlg(t('confirm.del'),{yes:t('delete'),danger:true})){ S.holdings=S.holdings.filter(x=>x.id!==h.id); save(); closeSheet(); renderAll(); } };
   $('#hform').onsubmit=e=>{ e.preventDefault(); let ok=true;
-    const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),price:$('#f-price').value!==''?parseFloat($('#f-price').value):null,sector:$('#f-sector').value,note:$('#f-note').value.trim(),pid:$('#f-pid').value||S.portfolios[0].id};
+    const v={ticker:tk.value.trim().toUpperCase(),exchange:ex.value,qty:parseFloat($('#f-qty').value),avgCost:parseFloat($('#f-cost').value),sector:$('#f-sector').value,note:$('#f-note').value.trim(),pid:$('#f-pid').value||S.portfolios[0].id};
     [['#f-ticker',!v.ticker],['#f-qty',!(v.qty>0)],['#f-cost',!(v.avgCost>=0)]].forEach(([s,bad])=>{ $(s).closest('.field').classList.toggle('invalid',bad); if(bad) ok=false; });
     if(!ok){ $('.field.invalid input').focus(); return; }
     const nm=$('#f-name').value.trim(); const u=findSec(v.ticker,v.exchange)||(S.lookups&&S.lookups[v.ticker]);
     const nameEn=$('#f-name').dataset.en||(u&&u.name_en)||nm, nameHe=$('#f-name').dataset.he||(u&&u.name_he)||nm;
-    const prevL=$('#f-price').dataset.prev?parseFloat($('#f-price').dataset.prev):null; if(v.price!=null&&prevL) v.prevClose=prevL;
-    if(isEdit){ Object.assign(h,v,{name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe}); if(v.price!=null){ h.updatedAt=Date.now(); delete h.sample; } }
-    else { const meta={sector:v.sector,note:v.note,name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe,price:v.price,prevClose:v.prevClose??null,updatedAt:v.price!=null?Date.now():null};
+    if(isEdit){ Object.assign(h,v,{name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe}); }
+    else { const meta={sector:v.sector,note:v.note,name:lang()==='en'?nm||nameEn:nameEn,name_he:lang()==='he'?nm||nameHe:nameHe,price:null,prevClose:null,updatedAt:null};
       const existed=S.holdings.some(x=>x.pid===v.pid&&x.ticker===v.ticker&&x.exchange===v.exchange);
       const r=applyTrade({side:'buy',pid:v.pid,ticker:v.ticker,exchange:v.exchange,qty:v.qty,price:v.avgCost,cash:false,meta});
-      if(existed){ if(v.price!=null){ r.holding.price=v.price; if(v.prevClose) r.holding.prevClose=v.prevClose; r.holding.updatedAt=Date.now(); delete r.holding.sample; } toast(t('merged',{t:v.ticker,p:pfName(v.pid)}),'ok'); } }
+      if(existed) toast(t('merged',{t:v.ticker,p:pfName(v.pid)}),'ok'); }
     if(prefill&&prefill.watchId) S.watchlist=S.watchlist.filter(x=>x.id!==prefill.watchId);
     save(); closeSheet(); renderAll(); toast(t('saved'),'ok');
     if(!isEdit){ const nh=S.holdings.find(x=>x.pid===v.pid&&x.ticker===v.ticker&&x.exchange===v.exchange); if(nh&&!nh.source) quoteOne(nh); } };
