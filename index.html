@@ -783,6 +783,21 @@ td.num,th.num{text-align:end}
 
       <!-- ======== Settings ======== -->
       <section class="page" id="page-settings">
+        <div class="card" id="md-card">
+          <div class="card-h"><h2 data-i18n="md.title">ספק נתוני שוק ישיר (מומלץ — חינמי ומהיר)</h2><span class="chip accent"><svg class="ic sm"><use href="#i-bolt"/></svg>Fast</span></div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="field"><label for="set-md-provider" data-i18n="md.provider">ספק</label>
+              <select class="input" id="set-md-provider">
+                <option value="none" data-i18n="md.none">ללא — שליפה דרך Claude (איטי)</option>
+                <option value="twelvedata">Twelve Data</option>
+              </select></div>
+            <div class="field" id="md-keyrow"><label for="set-md-key" data-i18n="md.key">מפתח API של הספק</label>
+              <div class="input-wrap"><input class="input" id="set-md-key" type="password" autocomplete="off" spellcheck="false" placeholder="…"><button class="btn sm" id="btn-md-test"><span class="spin"></span><span class="lbl" data-i18n="md.test">בדוק</span></button></div>
+              <div class="help" data-i18n="md.help">שליפה דרך Claude פותחת דפי אינטרנט אמיתיים ולכן לוקחת עשרות שניות ולפעמים נכשלת. ספק נתונים ישיר מחזיר שערים ומדדים בשנייה אחת, בחינם, וללא עלות טוקנים.</div>
+              <div class="help" id="md-status" style="color:var(--text-2)"></div></div>
+            <div id="md-signrow"><a class="btn sm" id="md-signup" href="https://twelvedata.com/pricing" target="_blank" rel="noopener"><svg class="ic sm"><use href="#i-ext"/></svg><span data-i18n="md.signup">פתח חשבון חינמי</span></a></div>
+          </div>
+        </div>
         <div class="grid two">
           <div class="card">
             <div class="card-h"><h2 data-i18n="set.api">חיבור ל-Anthropic API</h2></div>
@@ -878,7 +893,7 @@ td.num,th.num{text-align:end}
    MarketMaster — Core: i18n, universe, state, utils
    ============================================================ */
 'use strict';
-const APP_VERSION='2026.09.14-1102';
+const APP_VERSION='2026.09.14-1243';
 
 const I18N = {
   he: {
@@ -900,7 +915,7 @@ const I18N = {
     'bld.invested':'מושקע','bld.cashleft':'נשאר במזומן','bld.positions':'פוזיציות','bld.vol':'תנודתיות צפויה','bld.yield':'תשואת דיבידנד','bld.beta':'β S&P 500','bld.alloc':'הרכב התיק','bld.sector':'חלוקה לפי סקטור','bld.risks':'סיכונים עיקריים','bld.fx':'חשיפת מט"ח','bld.rebal':'איזון מחדש','bld.drawdown':'תרחיש שנה גרועה','bld.alts':'חלופות','bld.create':'צור תיק חדש מההמלצה','bld.watch':'הוסף הכל למעקב','bld.created':'נוצר תיק "{n}" עם {k} פוזיציות','bld.create.confirm':'ליצור תיק חדש "{n}" עם {k} פוזיציות בסך {v}? פוזיציות ללא מחיר יתווספו למעקב.','bld.shares':'{n} יח׳ × {p}','bld.noprice':'ללא מחיר','bld.weight':'משקל','bld.amount':'סכום','bld.asof':'מחירים נכון ל-{d}','bld.role.core':'ליבה','bld.role.growth':'צמיחה','bld.role.defensive':'הגנתי','bld.role.income':'הכנסה','bld.role.satellite':'לוויין','bld.budget.of':'תקציב','bld.pricing':'מעדכן מחירים לתיק המומלץ…','bld.done':'התיק המומלץ מוכן','bld.priceWait':'ממתין למחיר','bld.reprice':'עדכן מחירים','bld.pricesPending':'המחירים מתעדכנים ברקע — הכמויות יחושבו כשיגיעו','bld.step1':'בחירת המניות','bld.pfname':'תיק AI','bld.watched':'{n} מניות נוספו למעקב',
     'upd.applying':'נמצאה גרסה חדשה ({v}) — מעדכן…','set.usage':'שימוש ועלות API','usage.help':'הערכה מקומית לפי ספירת הטוקנים האמיתית שחוזרת בכל בקשה ומחירון Anthropic הנוכחי. ה-API לא חושף את יתרת החשבון, לכן היתרה כאן מחושבת מהסכום שהזנת פחות השימוש מאז.','usage.month':'החודש','usage.today':'היום','usage.all':'סה"כ מאז {d}','usage.calls':'{n} בקשות','usage.remaining':'יתרה משוערת','usage.credit':'קרדיט שנטען','usage.credit.set':'עדכן יתרה','usage.credit.help':'הזינו את היתרה שמופיעה בקונסולת Anthropic (Billing). מאותו רגע האפליקציה תפחית ממנה את העלות המשוערת של כל בקשה.','usage.credit.ph':'סכום בדולרים','usage.credit.since':'מאז {d}','usage.low':'היתרה המשוערת נמוכה — כדאי לטעון קרדיט','usage.none':'עדיין לא נרשם שימוש','usage.billing':'יתרה ורכישת קרדיט','usage.console':'שימוש בקונסולה','usage.keys':'מפתחות API','usage.bytag':'לפי סוג פעולה','usage.tokens':'{i} קלט · {o} פלט · {s} חיפושים','usage.reset':'אפס מונה','usage.reset.confirm':'לאפס את היסטוריית השימוש? היתרה שהוזנה תישאר.','usage.saved':'היתרה עודכנה','usage.lowcredit':'יתרת ה-API נגמרה — לחצו לטעינת קרדיט','usage.last':'בקשה אחרונה',
     'usage.tag.quotes':'רענון שערים','usage.tag.scan':'סורק שוק','usage.tag.analyze':'ניתוח תיק','usage.tag.build':'בניית תיק AI','usage.tag.deepdive':'ניתוח מניה','usage.tag.lookup':'זיהוי מניה','usage.tag.hist':'גרפים היסטוריים','usage.tag.alerts':'התראות','usage.tag.test':'בדיקת חיבור','usage.tag.other':'אחר',
-    'q.closed':'השוק סגור והשערים כבר משקפים את הסגירה האחרונה — לא בוצעה משיכה.','q.closed.some':'{n} ניירות דולגו: השוק שלהם סגור והשער כבר מעודכן לסגירה','q.stale':'שער ישן מ-{d}','q.lag':'סגירת מסחר קודם','q.live':'תוך-יומי (בדיליי)','q.behind.n':'{n} שערים עדיין מהמסחר הקודם — כדאי לרענן שוב בעוד כמה דקות','q.timeout.n':'{n} ניירות לא השיבו בזמן — לחצו רענון שוב להשלמה','q.one':'{t}: שער {p} נטען','q.stale.n':'{n} שערים נראים ישנים — מומלץ לרענן שוב מאוחר יותר','q.closed.one':'השוק של {t} סגור והשער כבר משקף את הסגירה האחרונה. לרענן בכל זאת?','set.mkthours':'רענון שערים רק כשיש מסחר חדש (חוסך קרדיטים)','set.mkthours.help':'מחוץ לשעות המסחר, בסופי שבוע ובחגים האפליקציה לא מושכת שוב שער שכבר משקף את הסגירה האחרונה. ת"א: ב׳–ו׳ (ו׳ עד 14:00), ניו יורק: ב׳–ו׳.','mkt.now':'כרגע','mkt.open':'פתוח','mkt.closed':'סגור','mkt.tase':'ת"א','mkt.us':'ניו יורק','refresh.anyway':'רענן בכל זאת','nav.markets':'שווקים','nav.s.markets':'שווקים','mk.until':'עד {t}','mk.unavail':'לא זמין כעת · נוסה {t}','mk.at':'{d} {t}','mk.sub':'שעונים, סטטוס מסחר והמדדים המובילים בתל אביב ובניו יורק','mk.israel':'ישראל','mk.ny':'ניו יורק','mk.open':'המסחר פתוח','mk.closed':'המסחר סגור','mk.pre':'לפני פתיחה','mk.closes':'נסגר בעוד {t}','mk.opens':'נפתח בעוד {t}','mk.hours':'שעות מסחר','mk.tase':'תל אביב','mk.tase.s':'TASE','mk.us':'וול סטריט','mk.us.s':'NYSE · NASDAQ','mk.updated':'עודכן {t}','mk.never':'המדדים טרם נטענו','mk.refresh':'עדכן מדדים','mk.loading':'טוען מדדים…','mk.5d':'5 ימים אחרונים','mk.range':'טווח יומי','mk.diff':'הפרש שעות: {h}','mk.stale':'המדדים כבר משקפים את הסגירה האחרונה — לא בוצעה משיכה.','mk.done':'המדדים עודכנו','mk.partial':'עודכנו {n} מתוך {t} מדדים','mk.some':'{n} מדדים דולגו — השוק שלהם סגור והערך כבר מעודכן','mk.day':'שינוי יומי','mk.prev':'סגירה קודמת','mk.asof':'נכון ל-{t}','mk.session':'התקדמות המסחר','mk.week':'ימי מסחר: {d}','mk.week.tase':'ב׳–ו׳','mk.week.us':'ב׳–ו׳','mk.empty':'לחצו "עדכן מדדים" כדי לטעון את הנתונים (כ-4 בקשות קצרות ל-Claude)','mk.needkey':'להצגת מדדים יש להזין מפתח API בהגדרות',
+    'q.closed':'השוק סגור והשערים כבר משקפים את הסגירה האחרונה — לא בוצעה משיכה.','q.closed.some':'{n} ניירות דולגו: השוק שלהם סגור והשער כבר מעודכן לסגירה','q.stale':'שער ישן מ-{d}','q.lag':'סגירת מסחר קודם','q.live':'תוך-יומי (בדיליי)','q.behind.n':'{n} שערים עדיין מהמסחר הקודם — כדאי לרענן שוב בעוד כמה דקות','q.timeout.n':'{n} ניירות לא השיבו בזמן — לחצו רענון שוב להשלמה','md.title':'ספק נתוני שוק ישיר (מומלץ — חינמי ומהיר)','md.provider':'ספק','md.none':'ללא — שליפה דרך Claude (איטי)','md.key':'מפתח API של הספק','md.help':'שליפה דרך Claude פותחת דפי אינטרנט אמיתיים ולכן לוקחת עשרות שניות ולפעמים נכשלת. ספק נתונים ישיר מחזיר שערים ומדדים בשנייה אחת, בחינם, וללא עלות טוקנים. פתחו חשבון חינמי, העתיקו את המפתח לכאן ולחצו "בדוק". מה שהספק לא מכסה ימשיך להיטען דרך Claude.','md.signup':'פתח חשבון חינמי','md.test':'בדוק','md.ok':'הספק עובד: {t} = {p}','md.fail':'הספק לא החזיר נתון: {e}','md.nokey':'יש להזין מפתח של הספק','md.src':'ספק ישיר','q.one':'{t}: שער {p} נטען','q.stale.n':'{n} שערים נראים ישנים — מומלץ לרענן שוב מאוחר יותר','q.closed.one':'השוק של {t} סגור והשער כבר משקף את הסגירה האחרונה. לרענן בכל זאת?','set.mkthours':'רענון שערים רק כשיש מסחר חדש (חוסך קרדיטים)','set.mkthours.help':'מחוץ לשעות המסחר, בסופי שבוע ובחגים האפליקציה לא מושכת שוב שער שכבר משקף את הסגירה האחרונה. ת"א: ב׳–ו׳ (ו׳ עד 14:00), ניו יורק: ב׳–ו׳.','mkt.now':'כרגע','mkt.open':'פתוח','mkt.closed':'סגור','mkt.tase':'ת"א','mkt.us':'ניו יורק','refresh.anyway':'רענן בכל זאת','nav.markets':'שווקים','nav.s.markets':'שווקים','mk.until':'עד {t}','mk.unavail':'לא זמין כעת · נוסה {t}','mk.at':'{d} {t}','mk.sub':'שעונים, סטטוס מסחר והמדדים המובילים בתל אביב ובניו יורק','mk.israel':'ישראל','mk.ny':'ניו יורק','mk.open':'המסחר פתוח','mk.closed':'המסחר סגור','mk.pre':'לפני פתיחה','mk.closes':'נסגר בעוד {t}','mk.opens':'נפתח בעוד {t}','mk.hours':'שעות מסחר','mk.tase':'תל אביב','mk.tase.s':'TASE','mk.us':'וול סטריט','mk.us.s':'NYSE · NASDAQ','mk.updated':'עודכן {t}','mk.never':'המדדים טרם נטענו','mk.refresh':'עדכן מדדים','mk.loading':'טוען מדדים…','mk.5d':'5 ימים אחרונים','mk.range':'טווח יומי','mk.diff':'הפרש שעות: {h}','mk.stale':'המדדים כבר משקפים את הסגירה האחרונה — לא בוצעה משיכה.','mk.done':'המדדים עודכנו','mk.partial':'עודכנו {n} מתוך {t} מדדים','mk.some':'{n} מדדים דולגו — השוק שלהם סגור והערך כבר מעודכן','mk.day':'שינוי יומי','mk.prev':'סגירה קודמת','mk.asof':'נכון ל-{t}','mk.session':'התקדמות המסחר','mk.week':'ימי מסחר: {d}','mk.week.tase':'ב׳–ו׳','mk.week.us':'ב׳–ו׳','mk.empty':'לחצו "עדכן מדדים" כדי לטעון את הנתונים (כ-4 בקשות קצרות ל-Claude)','mk.needkey':'להצגת מדדים יש להזין מפתח API בהגדרות',
     'idx.TA35':'ת"א 35','idx.TA125':'ת"א 125','idx.TA90':'ת"א 90','idx.TABANKS':'ת"א בנקים 5','idx.SPX':'S&P 500','idx.IXIC':'נאסד"ק','idx.NDX':'נאסד"ק 100','idx.DJI':'דאו ג׳ונס','idx.RUT':'ראסל 2000','idx.VIX':'VIX (מדד הפחד)',
     'about.dev':'פיתוח: דודו טל','about.1':'אפליקציית ניהול תיק השקעות למניות בתל אביב ובניו יורק, עם מנוע תובנות מבוסס Claude.','about.2':'שערים, חדשות וניתוחים נאספים דרך Claude עם חיפוש אינטרנט בזמן אמת. ייתכנו עיכובים או אי-דיוקים — יש לאמת מול מקור רשמי לפני ביצוע פעולה.',
     disclaimer:'המידע באפליקציה מופק על ידי מערכת תומכת החלטה ואינו מהווה ייעוץ השקעות, שיווק השקעות או הצעה לרכישת ניירות ערך. השקעה בניירות ערך כרוכה בסיכון, לרבות אובדן מלא של ההשקעה. ביצועי עבר אינם ערובה לתשואות עתידיות. השקעה בני"ע נקובי מט"ח חושפת לסיכון שער חליפין.',
@@ -939,7 +954,7 @@ const I18N = {
     'bld.invested':'Invested','bld.cashleft':'Cash left','bld.positions':'Positions','bld.vol':'Expected volatility','bld.yield':'Dividend yield','bld.beta':'β S&P 500','bld.alloc':'Allocation','bld.sector':'By sector','bld.risks':'Key risks','bld.fx':'FX exposure','bld.rebal':'Rebalancing','bld.drawdown':'Bad-year scenario','bld.alts':'Alternatives','bld.create':'Create portfolio from plan','bld.watch':'Add all to watchlist','bld.created':'Created portfolio "{n}" with {k} positions','bld.create.confirm':'Create a new portfolio "{n}" with {k} positions totalling {v}? Positions without a price go to the watchlist.','bld.shares':'{n} sh × {p}','bld.noprice':'no price','bld.weight':'Weight','bld.amount':'Amount','bld.asof':'Prices as of {d}','bld.role.core':'Core','bld.role.growth':'Growth','bld.role.defensive':'Defensive','bld.role.income':'Income','bld.role.satellite':'Satellite','bld.budget.of':'Budget','bld.pricing':'Fetching prices for the plan…','bld.done':'Portfolio plan ready','bld.priceWait':'awaiting price','bld.reprice':'Refresh prices','bld.pricesPending':'Prices are loading in the background — share counts follow','bld.step1':'Selecting stocks','bld.pfname':'AI portfolio','bld.watched':'{n} stocks added to watchlist',
     'upd.applying':'New version found ({v}) — updating…','set.usage':'API usage & cost','usage.help':'Local estimate based on the real token counts returned with every request and current Anthropic pricing. The API does not expose your account balance, so the balance here is the amount you entered minus usage since then.','usage.month':'This month','usage.today':'Today','usage.all':'Total since {d}','usage.calls':'{n} requests','usage.remaining':'Estimated balance','usage.credit':'Credit loaded','usage.credit.set':'Update balance','usage.credit.help':'Enter the balance shown in the Anthropic Console (Billing). From that moment the app subtracts the estimated cost of every request.','usage.credit.ph':'Amount in USD','usage.credit.since':'since {d}','usage.low':'Estimated balance is low — consider adding credit','usage.none':'No usage recorded yet','usage.billing':'Balance & buy credit','usage.console':'Usage in Console','usage.keys':'API keys','usage.bytag':'By operation','usage.tokens':'{i} in · {o} out · {s} searches','usage.reset':'Reset meter','usage.reset.confirm':'Reset usage history? The entered balance stays.','usage.saved':'Balance updated','usage.lowcredit':'API credit exhausted — tap to add credit','usage.last':'Last request',
     'usage.tag.quotes':'Quote refresh','usage.tag.scan':'Market scan','usage.tag.analyze':'Portfolio analysis','usage.tag.build':'AI builder','usage.tag.deepdive':'Stock deep dive','usage.tag.lookup':'Ticker lookup','usage.tag.hist':'Price history','usage.tag.alerts':'Alerts','usage.tag.test':'Connection test','usage.tag.other':'Other',
-    'q.closed':'Markets are closed and quotes already reflect the last close — nothing fetched.','q.closed.some':'{n} securities skipped: their market is closed and the quote already reflects the close','q.stale':'stale quote from {d}','q.lag':'previous session','q.live':'intraday (delayed)','q.behind.n':'{n} quotes are still from the previous session — try refreshing again in a few minutes','q.timeout.n':'{n} securities did not answer in time — refresh again to complete them','q.one':'{t}: quote {p} loaded','q.stale.n':'{n} quotes look outdated — try refreshing again later','q.closed.one':'The market for {t} is closed and the quote already reflects the last close. Refresh anyway?','set.mkthours':'Refresh quotes only when there is new trading (saves credits)','set.mkthours.help':'Outside trading hours, on weekends and holidays the app does not re-fetch a quote that already reflects the last close. TASE: Mon–Fri (Friday until 14:00), New York: Mon–Fri.','mkt.now':'Now','mkt.open':'open','mkt.closed':'closed','mkt.tase':'TASE','mkt.us':'New York','refresh.anyway':'Refresh anyway','nav.markets':'Markets','nav.s.markets':'Markets','mk.until':'until {t}','mk.unavail':'unavailable · tried {t}','mk.at':'{d} {t}','mk.sub':'Clocks, session status and the leading indices in Tel Aviv and New York','mk.israel':'Israel','mk.ny':'New York','mk.open':'Market open','mk.closed':'Market closed','mk.pre':'Pre-open','mk.closes':'closes in {t}','mk.opens':'opens in {t}','mk.hours':'Trading hours','mk.tase':'Tel Aviv','mk.tase.s':'TASE','mk.us':'Wall Street','mk.us.s':'NYSE · NASDAQ','mk.updated':'updated {t}','mk.never':'Indices not loaded yet','mk.refresh':'Refresh indices','mk.loading':'Loading indices…','mk.5d':'Last 5 days','mk.range':'Day range','mk.diff':'Time difference: {h}','mk.stale':'Indices already reflect the last close — nothing fetched.','mk.done':'Indices updated','mk.partial':'{n} of {t} indices updated','mk.some':'{n} indices skipped — their market is closed and the value is current','mk.day':'Day change','mk.prev':'Previous close','mk.asof':'as of {t}','mk.session':'Session progress','mk.week':'Trading days: {d}','mk.week.tase':'Mon–Fri','mk.week.us':'Mon–Fri','mk.empty':'Tap "Refresh indices" to load the data (about 4 short Claude requests)','mk.needkey':'Enter an API key in Settings to load indices',
+    'q.closed':'Markets are closed and quotes already reflect the last close — nothing fetched.','q.closed.some':'{n} securities skipped: their market is closed and the quote already reflects the close','q.stale':'stale quote from {d}','q.lag':'previous session','q.live':'intraday (delayed)','q.behind.n':'{n} quotes are still from the previous session — try refreshing again in a few minutes','q.timeout.n':'{n} securities did not answer in time — refresh again to complete them','md.title':'Direct market-data provider (recommended — free and fast)','md.provider':'Provider','md.none':'None — fetch through Claude (slow)','md.key':'Provider API key','md.help':'Fetching through Claude opens real web pages, which takes tens of seconds and sometimes fails. A direct data provider returns quotes and indices in about a second, free, with no token cost. Open a free account, paste the key here and press "Test". Anything the provider does not cover keeps loading through Claude.','md.signup':'Open a free account','md.test':'Test','md.ok':'Provider works: {t} = {p}','md.fail':'Provider returned no value: {e}','md.nokey':'Enter the provider key','md.src':'direct provider','q.one':'{t}: quote {p} loaded','q.stale.n':'{n} quotes look outdated — try refreshing again later','q.closed.one':'The market for {t} is closed and the quote already reflects the last close. Refresh anyway?','set.mkthours':'Refresh quotes only when there is new trading (saves credits)','set.mkthours.help':'Outside trading hours, on weekends and holidays the app does not re-fetch a quote that already reflects the last close. TASE: Mon–Fri (Friday until 14:00), New York: Mon–Fri.','mkt.now':'Now','mkt.open':'open','mkt.closed':'closed','mkt.tase':'TASE','mkt.us':'New York','refresh.anyway':'Refresh anyway','nav.markets':'Markets','nav.s.markets':'Markets','mk.until':'until {t}','mk.unavail':'unavailable · tried {t}','mk.at':'{d} {t}','mk.sub':'Clocks, session status and the leading indices in Tel Aviv and New York','mk.israel':'Israel','mk.ny':'New York','mk.open':'Market open','mk.closed':'Market closed','mk.pre':'Pre-open','mk.closes':'closes in {t}','mk.opens':'opens in {t}','mk.hours':'Trading hours','mk.tase':'Tel Aviv','mk.tase.s':'TASE','mk.us':'Wall Street','mk.us.s':'NYSE · NASDAQ','mk.updated':'updated {t}','mk.never':'Indices not loaded yet','mk.refresh':'Refresh indices','mk.loading':'Loading indices…','mk.5d':'Last 5 days','mk.range':'Day range','mk.diff':'Time difference: {h}','mk.stale':'Indices already reflect the last close — nothing fetched.','mk.done':'Indices updated','mk.partial':'{n} of {t} indices updated','mk.some':'{n} indices skipped — their market is closed and the value is current','mk.day':'Day change','mk.prev':'Previous close','mk.asof':'as of {t}','mk.session':'Session progress','mk.week':'Trading days: {d}','mk.week.tase':'Mon–Fri','mk.week.us':'Mon–Fri','mk.empty':'Tap "Refresh indices" to load the data (about 4 short Claude requests)','mk.needkey':'Enter an API key in Settings to load indices',
     'idx.TA35':'TA-35','idx.TA125':'TA-125','idx.TA90':'TA-90','idx.TABANKS':'TA-Banks 5','idx.SPX':'S&P 500','idx.IXIC':'NASDAQ Composite','idx.NDX':'NASDAQ 100','idx.DJI':'Dow Jones','idx.RUT':'Russell 2000','idx.VIX':'VIX (fear index)',
     'about.dev':'Developed by Dudu Tal','about.1':'Portfolio manager for Tel Aviv and New York listed stocks, with a Claude-powered insights engine.','about.2':'Quotes, news and analyses are gathered via Claude with real-time web search. Delays or inaccuracies are possible — verify with an official source before acting.',
     disclaimer:'Information in this app is produced by a decision-support system and does not constitute investment advice, marketing or an offer to buy securities. Investing involves risk, including total loss of capital. Past performance is no guarantee of future returns. Foreign-currency securities carry FX risk.',
@@ -1013,7 +1028,7 @@ const SAMPLE_HOLDINGS = [
 /* ---------- State ---------- */
 const LS_KEY = 'marketmaster.v1';
 const DEFAULTS = {
-  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,marketHoursOnly:true,lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
+  settings:{apiKey:'',model:'claude-opus-5',dataModel:'claude-sonnet-5',effort:'medium',fastMode:false,perfV2:true,autoAlerts:true,chartType:'candle',chartMA:true,chartVol:true,marketHoursOnly:true,mdProvider:'none',mdKey:'',lang:'he',currency:'ILS',theme:'dark',usdIls:3.35,cashIls:0,cashUsd:0,fxUpdated:null,lastQuotes:null},
   portfolios:[{id:'main',name:'התיק הראשי',createdAt:0,cashIls:0,cashUsd:0}], view:'all',
   holdings:[], watchlist:[], trades:[], history:[], scans:[], indices:{}, usage:{log:[],months:{},credit:null,total:0,calls:0,since:null}, analyses:{portfolio:null, stocks:{}}, hist:{}, alerts:{ts:null,items:[],seen:{},dismissed:{}}
 };
@@ -1323,7 +1338,7 @@ async function fetchQuotesChunk(list,{signal,onStatus,onText,strict}={}){
 Method, per security: web_fetch the URLs below IN ORDER, each EXACTLY as written, stopping at the first that works: (a) Yahoo chart JSON → meta.regularMarketPrice (price), meta.chartPreviousClose or meta.previousClose, meta.currency, meta.regularMarketTime (unix seconds); (b) StockAnalysis quote page → current price, previous close and the timestamp shown; (c) Google Finance page → price, previous close, timestamp${hasTase?'; (d) Tel Aviv only — Yahoo symbol resolver, when the plain .TA symbol returns "Not Found"':''}. Only if all of them fail, use web_search and then web_fetch the best result page${hasTase?' (for Tel Aviv prefer globes.co.il, bizportal.co.il, calcalist.co.il, themarker.com, tase.co.il — read the price table on the page, never a snippet)':''}.
 When the market is OPEN the price must be from TODAY's session — an intraday price delayed by 15-20 minutes is exactly what we want. When the market is closed, return the last session's close. Always report the real date and time of the value in "quoteTime".
 Currency rules: Tel Aviv prices must be returned in SHEKELS (ILS). Yahoo reports TASE in agorot with meta.currency "ILA" — divide price and previous close by 100, and then report "currency":"ILS" (do not report ILA once you have divided). A TASE share priced in the thousands is a red flag that the division is missing.
-Speed matters, this is a live refresh: fetch source (a) for ALL securities in one parallel batch; the moment a Yahoo JSON answers, use it and open nothing else for that security. Budget about 15 seconds per security — if the listed sources do not answer, return price:null with a one-line note instead of looking further. Do not think at length; extract the numbers and answer.
+Speed matters, this is a live refresh: ${list.length>1?'fetch source (a) for ALL securities in one parallel batch; the':'the'} moment a Yahoo JSON answers, use it and open nothing else for that security. Budget about 20 seconds per security — if the listed sources do not answer, return price:null with a one-line note instead of looking further. Do not think at length; extract the numbers and answer.
 Freshness: the quote must be from the most recent trading session. If a page shows a date older than 5 days, it is stale — move to the next source. Never take a price from a search snippet or a news article.
 Securities and URLs:
 ${urls}
@@ -1331,7 +1346,7 @@ ${urls}
 Respond with ONLY this JSON object (no prose):
 {"asOf":"YYYY-MM-DD HH:MM (timezone)","quotes":[{"ticker":"OKLO","exchange":"NYSE","price":0,"prevClose":0,"changePct":0,"currency":"ILS|USD","source":"yahoo|google|search","quoteTime":"YYYY-MM-DD HH:MM (timezone)","note":null}]}
 If a security cannot be found, include it with price:null and a short note. changePct = (price/prevClose-1)*100.${strict?'\nIMPORTANT: a previous attempt returned an OUT-OF-DATE quote for these securities ('+list.map(x=>x.ticker+' dated '+x.staleDate+', latest session is '+x.lastDay).join('; ')+'). Fetch the Yahoo chart JSON (a) and read meta.regularMarketPrice with meta.regularMarketTime; for Tel Aviv use the symbol resolver (d) when the .TA symbol is not found. Return the value of the latest session (intraday when the market is open) with its real date; if you cannot verify it, return price:null.':''}`;
-  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+2),webSearchTool(hasTase?2:1)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,hasTase?70000:55000), onStatus, onText});
+  const r=await claude({tag:'quotes', system:SYSTEM_BASE(), user, tools:[webFetchTool(list.length*2+2),webSearchTool(hasTase?2:1)], maxTokens:1200, effort:'low', model:S.settings.dataModel, signal:withTimeout(signal,hasTase?90000:60000), onStatus, onText});
   const j=extractJSON(r.text); if(!j||!Array.isArray(j.quotes)){ const e=new Error(t('q.none')); e.raw=r.text; throw e; }
   return j;
 }
@@ -1364,19 +1379,25 @@ async function fetchQuotes({signal,onProgress,onText,force}={}){
   const wanted=force?all:all.filter(h=>needsQuote(h)); const skipped=all.length-wanted.length;
   const list=wanted.map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||''}));
   if(!list.length) return {applied:0,failed:0,total:0,skipped,allSkipped:true,errors:[]};
-  const groups={}; list.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
-  const chunks=[]; Object.values(groups).forEach(g=>{ for(let i=0;i<g.length;i+=2) chunks.push(g.slice(i,i+2)); });
-  let done=0, applied=0, failed=0, timedOut=0; const errors=[];
+  let done=0, applied=0, failed=0, timedOut=0, direct=0; const errors=[];
+  // fast path: a direct provider answers in about a second and costs nothing
+  let rest=list;
+  if(mdReady()){ const got=await mdQuotes(list,{signal}); if(got.length){ direct=applyQuotes({asOf:new Date().toISOString().slice(0,16).replace('T',' '),quotes:got},{noHistory:true}); applied+=direct;
+      const done1=new Set(got.map(q=>q.ticker+'|'+q.exchange)); rest=list.filter(x=>!done1.has(x.ticker+'|'+x.exchange)); onProgress&&onProgress(list.length-rest.length,list.length); } }
+  if(!rest.length) return {applied,failed:0,timedOut:0,direct,total:list.length,skipped,stale:0,behind:0,allSkipped:false,errors};
+  const groups={}; rest.forEach(x=>{ (groups[x.exchange==='TASE'?'TASE':'US']=groups[x.exchange==='TASE'?'TASE':'US']||[]).push(x); });
+  const chunks=[]; Object.values(groups).forEach(g=>g.forEach(x=>chunks.push([x]))); // one security per request: short tool chain, lands early
+  done=list.length-rest.length;
   const run=async(chunk)=>{ try{ const j=await fetchQuotesChunk(chunk,{signal,onText}); applied+=applyQuotes(j,{noHistory:true}); }
     catch(e){ if(signal&&signal.aborted) throw e; /* only a real user cancel stops the refresh */
       if(e.cancelled) timedOut+=chunk.length; failed+=chunk.length; errors.push(e); console.warn('chunk failed',chunk.map(c=>c.ticker),e); }
     finally{ done+=chunk.length; onProgress&&onProgress(done,list.length); } };
-  const queue=[...chunks]; const workers=Array.from({length:Math.min(5,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
+  const queue=[...chunks]; const workers=Array.from({length:Math.min(6,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
   // one strict retry for quotes that came back stale (e.g. a source showing a weeks-old date)
   const staleNow=wanted.filter(h=>h.stale||(h.qlag&&marketState(h.exchange).open)); let stale=0, behind=0;
   if(staleNow.length&&!(signal&&signal.aborted)){ try{ const chunk=staleNow.slice(0,6).map(h=>({ticker:h.ticker,exchange:h.exchange,name:h.name||h.name_he||'',staleDate:h.stale||h.quoteTime,lastDay:lastSessionDay(h.exchange)})); const j=await fetchQuotesChunk(chunk,{signal,onText,strict:true}); applyQuotes(j,{noHistory:true}); }catch(e){ if(signal&&signal.aborted) throw e; console.warn('strict retry failed',e); } stale=wanted.filter(h=>h.stale).length; behind=wanted.filter(h=>h.qlag&&marketState(h.exchange).open).length; }
-  return {applied,failed,timedOut,total:list.length,skipped,stale,behind,allSkipped:false,errors};
+  return {applied,failed,timedOut,direct,total:list.length,skipped,stale,behind,allSkipped:false,errors};
 }
 /** TASE quotes arrive in shekels or agorot. Compare with a known reference (last price, snapshot, average cost)
  *  and correct a clear 100x mismatch in either direction; fall back to the reported currency when nothing is known. */
@@ -1511,19 +1532,57 @@ Be specific: use the actual tickers, weights and P&L from the data. Keep text fi
   return {...j, sources:r.sources, ts:Date.now(), profile};
 }
 
+/* ---------- Direct market-data provider (optional, free, no tokens) ----------
+   Quotes come straight from a CORS-enabled JSON API in about a second. Whatever it cannot
+   answer falls through to the Claude engine below, so a wrong symbol only costs a fallback. */
+const MD_PROVIDERS={
+  twelvedata:{ name:'Twelve Data', signup:'https://twelvedata.com/pricing', batch:8,
+    url(syms,key){ return `https://api.twelvedata.com/quote?symbol=${encodeURIComponent(syms.join(','))}&apikey=${encodeURIComponent(key)}`; },
+    sym(x){ return x.td || (x.exchange==='TASE'?x.ticker+':TASE':x.ticker); },
+    parse(j,list){ const out=[]; const rows=(j&&j.symbol)?{[j.symbol]:j}:(j||{});
+      list.forEach(x=>{ const s=this.sym(x); const r=rows[s]||rows[x.ticker]||(j&&j.symbol===s?j:null); if(!r||r.status==='error') return;
+        const price=+r.close, prev=+r.previous_close; if(!(price>0)) return;
+        out.push({ticker:x.ticker,exchange:x.exchange,price,prevClose:prev>0?prev:null,changePct:r.percent_change!=null?+r.percent_change:null,currency:(r.currency||'').toUpperCase()||null,source:'twelvedata',quoteTime:r.datetime||null});
+      }); return out; } },
+};
+function mdReady(){ const p=MD_PROVIDERS[S.settings.mdProvider]; return p&&(S.settings.mdKey||'').trim()?p:null; }
+/** Fetch as many of `list` as the provider can answer. Never throws. */
+async function mdQuotes(list,{signal}={}){
+  const p=mdReady(); if(!p||!list.length) return [];
+  const key=(S.settings.mdKey||'').trim(); const out=[];
+  for(let i=0;i<list.length;i+=p.batch){
+    if(signal&&signal.aborted) break;
+    const part=list.slice(i,i+p.batch);
+    try{ const r=await fetchWithTimeout(p.url(part.map(x=>p.sym(x)),key),9000); if(!r.ok) continue; const j=await r.json(); out.push(...p.parse(j,part)); }
+    catch(e){ console.warn('md provider failed',e); }
+  }
+  return out;
+}
+/** One-symbol probe for the Settings test button. Returns {ticker,price} or throws. */
+async function mdTest(){
+  const p=MD_PROVIDERS[S.settings.mdProvider]; if(!p) throw new Error('no provider');
+  const key=(S.settings.mdKey||'').trim(); if(!key) throw new Error(t('md.nokey'));
+  const probe={ticker:'AAPL',exchange:'NASDAQ'};
+  const r=await fetchWithTimeout(p.url([p.sym(probe)],key),9000);
+  const j=await r.json().catch(()=>null);
+  const got=p.parse(j,[probe])[0];
+  if(!got) throw new Error((j&&(j.message||j.note))||('HTTP '+r.status));
+  return {ticker:got.ticker,price:got.price,currency:got.currency};
+}
+
 /* ---------- Market indices (Trading Floor) ---------- */
 const YSEARCH=q=>`https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=8&newsCount=0`;
 const INDICES=[
-  {key:'TA35',market:'TASE',he:'ת"א 35',en:'TA-35',yahoo:['TA35.TA','^TA35.TA'],resolve:YSEARCH('TA-35 index'),google:['TA35:TLV','TA35:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/137','https://il.investing.com/indices/ta35']},
-  {key:'TA125',market:'TASE',he:'ת"א 125',en:'TA-125',yahoo:['^TA125.TA','TA125.TA'],resolve:YSEARCH('TA-125 index'),google:['TA125:TLV','TA125:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/142','https://tradingeconomics.com/israel/stock-market']},
-  {key:'TA90',market:'TASE',he:'ת"א 90',en:'TA-90',yahoo:['^TA90.TA','TA90.TA'],resolve:YSEARCH('TA-90 index'),google:['TA90:TLV','TA90:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/143','https://il.investing.com/indices/ta-90']},
-  {key:'TABANKS',market:'TASE',he:'ת"א בנקים 5',en:'TA-Banks 5',yahoo:['^TA-BANKS.TA','TA-BANKS5.TA'],resolve:YSEARCH('TA-Banks 5 index'),google:['TA-BANKS:TLV','TABANKS:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/164','https://il.investing.com/indices/ta-banks']},
-  {key:'SPX',market:'US',he:'S&P 500',en:'S&P 500',yahoo:['^GSPC'],google:['.INX:INDEXSP'],other:['https://www.investing.com/indices/us-spx-500']},
-  {key:'IXIC',market:'US',he:'נאסד"ק',en:'NASDAQ Composite',yahoo:['^IXIC'],google:['.IXIC:INDEXNASDAQ'],other:['https://www.investing.com/indices/nasdaq-composite']},
-  {key:'NDX',market:'US',he:'נאסד"ק 100',en:'NASDAQ 100',yahoo:['^NDX'],google:['NDX:INDEXNASDAQ'],other:['https://www.investing.com/indices/nq-100']},
-  {key:'DJI',market:'US',he:'דאו ג׳ונס',en:'Dow Jones',yahoo:['^DJI'],google:['.DJI:INDEXDJX'],other:['https://www.investing.com/indices/us-30']},
-  {key:'RUT',market:'US',he:'ראסל 2000',en:'Russell 2000',yahoo:['^RUT'],google:['RUT:INDEXRUSSELL'],other:['https://www.investing.com/indices/smallcap-2000']},
-  {key:'VIX',market:'US',he:'VIX',en:'VIX',yahoo:['^VIX'],google:['VIX:INDEXCBOE'],other:['https://www.investing.com/indices/volatility-s-p-500']},
+  {key:'TA35',td:'TA35:TASE',market:'TASE',he:'ת"א 35',en:'TA-35',yahoo:['TA35.TA','^TA35.TA'],resolve:YSEARCH('TA-35 index'),google:['TA35:TLV','TA35:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/137','https://il.investing.com/indices/ta35']},
+  {key:'TA125',td:'TA125:TASE',market:'TASE',he:'ת"א 125',en:'TA-125',yahoo:['^TA125.TA','TA125.TA'],resolve:YSEARCH('TA-125 index'),google:['TA125:TLV','TA125:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/142','https://tradingeconomics.com/israel/stock-market']},
+  {key:'TA90',td:'TA90:TASE',market:'TASE',he:'ת"א 90',en:'TA-90',yahoo:['^TA90.TA','TA90.TA'],resolve:YSEARCH('TA-90 index'),google:['TA90:TLV','TA90:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/143','https://il.investing.com/indices/ta-90']},
+  {key:'TABANKS',td:'TA-BANKS5:TASE',market:'TASE',he:'ת"א בנקים 5',en:'TA-Banks 5',yahoo:['^TA-BANKS.TA','TA-BANKS5.TA'],resolve:YSEARCH('TA-Banks 5 index'),google:['TA-BANKS:TLV','TABANKS:INDEXTASE'],other:['https://www.bizportal.co.il/indices/quote/generalview/164','https://il.investing.com/indices/ta-banks']},
+  {key:'SPX',td:'SPX',market:'US',he:'S&P 500',en:'S&P 500',yahoo:['^GSPC'],google:['.INX:INDEXSP'],other:['https://www.investing.com/indices/us-spx-500']},
+  {key:'IXIC',td:'IXIC',market:'US',he:'נאסד"ק',en:'NASDAQ Composite',yahoo:['^IXIC'],google:['.IXIC:INDEXNASDAQ'],other:['https://www.investing.com/indices/nasdaq-composite']},
+  {key:'NDX',td:'NDX',market:'US',he:'נאסד"ק 100',en:'NASDAQ 100',yahoo:['^NDX'],google:['NDX:INDEXNASDAQ'],other:['https://www.investing.com/indices/nq-100']},
+  {key:'DJI',td:'DJI',market:'US',he:'דאו ג׳ונס',en:'Dow Jones',yahoo:['^DJI'],google:['.DJI:INDEXDJX'],other:['https://www.investing.com/indices/us-30']},
+  {key:'RUT',td:'RUT',market:'US',he:'ראסל 2000',en:'Russell 2000',yahoo:['^RUT'],google:['RUT:INDEXRUSSELL'],other:['https://www.investing.com/indices/smallcap-2000']},
+  {key:'VIX',td:'VIX',market:'US',he:'VIX',en:'VIX',yahoo:['^VIX'],google:['VIX:INDEXCBOE'],other:['https://www.investing.com/indices/volatility-s-p-500']},
 ];
 function needsIndex(ix,now=Date.now()){ const v=S.indices[ix.key]; if(S.settings.marketHoursOnly===false) return true; const st=marketState(ix.market==='TASE'?'TASE':'NYSE',now);
   if(!v||v.price==null||!v.updatedAt){ // never loaded (or failed): while the market is closed, one attempt per session is enough
@@ -1557,12 +1616,19 @@ async function fetchIndices({signal,onProgress,force}={}){
   const wanted=force?INDICES:INDICES.filter(ix=>needsIndex(ix)); const skipped=INDICES.length-wanted.length;
   if(!wanted.length) return {applied:0,total:0,skipped,allSkipped:true,errors:[]};
   const groups={}; wanted.forEach(ix=>{ (groups[ix.market]=groups[ix.market]||[]).push(ix); });
-  const chunks=[]; Object.values(groups).forEach(g=>{ g.forEach(ix=>chunks.push([ix])); }); // one index per request: short chain, streams in as each lands
-  let done=0, applied=0; const errors=[];
+  let done=0, applied=0, direct=0; const errors=[];
+  let restIx=wanted;
+  const mdCand=mdReady()?wanted.filter(ix=>ix.td):[];
+  if(mdCand.length){ const got=await mdQuotes(mdCand.map(ix=>({ticker:ix.key,exchange:ix.market==='TASE'?'TASE':'US',td:ix.td})),{signal});
+    if(got.length){ direct=applyIndexQuotes({asOf:new Date().toISOString().slice(0,16).replace('T',' '),quotes:got.map(q=>({key:q.ticker,price:q.price,prevClose:q.prevClose,changePct:q.changePct,source:q.source,quoteTime:q.quoteTime}))}); applied+=direct;
+      const ok=new Set(got.map(q=>q.ticker)); restIx=wanted.filter(ix=>!ok.has(ix.key)); onProgress&&onProgress(wanted.length-restIx.length,wanted.length); } }
+  if(!restIx.length) return {applied,total:wanted.length,skipped,direct,allSkipped:false,errors};
+  const chunks=[]; restIx.forEach(ix=>chunks.push([ix])); // one index per request: short chain, streams in as each lands
+  done=wanted.length-restIx.length;
   const run=async(chunk)=>{ let err=null; try{ const j=await fetchIndicesChunk(chunk,{signal}); applied+=applyIndexQuotes(j); } catch(e){ if(signal&&signal.aborted) throw e; err=e; errors.push(e); console.warn('index chunk failed',chunk.map(c=>c.key),e); } finally{ const now=Date.now(); chunk.forEach(ix=>{ const v=S.indices[ix.key]; if(!v||v.price==null) S.indices[ix.key]={...(v||{}),triedAt:now,note:(v&&v.note)||(err?(err.cancelled?t('job.timeout'):String(err.message).slice(0,90)):null)}; }); save(); done+=chunk.length; onProgress&&onProgress(done,wanted.length); } };
   const queue=[...chunks]; const workers=Array.from({length:Math.min(5,queue.length)},async()=>{ while(queue.length){ if(signal&&signal.aborted){ const ce=new Error(t('job.cancelled')); ce.cancelled=true; throw ce; } await run(queue.shift()); } });
   const results=await Promise.allSettled(workers); const cancelled=results.find(r=>r.status==='rejected'); if(cancelled) throw cancelled.reason;
-  return {applied,total:wanted.length,skipped,allSkipped:false,errors};
+  return {applied,total:wanted.length,skipped,direct,allSkipped:false,errors};
 }
 
 /* ---------- AI portfolio builder ---------- */
@@ -2587,9 +2653,10 @@ async function doRefresh({afterUpdate,force}={}){
     const res=await fetchQuotes({force,signal:job.signal,onProgress:(d,tt)=>{ job.progress(d,tt); renderPortfolio(); renderDashboard(); },onText:x=>job.live(x)});
     S.holdings.forEach(h=>{ if(h.price!=null&&h.updatedAt&&Date.now()-h.updatedAt<12e4) delete h.sample; });
     recordHistory(); save(); renderAll();
+    if(res.direct&&res.direct===res.total) toast(t('q.done')+' \u00b7 '+t('md.src'),'ok');
     if(res.stale) toast(t('q.stale.n',{n:res.stale}),'err');
     else if(res.behind) toast(t('q.behind.n',{n:res.behind}));
-    if(res.allSkipped) closedToast(); else if(res.applied===res.total){ toast(t('q.done'),'ok'); if(res.skipped) toast(t('q.closed.some',{n:res.skipped})); } else if(res.timedOut&&res.timedOut>=res.total-res.applied) toast(t('q.timeout.n',{n:res.timedOut}),res.applied?'':'err');
+    if(res.allSkipped) closedToast(); else if(res.direct&&res.direct===res.total){ /* reported above */ } else if(res.applied===res.total){ toast(t('q.done'),'ok'); if(res.skipped) toast(t('q.closed.some',{n:res.skipped})); } else if(res.timedOut&&res.timedOut>=res.total-res.applied) toast(t('q.timeout.n',{n:res.timedOut}),res.applied?'':'err');
     else toast(t('q.partial',{n:res.applied,t:res.total})+(res.errors.length?' · '+res.errors[0].message:''),res.applied?'':'err');
     // Phase 2: Bank of Israel representative rate (already in flight since the start; skipped when today's is stored)
     if(fxP){ job.title(t('job.fx')); job.live(''); const fxr=await fxP; if(fxr&&applyFx(fxr)){ recordHistory(); renderAll(); } else if(!fxr) toast(t('fx.failed'),''); }
@@ -2600,7 +2667,9 @@ async function doRefresh({afterUpdate,force}={}){
 
 /* ---------- Settings ---------- */
 function renderSettings(){
-  const s=S.settings; $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-datamodel').value=s.dataModel||'claude-sonnet-5'; $('#set-fast').checked=!!s.fastMode; const mh=$('#set-mkthours'); if(mh) mh.checked=s.marketHoursOnly!==false; const ms=$('#mkt-status'); if(ms){ const a=marketState('TASE'),b=marketState('NYSE'); ms.textContent=`${t('mkt.now')}: ${t('mkt.tase')} ${a.open?t('mkt.open'):t('mkt.closed')} · ${t('mkt.us')} ${b.open?t('mkt.open'):t('mkt.closed')}`; } $('#set-fx').value=s.usdIls; $('#set-cash-list').innerHTML=cashRowsHTML();
+  const s=S.settings; const mp=$('#set-md-provider'); if(mp) mp.value=s.mdProvider||'none'; const mk=$('#set-md-key'); if(mk&&document.activeElement!==mk) mk.value=s.mdKey||''; const pr=MD_PROVIDERS[s.mdProvider]; const sg=$('#md-signup'); if(sg) sg.href=pr?pr.signup:'https://twelvedata.com/pricing';
+  ['#md-keyrow','#md-signrow'].forEach(sel=>{ const el=$(sel); if(el) el.hidden=!pr; }); const mst=$('#md-status'); if(mst&&!pr) mst.textContent='';
+  $('#set-key').value=s.apiKey||''; $('#set-model').value=s.model; $('#set-datamodel').value=s.dataModel||'claude-sonnet-5'; $('#set-fast').checked=!!s.fastMode; const mh=$('#set-mkthours'); if(mh) mh.checked=s.marketHoursOnly!==false; const ms=$('#mkt-status'); if(ms){ const a=marketState('TASE'),b=marketState('NYSE'); ms.textContent=`${t('mkt.now')}: ${t('mkt.tase')} ${a.open?t('mkt.open'):t('mkt.closed')} · ${t('mkt.us')} ${b.open?t('mkt.open'):t('mkt.closed')}`; } $('#set-fx').value=s.usdIls; $('#set-cash-list').innerHTML=cashRowsHTML();
   $$('#set-effort button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.e===s.effort));
   $$('#set-theme button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===s.theme));
   $$('#set-lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===s.lang));
@@ -2673,6 +2742,13 @@ function bind(){
   $('#set-datamodel').addEventListener('change',e=>{ S.settings.dataModel=e.target.value; save(); });
   $('#set-fast').addEventListener('change',e=>{ S.settings.fastMode=e.target.checked; save(); });
   $('#set-mkthours').addEventListener('change',e=>{ S.settings.marketHoursOnly=e.target.checked; save(); });
+  $('#set-md-provider').addEventListener('change',e=>{ S.settings.mdProvider=e.target.value; save(); renderSettings(); });
+  $('#set-md-key').addEventListener('change',e=>{ S.settings.mdKey=e.target.value.trim(); save(); });
+  $('#btn-md-test').onclick=async()=>{ const b=$('#btn-md-test'); S.settings.mdProvider=$('#set-md-provider').value; S.settings.mdKey=$('#set-md-key').value.trim();
+    if(S.settings.mdProvider==='none'){ toast(t('md.none'),'err'); return; } save(); setLoading(b,true); const st=$('#md-status');
+    try{ const r=await mdTest(); const msg=t('md.ok',{t:r.ticker,p:fmtC(r.price,r.currency==='ILS'?'ILS':'USD')}); st.textContent='\u2713 '+msg; st.style.color='var(--gain)'; toast(msg,'ok'); }
+    catch(e){ const msg=t('md.fail',{e:e.message}); st.textContent='\u2715 '+msg; st.style.color='var(--loss)'; toast(msg,'err'); }
+    finally{ setLoading(b,false); } };
   $$('#set-effort button').forEach(b=>b.onclick=()=>{ S.settings.effort=b.dataset.e; save(); renderSettings(); });
   $$('#set-lang button').forEach(b=>b.onclick=()=>{ S.settings.lang=b.dataset.l; save(); applyI18n(); renderAll(); });
   $$('#set-theme button').forEach(b=>b.onclick=()=>{ S.settings.theme=b.dataset.t; save(); applyTheme(); renderAll(); });
